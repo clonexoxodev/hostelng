@@ -1,18 +1,12 @@
-# Welcome to your Lovable project
+# HostelNG - Find Your Perfect Student Hostel
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+A modern web application for discovering and booking verified student hostels near universities.
 
 ## How can I edit this code?
 
 There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
 
 **Use your preferred IDE**
 
@@ -62,12 +56,8 @@ This project is built with:
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+You can deploy this project using various platforms like Vercel, Netlify, or your preferred hosting service. Follow their documentation for deployment steps.
 
-## Can I connect a custom domain to my Lovable project?
+## Connecting a custom domain
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Most hosting platforms support custom domain connections. Refer to your hosting provider's documentation for domain configuration steps.
