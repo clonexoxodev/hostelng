@@ -11,14 +11,14 @@ import heroBg from "@/assets/hero-bg.jpg";
 import hostel3 from "@/assets/hostel-3.jpg";
 
 const stats = [
-  { value: "500+", label: "Verified Hostels" },
-  { value: "20,000+", label: "Happy Students" },
-  { value: "50+", label: "Universities" },
-  { value: "4.8★", label: "Average Rating" },
+  { value: "60+", label: "Verified Hostels" },
+  { value: "8,000+", label: "Happy Students" },
+  { value: "6", label: "Institutions" },
+  { value: "4.6★", label: "Average Rating" },
 ];
 
 const trustedBy = [
-  "UNILAG", "OAU", "UI", "ABU", "UNN", "UNIBEN", "LASU", "FUTA",
+  "UI", "IBADANPOLY", "ACU", "EKSU", "FEDPOLYADOEKITI", "ABUAD",
 ];
 
 const benefits = [
@@ -69,7 +69,7 @@ const Index = () => {
         <div className="relative z-10 container mx-auto px-4 text-center py-24">
           <div className="inline-flex items-center gap-2 bg-primary-foreground/15 backdrop-blur-sm border border-primary-foreground/25 text-primary-foreground text-xs font-semibold px-4 py-2 rounded-full mb-6 animate-fade-in">
             <ShieldCheck className="w-3.5 h-3.5 text-accent" />
-            Nigeria's #1 Verified Student Hostel Platform
+            Nigeria's Top Verified Student Hostel Platform
           </div>
 
           <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl text-primary-foreground leading-tight mb-6 animate-fade-up max-w-3xl mx-auto">

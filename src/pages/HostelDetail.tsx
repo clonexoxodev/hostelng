@@ -25,7 +25,7 @@ const amenityIconMap: Record<string, React.ComponentType<{ className?: string }>
   "CCTV": Camera,
   "Generator": Zap,
   "Backup Generator": Zap,
-  "Swimming Pool": Droplets,
+  /*"Swimming Pool": Droplets,*/
 };
 
 const genderLabel = {
