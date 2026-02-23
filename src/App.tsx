@@ -8,6 +8,8 @@ import Hostels from "./pages/Hostels";
 import HostelDetail from "./pages/HostelDetail";
 import ListHostel from "./pages/ListHostel";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +24,8 @@ const App = () => (
           <Route path="/hostels" element={<Hostels />} />
           <Route path="/hostels/:id" element={<HostelDetail />} />
           <Route path="/list-hostel" element={<ListHostel />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

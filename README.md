@@ -44,20 +44,120 @@ npm run dev
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## What technologies are used for this project?
 
-This project is built with:
+## Setup
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+1. **Install dependencies**
+	 ```bash
+	 npm install
+	 ```
+2. **Environment variables**
+	 Create a `.env.local` file in the root with:
+	 ```env
+	 VITE_SUPABASE_URL=your-supabase-url
+	 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+	 ```
+3. **Run the app**
+	 ```bash
+	 npm run dev
+	 ```
 
-## How can I deploy this project?
+## Features
+- Students can browse and book hostels
+- Hostel owners can list their properties
+- Authentication via Supabase
+- Accessible, responsive UI
 
-You can deploy this project using various platforms like Vercel, Netlify, or your preferred hosting service. Follow their documentation for deployment steps.
+## Pages
+- Home
+- Browse Hostels
+- Hostel Details
+- List Hostel
+- Login/Register
 
-## Connecting a custom domain
+## Supabase Setup
+See below for SQL snippets to create tables and functions.
 
-Most hosting platforms support custom domain connections. Refer to your hosting provider's documentation for domain configuration steps.
+---
+
+## SQL Snippets (Supabase)
+
+### Users (auth handled by Supabase)
+Supabase Auth manages users. To store extra profile info:
+```sql
+create table profiles (
+	id uuid references auth.users not null primary key,
+	full_name text,
+	created_at timestamp with time zone default timezone('utc'::text, now())
+);
+```
+
+### Hostels
+```sql
+create table hostels (
+	id uuid primary key default gen_random_uuid(),
+	owner_id uuid references profiles(id),
+	name text not null,
+	description text,
+	address text,
+	city text,
+	state text,
+	price numeric not null,
+	image_url text,
+	created_at timestamp with time zone default timezone('utc'::text, now())
+);
+```
+
+### Bookings
+```sql
+create table bookings (
+	id uuid primary key default gen_random_uuid(),
+	user_id uuid references profiles(id),
+	hostel_id uuid references hostels(id),
+	start_date date not null,
+	end_date date not null,
+	status text default 'pending',
+	created_at timestamp with time zone default timezone('utc'::text, now())
+);
+```
+
+### Functions (optional)
+- You may want a function to check hostel availability or return all bookings for a user.
+
+---
+
+## Product Requirements Document (PRD)
+
+### Project: HostelNG - Student Hostel Booking Platform
+
+#### Objective
+Build a web platform for students to discover, book, and review hostels, and for hostel owners to list and manage their properties.
+
+#### Core Features
+- User authentication (Supabase)
+- Student dashboard: browse/search hostels, book, view bookings
+- Hostel owner dashboard: list hostel, manage listings, view bookings
+- Hostel details: images, description, price, location, reviews
+- Booking system: select dates, confirm, cancel
+- Responsive, accessible UI
+
+#### User Roles
+- Student: browse, book, review
+- Hostel Owner: list/manage hostels, view bookings
+
+#### Data Model
+- User (Supabase Auth + profile)
+- Hostel (name, description, address, price, owner, images)
+- Booking (user, hostel, dates, status)
+
+#### Success Metrics
+- Number of bookings
+- Number of hostels listed
+- User engagement (logins, searches)
+
+#### Stretch Goals
+- Reviews/ratings
+- Payment integration
+- Admin dashboard
+
+---

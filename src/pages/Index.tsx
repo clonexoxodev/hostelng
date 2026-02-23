@@ -75,7 +75,7 @@ const Index = () => {
           <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl text-primary-foreground leading-tight mb-6 animate-fade-up max-w-3xl mx-auto">
             Find Your Perfect
             <span className="block text-accent">Student Home</span>
-            Near Your Campus
+            Near Your Campus Always
           </h1>
 
           <p className="text-primary-foreground/80 text-base md:text-lg max-w-xl mx-auto mb-10 leading-relaxed animate-fade-up" style={{ animationDelay: "0.15s" }}>
