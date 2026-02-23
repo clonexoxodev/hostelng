@@ -1,11 +1,36 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Home, Search, Building, Phone } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Menu, X, Home, Search, Building, Phone, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setIsOpen(false);
+    navigate('/');
+  };
 
   const navLinks = [
     { to: "/", label: "Home", icon: Home },
@@ -48,12 +73,32 @@ const Navbar = () => {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="outline" size="sm" className="border-primary/30 text-primary hover:bg-secondary" asChild>
-              <Link to="/login">Sign In</Link>
-            </Button>
-            <Button size="sm" className="gradient-primary border-0 shadow-primary text-primary-foreground" asChild>
-              <Link to="/register">Get Started</Link>
-            </Button>
+            {user ? (
+              <>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary/60 text-sm">
+                  <User className="w-4 h-4 text-primary" />
+                  <span className="text-foreground/80">{user.email?.split('@')[0]}</span>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-primary/30 text-primary hover:bg-secondary"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="outline" size="sm" className="border-primary/30 text-primary hover:bg-secondary" asChild>
+                  <Link to="/login">Sign In</Link>
+                </Button>
+                <Button size="sm" className="gradient-primary border-0 shadow-primary text-primary-foreground" asChild>
+                  <Link to="/register">Get Started</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -87,12 +132,31 @@ const Navbar = () => {
               </Link>
             ))}
             <div className="pt-2 pb-1 flex flex-col gap-2">
-              <Button variant="outline" className="w-full border-primary/30 text-primary" asChild>
-                <Link to="/login" onClick={() => setIsOpen(false)}>Sign In</Link>
-              </Button>
-              <Button className="w-full gradient-primary border-0 text-primary-foreground" asChild>
-                <Link to="/register" onClick={() => setIsOpen(false)}>Get Started Free</Link>
-              </Button>
+              {user ? (
+                <>
+                  <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-secondary/60">
+                    <User className="w-4 h-4 text-primary" />
+                    <span className="text-sm text-foreground/80">{user.email}</span>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-primary/30 text-primary"
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="outline" className="w-full border-primary/30 text-primary" asChild>
+                    <Link to="/login" onClick={() => setIsOpen(false)}>Sign In</Link>
+                  </Button>
+                  <Button className="w-full gradient-primary border-0 text-primary-foreground" asChild>
+                    <Link to="/register" onClick={() => setIsOpen(false)}>Get Started Free</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
