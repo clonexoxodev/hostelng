@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import Navbar from '@/components/Navbar'
 
 export default function Register() {
   const [fullName, setFullName] = useState('')
+  const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
@@ -25,7 +28,10 @@ export default function Register() {
 
     setLoading(true)
     try {
-      const { data, error } = await supabase.auth.signUp({ email, password }, { data: { full_name: fullName } })
+      const { data, error } = await supabase.auth.signUp(
+        { email, password },
+        { data: { full_name: fullName, phone } }
+      )
       if (error) {
         setError(error.message)
       } else {
@@ -39,7 +45,9 @@ export default function Register() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-6">
+    <>
+      <Navbar />
+      <main className="min-h-screen flex items-center justify-center p-6">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md bg-white shadow-md rounded-lg p-6"
@@ -58,6 +66,21 @@ export default function Register() {
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
           className="mt-1 mb-4 block w-full rounded border px-3 py-2"
+        />
+
+        <label htmlFor="phone" className="block text-sm font-medium">
+          Phone Number
+        </label>
+        <input
+          id="phone"
+          type="tel"
+          required
+          autoComplete="tel"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          className="mt-1 mb-4 block w-full rounded border px-3 py-2"
+          pattern="[0-9]{10,15}"
+          placeholder="e.g. 08012345678"
         />
 
         <label htmlFor="email" className="block text-sm font-medium">
@@ -138,7 +161,12 @@ export default function Register() {
             </p>
           )}
         </div>
-      </form>
-    </main>
+        <div className="mt-6 text-center text-sm">
+          Already have an account?{' '}
+          <Link to="/login" className="text-sky-700 hover:underline">Sign in</Link>
+        </div>
+        </form>
+      </main>
+    </>
   )
 }

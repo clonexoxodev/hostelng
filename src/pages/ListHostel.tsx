@@ -126,6 +126,18 @@ const ListHostel = () => {
                     />
                   </div>
                 </div>
+
+                <div>
+                  <label className="section-label text-[10px] block mb-1.5">Upload Hostel Photos</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="w-full px-4 py-3 rounded-xl border border-border bg-background text-sm text-foreground outline-none focus:border-primary transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
+                  />
+                  <span className="text-xs text-muted-foreground">You can select multiple images. Max 10MB each.</span>
+                </div>
+
                 <div>
                   <label className="section-label text-[10px] block mb-1.5">Hostel Address</label>
                   <textarea

@@ -39,7 +39,7 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden pb-32">
         {/* Background */}
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -47,15 +47,15 @@ const Index = () => {
         />
         <div className="absolute inset-0 hero-overlay" />
 
-        {/* Floating stats (desktop) */}
-        <div className="absolute bottom-0 left-0 right-0 hidden md:block">
+        {/* Floating stats (desktop, overlay bottom of hero) */}
+        <div className="absolute bottom-0 left-0 right-0 hidden md:block" style={{ pointerEvents: 'none' }}>
           <div className="container mx-auto px-4 pb-8">
-            <div className="grid grid-cols-4 gap-4 max-w-2xl">
+            <div className="grid grid-cols-4 gap-4 max-w-2xl mx-auto">
               {stats.map((stat, i) => (
                 <div
                   key={i}
                   className="bg-card/90 backdrop-blur-md rounded-2xl p-4 text-center border border-border/40 animate-fade-up"
-                  style={{ animationDelay: `${i * 0.1}s` }}
+                  style={{ animationDelay: `${i * 0.1}s`, pointerEvents: 'auto' }}
                 >
                   <p className="font-display font-bold text-xl text-primary">{stat.value}</p>
                   <p className="text-muted-foreground text-xs">{stat.label}</p>
@@ -107,7 +107,7 @@ const Index = () => {
       <div className="md:hidden bg-primary py-6">
         <div className="container mx-auto px-4 grid grid-cols-2 gap-4">
           {stats.map((stat, i) => (
-            <div key={i} className="text-center">
+            <div key={i} className="mt-8 text-center">
               <p className="font-display font-bold text-2xl text-primary-foreground">{stat.value}</p>
               <p className="text-primary-foreground/70 text-xs">{stat.label}</p>
             </div>

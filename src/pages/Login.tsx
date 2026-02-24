@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import Navbar from '@/components/Navbar'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -35,7 +36,9 @@ export default function Login() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-6">
+    <>
+      <Navbar />
+      <main className="min-h-screen flex items-center justify-center p-6">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md bg-white shadow-md rounded-lg p-6"
@@ -81,6 +84,11 @@ export default function Login() {
           </button>
         </div>
 
+        <div className="mt-6 text-center text-sm">
+          Don't have an account?{' '}
+          <Link to="/register" className="text-sky-700 hover:underline">Register</Link>
+        </div>
+
         <button
           type="submit"
           className="w-full py-2 px-4 bg-sky-600 text-white rounded hover:bg-sky-700 disabled:opacity-60"
@@ -101,7 +109,8 @@ export default function Login() {
             </p>
           )}
         </div>
-      </form>
-    </main>
+        </form>
+      </main>
+    </>
   )
 }
