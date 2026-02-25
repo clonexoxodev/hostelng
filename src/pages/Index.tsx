@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Star, ShieldCheck, Building, TrendingUp, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
@@ -7,6 +8,7 @@ import HostelCard from "@/components/HostelCard";
 import HowItWorks from "@/components/HowItWorks";
 import Footer from "@/components/Footer";
 import { hostels } from "@/data/hostels";
+import { supabase } from "@/lib/supabase";
 import heroBg from "@/assets/hero-bg.jpg";
 import hostel3 from "@/assets/hostel-3.jpg";
 
@@ -31,8 +33,28 @@ const benefits = [
 ];
 
 const Index = () => {
+  const [user, setUser] = useState<any>(null);
   const featuredHostels = hostels.filter((h) => h.featured);
   const allHostels = hostels.slice(0, 6);
+
+  useEffect(() => {
+    // Check current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // Check if user is an agent
+  const isAgent = user?.user_metadata?.role === 'agent';
 
   return (
     <div className="min-h-screen bg-background">
@@ -224,41 +246,43 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA for hostel owners */}
-      <section className="py-20 gradient-primary">
-        <div className="container mx-auto px-4 text-center">
-          <Building className="w-12 h-12 text-primary-foreground/70 mx-auto mb-5" />
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
-            Own a Student Hostel?
-          </h2>
-          <p className="text-primary-foreground/80 max-w-xl mx-auto text-base leading-relaxed mb-10">
-            List your property on HostelNG for free. Reach thousands of university students looking for quality accommodation. We only earn when you earn.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              className="bg-accent border-0 shadow-amber text-accent-foreground hover:opacity-90 px-8 font-semibold"
-              size="lg"
-              asChild
-            >
-              <Link to="/list-hostel">
-                List Your Hostel — It's Free
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 px-8"
-              asChild
-            >
-              <Link to="/contact">Learn More</Link>
-            </Button>
+      {/* CTA for hostel owners - Only show if not an authenticated agent */}
+      {!isAgent && (
+        <section className="py-20 gradient-primary">
+          <div className="container mx-auto px-4 text-center">
+            <Building className="w-12 h-12 text-primary-foreground/70 mx-auto mb-5" />
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
+              Own a Student Hostel?
+            </h2>
+            <p className="text-primary-foreground/80 max-w-xl mx-auto text-base leading-relaxed mb-10">
+              List your property on HostelNG for free. Reach thousands of university students looking for quality accommodation. We only earn when you earn.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                className="bg-accent border-0 shadow-amber text-accent-foreground hover:opacity-90 px-8 font-semibold"
+                size="lg"
+                asChild
+              >
+                <Link to="/list-hostel">
+                  List Your Hostel — It's Free
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 px-8"
+                asChild
+              >
+                <Link to="/contact">Learn More</Link>
+              </Button>
+            </div>
+            <p className="mt-6 text-primary-foreground/50 text-xs">
+              Commission only charged upon successful student booking & payment. No upfront fees.
+            </p>
           </div>
-          <p className="mt-6 text-primary-foreground/50 text-xs">
-            Commission only charged upon successful student booking & payment. No upfront fees.
-          </p>
-        </div>
-      </section>
+        </section>
+      )}
 
       <Footer />
     </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CheckCircle2, Building2, Camera, FileText, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
@@ -23,17 +23,42 @@ const perks = [
 ];
 
 const ListHostel = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
+      
+      // Redirect authenticated agents to dashboard
+      if (session?.user?.user_metadata?.role === 'agent') {
+        navigate('/dashboard');
+      }
+      
+      setLoading(false);
     });
+    
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      
+      // Redirect authenticated agents to dashboard
+      if (session?.user?.user_metadata?.role === 'agent') {
+        navigate('/dashboard');
+      }
     });
+    
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate]);
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -123,30 +148,25 @@ const ListHostel = () => {
         </div>
       </section>
 
-      {/* Registration Section */}
+      {/* Registration Section - Only show for non-agents */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
-            {user && user.user_metadata?.role === 'agent' ? (
-              <div className="bg-card rounded-2xl border border-border p-8">
-                <h3 className="font-display font-bold text-xl text-foreground mb-2">Register Your Hostel</h3>
-                <p className="text-muted-foreground text-sm mb-6">Fill in the form below and our team will contact you within 24 hours.</p>
-                <div className="text-center py-12">
-                  <p className="text-muted-foreground">Form coming soon. Please contact us directly for now.</p>
-                  <Button className="mt-4" asChild>
-                    <Link to="/contact">Contact Us</Link>
-                  </Button>
-                </div>
+            <div className="bg-card rounded-2xl border border-border p-8 flex flex-col items-center justify-center min-h-[400px]">
+              <Building2 className="w-16 h-16 text-muted-foreground mb-4" />
+              <h3 className="font-display font-bold text-xl text-foreground mb-2">Ready to List Your Hostel?</h3>
+              <p className="text-muted-foreground text-sm mb-6 text-center">
+                Sign in as a hostel listing agent to access the dashboard and start adding your properties.
+              </p>
+              <div className="flex gap-4">
+                <Button variant="outline" asChild>
+                  <Link to="/register">Register as Agent</Link>
+                </Button>
+                <Button className="gradient-primary border-0 shadow-primary text-primary-foreground" asChild>
+                  <Link to="/signin">Sign In</Link>
+                </Button>
               </div>
-            ) : (
-              <div className="bg-card rounded-2xl border border-border p-8 flex flex-col items-center justify-center min-h-[400px]">
-                <Building2 className="w-16 h-16 text-muted-foreground mb-4" />
-                <h3 className="font-display font-bold text-xl text-foreground mb-2">Only Hostel Listing Agents can register hostels.</h3>
-                <p className="text-muted-foreground text-sm mb-4">
-                  Please <Link to="/register" className="text-primary hover:underline">register</Link> or <Link to="/signin" className="text-primary hover:underline">sign in</Link> as an agent to access this form.
-                </p>
-              </div>
-            )}
+            </div>
           </div>
         </div>
       </section>

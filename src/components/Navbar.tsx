@@ -32,12 +32,27 @@ const Navbar = () => {
     navigate('/');
   };
 
+  // Get user role from metadata
+  const userRole = user?.user_metadata?.role;
+  const isAgent = userRole === 'agent';
+
+  // Filter nav links based on user role
   const navLinks = [
-    { to: "/", label: "Home", icon: Home },
-    { to: "/hostels", label: "Browse Hostels", icon: Search },
-    { to: "/list-hostel", label: "List Your Hostel", icon: Building },
-    { to: "/contact", label: "Contact", icon: Phone },
+    { to: "/", label: "Home", icon: Home, showFor: 'all' },
+    { to: "/hostels", label: "Browse Hostels", icon: Search, showFor: 'all' },
+    { to: "/list-hostel", label: "List Your Hostel", icon: Building, showFor: 'agent' },
+    { to: "/contact", label: "Contact", icon: Phone, showFor: 'all' },
   ];
+
+  // Filter links based on authentication and role
+  const visibleLinks = navLinks.filter(link => {
+    if (link.showFor === 'all') return true;
+    if (link.showFor === 'agent') {
+      // Show "List Your Hostel" only if user is not logged in OR is an agent
+      return !user || isAgent;
+    }
+    return true;
+  });
 
   return (
     <nav className="nav-glass fixed top-0 left-0 right-0 z-50 transition-all duration-300">
@@ -56,7 +71,7 @@ const Navbar = () => {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
+            {visibleLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
@@ -75,17 +90,19 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-primary hover:bg-secondary"
-                  asChild
-                >
-                  <Link to="/dashboard">
-                    <LayoutDashboard className="w-4 h-4 mr-2" />
-                    Dashboard
-                  </Link>
-                </Button>
+                {isAgent && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-primary hover:bg-secondary"
+                    asChild
+                  >
+                    <Link to="/dashboard">
+                      <LayoutDashboard className="w-4 h-4 mr-2" />
+                      Dashboard
+                    </Link>
+                  </Button>
+                )}
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary/60 text-sm">
                   <User className="w-4 h-4 text-primary" />
                   <span className="text-foreground/80">{user.email?.split('@')[0]}</span>
@@ -127,7 +144,7 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden border-t border-border bg-card animate-fade-up">
           <div className="container mx-auto px-4 py-3 space-y-1">
-            {navLinks.map((link) => (
+            {visibleLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
@@ -145,14 +162,16 @@ const Navbar = () => {
             <div className="pt-2 pb-1 flex flex-col gap-2">
               {user ? (
                 <>
-                  <Link
-                    to="/dashboard"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-primary hover:bg-secondary transition-all"
-                  >
-                    <LayoutDashboard className="w-4 h-4" />
-                    Dashboard
-                  </Link>
+                  {isAgent && (
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-primary hover:bg-secondary transition-all"
+                    >
+                      <LayoutDashboard className="w-4 h-4" />
+                      Dashboard
+                    </Link>
+                  )}
                   <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-secondary/60">
                     <User className="w-4 h-4 text-primary" />
                     <span className="text-sm text-foreground/80">{user.email}</span>
