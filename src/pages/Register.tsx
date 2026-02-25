@@ -10,6 +10,7 @@ export default function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
+  const [role, setRole] = useState<'student' | 'agent' | ''>('');
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -21,23 +22,44 @@ export default function Register() {
     setError(null)
     setMessage(null)
 
+    console.log('Form submitted with:', { email, fullName, phone, role });
+
     if (password !== confirm) {
       setError('Passwords do not match')
       return
     }
 
+    if (!role) {
+      setError('Please select your registration type.');
+      return;
+    }
+
     setLoading(true)
     try {
-      const { data, error } = await supabase.auth.signUp(
-        { email, password },
-        { data: { full_name: fullName, phone } }
-      )
+      console.log('Attempting to sign up...');
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            phone,
+            role
+          }
+        }
+      })
+      
+      console.log('Signup response:', { data, error });
+      
       if (error) {
+        console.error('Signup error:', error);
         setError(error.message)
       } else {
+        console.log('Signup successful!');
         setMessage('Registration successful. Check your email to confirm your account.')
       }
     } catch (err: any) {
+      console.error('Unexpected error:', err);
       setError(err?.message || 'An unexpected error occurred')
     } finally {
       setLoading(false)
@@ -47,14 +69,42 @@ export default function Register() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen flex items-center justify-center p-6">
+      <main className="min-h-screen flex items-center justify-center p-6 pt-32 bg-background">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md bg-white shadow-md rounded-lg p-6"
+        className="w-full max-w-md bg-white shadow-md rounded-lg p-6 mt-4"
         aria-busy={loading}
         aria-describedby="register-status"
       >
         <h1 className="text-2xl font-semibold mb-4">Create an account</h1>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">I am registering as:</label>
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="role"
+                value="student"
+                checked={role === 'student'}
+                onChange={() => setRole('student')}
+                className="accent-sky-600"
+              />
+              Student
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="role"
+                value="agent"
+                checked={role === 'agent'}
+                onChange={() => setRole('agent')}
+                className="accent-sky-600"
+              />
+              Hostel Listing
+            </label>
+          </div>
+        </div>
 
         <label htmlFor="fullName" className="block text-sm font-medium">
           Full name

@@ -1,0 +1,424 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, Upload, X, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { supabase } from '@/lib/supabase';
+import Navbar from '@/components/Navbar';
+import { toast } from 'sonner';
+
+interface HostelFormData {
+  name: string;
+  location: string;
+  university: string;
+  price: string;
+  description: string;
+  amenities: string;
+  contact_phone: string;
+  contact_email: string;
+  rooms_available: string;
+}
+
+const HostelForm = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const isEdit = !!id;
+
+  const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [formData, setFormData] = useState<HostelFormData>({
+    name: '',
+    location: '',
+    university: '',
+    price: '',
+    description: '',
+    amenities: '',
+    contact_phone: '',
+    contact_email: '',
+    rooms_available: '',
+  });
+  const [images, setImages] = useState<string[]>([]);
+  const [newImages, setNewImages] = useState<File[]>([]);
+
+  useEffect(() => {
+    if (isEdit) {
+      loadHostel();
+    }
+  }, [id]);
+
+  const loadHostel = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('hostels')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) throw error;
+
+      setFormData({
+        name: data.name || '',
+        location: data.location || '',
+        university: data.university || '',
+        price: data.price?.toString() || '',
+        description: data.description || '',
+        amenities: data.amenities?.join(', ') || '',
+        contact_phone: data.contact_phone || '',
+        contact_email: data.contact_email || '',
+        rooms_available: data.rooms_available?.toString() || '',
+      });
+      setImages(data.images || []);
+    } catch (error: any) {
+      toast.error('Failed to load hostel: ' + error.message);
+      navigate('/dashboard');
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      setNewImages([...newImages, ...files]);
+    }
+  };
+
+  const removeNewImage = (index: number) => {
+    setNewImages(newImages.filter((_, i) => i !== index));
+  };
+
+  const removeExistingImage = (index: number) => {
+    setImages(images.filter((_, i) => i !== index));
+  };
+
+  const uploadImages = async (userId: string): Promise<string[]> => {
+    const uploadedUrls: string[] = [];
+
+    for (const file of newImages) {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${userId}/${Date.now()}-${Math.random()}.${fileExt}`;
+
+      const { data, error } = await supabase.storage
+        .from('hostel-images')
+        .upload(fileName, file);
+
+      if (error) throw error;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('hostel-images')
+        .getPublicUrl(fileName);
+
+      uploadedUrls.push(publicUrl);
+    }
+
+    return uploadedUrls;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      setUploading(true);
+      const uploadedImages = await uploadImages(user.id);
+      setUploading(false);
+
+      const allImages = [...images, ...uploadedImages];
+
+      const hostelData = {
+        name: formData.name,
+        location: formData.location,
+        university: formData.university,
+        price: parseFloat(formData.price),
+        description: formData.description,
+        amenities: formData.amenities.split(',').map(a => a.trim()).filter(Boolean),
+        contact_phone: formData.contact_phone,
+        contact_email: formData.contact_email,
+        rooms_available: parseInt(formData.rooms_available),
+        images: allImages,
+        owner_id: user.id,
+        featured: false,
+        rating: 0,
+      };
+
+      if (isEdit) {
+        const { error } = await supabase
+          .from('hostels')
+          .update(hostelData)
+          .eq('id', id);
+
+        if (error) throw error;
+        toast.success('Hostel updated successfully!');
+      } else {
+        const { error } = await supabase
+          .from('hostels')
+          .insert([hostelData]);
+
+        if (error) throw error;
+        toast.success('Hostel created successfully!');
+      }
+
+      navigate('/dashboard');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to save hostel');
+    } finally {
+      setLoading(false);
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      
+      <div className="container mx-auto px-4 py-8 mt-20 max-w-3xl">
+        <Button
+          variant="ghost"
+          onClick={() => navigate('/dashboard')}
+          className="mb-6"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Dashboard
+        </Button>
+
+        <div className="bg-card rounded-xl border border-border p-8">
+          <h1 className="font-display text-2xl font-bold text-foreground mb-6">
+            {isEdit ? 'Edit Hostel' : 'Add New Hostel'}
+          </h1>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <Label htmlFor="name">Hostel Name *</Label>
+              <Input
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+                placeholder="e.g., Sunshine Hostel"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="location">Location *</Label>
+                <Input
+                  id="location"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="e.g., Bodija, Ibadan"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="university">University *</Label>
+                <Input
+                  id="university"
+                  name="university"
+                  value={formData.university}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="e.g., University of Ibadan"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="price">Price per Year (₦) *</Label>
+                <Input
+                  id="price"
+                  name="price"
+                  type="number"
+                  value={formData.price}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="e.g., 150000"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="rooms_available">Rooms Available *</Label>
+                <Input
+                  id="rooms_available"
+                  name="rooms_available"
+                  type="number"
+                  value={formData.rooms_available}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="e.g., 20"
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="description">Description *</Label>
+              <Textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                required
+                rows={4}
+                placeholder="Describe your hostel..."
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="amenities">Amenities (comma-separated) *</Label>
+              <Input
+                id="amenities"
+                name="amenities"
+                value={formData.amenities}
+                onChange={handleInputChange}
+                required
+                placeholder="e.g., WiFi, Security, Water Supply, Parking"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="contact_phone">Contact Phone *</Label>
+                <Input
+                  id="contact_phone"
+                  name="contact_phone"
+                  type="tel"
+                  value={formData.contact_phone}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="e.g., 08012345678"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="contact_email">Contact Email *</Label>
+                <Input
+                  id="contact_email"
+                  name="contact_email"
+                  type="email"
+                  value={formData.contact_email}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="e.g., contact@hostel.com"
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label>Images</Label>
+              <div className="mt-2">
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-accent/5">
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <Upload className="w-8 h-8 text-muted-foreground mb-2" />
+                    <p className="text-sm text-muted-foreground">Click to upload images</p>
+                  </div>
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    multiple
+                    onChange={handleImageSelect}
+                  />
+                </label>
+              </div>
+
+              {/* Existing Images */}
+              {images.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm font-medium mb-2">Current Images:</p>
+                  <div className="grid grid-cols-3 gap-4">
+                    {images.map((url, index) => (
+                      <div key={index} className="relative group">
+                        <img
+                          src={url}
+                          alt={`Hostel ${index + 1}`}
+                          className="w-full h-24 object-cover rounded-lg"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeExistingImage(index)}
+                          className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* New Images Preview */}
+              {newImages.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm font-medium mb-2">New Images:</p>
+                  <div className="grid grid-cols-3 gap-4">
+                    {newImages.map((file, index) => (
+                      <div key={index} className="relative group">
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt={`New ${index + 1}`}
+                          className="w-full h-24 object-cover rounded-lg"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeNewImage(index)}
+                          className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-4 pt-4">
+              <Button
+                type="submit"
+                disabled={loading || uploading}
+                className="gradient-primary border-0 shadow-primary text-primary-foreground"
+              >
+                {uploading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Uploading Images...
+                  </>
+                ) : loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  isEdit ? 'Update Hostel' : 'Create Hostel'
+                )}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => navigate('/dashboard')}
+                disabled={loading || uploading}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default HostelForm;

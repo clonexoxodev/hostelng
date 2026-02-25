@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Home, Search, Building, Phone, LogOut, User } from "lucide-react";
+import { Menu, X, Home, Search, Building, Phone, LogOut, User, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 
@@ -75,6 +75,17 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-primary hover:bg-secondary"
+                  asChild
+                >
+                  <Link to="/dashboard">
+                    <LayoutDashboard className="w-4 h-4 mr-2" />
+                    Dashboard
+                  </Link>
+                </Button>
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary/60 text-sm">
                   <User className="w-4 h-4 text-primary" />
                   <span className="text-foreground/80">{user.email?.split('@')[0]}</span>
@@ -134,6 +145,14 @@ const Navbar = () => {
             <div className="pt-2 pb-1 flex flex-col gap-2">
               {user ? (
                 <>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-primary hover:bg-secondary transition-all"
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                    Dashboard
+                  </Link>
                   <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-secondary/60">
                     <User className="w-4 h-4 text-primary" />
                     <span className="text-sm text-foreground/80">{user.email}</span>
