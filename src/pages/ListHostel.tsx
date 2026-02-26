@@ -1,183 +1,296 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import { CheckCircle2, Building2, Camera, FileText, ArrowRight } from "lucide-react";
+import { CheckCircle2, Building2, Camera, FileText, ArrowRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { supabase } from '@/lib/supabase';
+import { toast } from "sonner";
 
-const steps = [
-  { icon: FileText, title: "Fill Basic Details", desc: "Enter your hostel name, location, university proximity, and contact information." },
-  { icon: Camera, title: "Upload Photos", desc: "Add high-quality photos of your rooms, facilities, and compound to attract students." },
-  { icon: Building2, title: "Set Room Types & Prices", desc: "Define room categories, pricing per year, and available units for each type." },
-  { icon: CheckCircle2, title: "Get Verified", desc: "Our team reviews and inspects your listing. Approved hostels go live within 48 hours." },
-];
-
-const perks = [
-  "Free to list — no upfront costs",
-  "Commission only on successful bookings",
-  "Reach thousands of university students",
-  "Secure payment — funds paid directly to you",
-  "Dedicated account manager support",
-  "Analytics dashboard to track enquiries",
-];
+const SUPERADMIN_EMAIL = "clonexoxo80@gmail.com";
 
 const ListHostel = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    university: "",
+    location: "",
+    price: "",
+    description: "",
+    amenities: "",
+    contact_phone: "",
+    contact_email: "",
+    rooms_available: "",
+  });
 
   useEffect(() => {
-    // Only check auth if supabase is configured
-    if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-      console.warn('Supabase not configured, skipping auth check');
+    checkAuth();
+  }, []);
+
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      navigate("/login");
       return;
     }
-
-    const checkAuth = async () => {
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (error) {
-          console.error('Auth error:', error);
-          return;
-        }
-        
-        setUser(session?.user ?? null);
-        
-        // Redirect authenticated agents to dashboard
-        if (session?.user?.user_metadata?.role === 'agent') {
-          navigate('/dashboard');
-        }
-      } catch (err) {
-        console.error('Unexpected error:', err);
-      }
-    };
-
-    checkAuth();
     
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    setUser(session.user);
+    
+    // Redirect superadmin to admin dashboard
+    if (session.user.email === SUPERADMIN_EMAIL) {
+      navigate("/admin");
+      return;
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      // Parse amenities from comma-separated string to array
+      const amenitiesArray = formData.amenities
+        .split(",")
+        .map(a => a.trim())
+        .filter(a => a.length > 0);
+
+      const hostelData = {
+        name: formData.name,
+        university: formData.university,
+        location: formData.location,
+        price: parseInt(formData.price),
+        description: formData.description,
+        amenities: amenitiesArray,
+        contact_phone: formData.contact_phone,
+        contact_email: formData.contact_email,
+        rooms_available: parseInt(formData.rooms_available),
+        user_id: user.id,
+        featured: false,
+        rating: 0,
+      };
+
+      const { error } = await supabase
+        .from("hostels")
+        .insert([hostelData]);
+
+      if (error) throw error;
+
+      toast.success("Hostel listed successfully!");
       
-      // Redirect authenticated agents to dashboard
-      if (session?.user?.user_metadata?.role === 'agent') {
-        navigate('/dashboard');
-      }
-    });
-    
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+      // Redirect to dashboard
+      navigate("/dashboard");
+    } catch (error: any) {
+      console.error("Error:", error);
+      toast.error(error.message || "Failed to list hostel");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-br from-primary/5 to-accent/5">
+      <div className="pt-24 pb-12">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-semibold px-4 py-2 rounded-full mb-6">
-              <Building2 className="w-3.5 h-3.5" />
-              For Hostel Owners
-            </div>
-            <h1 className="font-display font-bold text-4xl md:text-5xl text-foreground mb-6">
-              List Your Hostel on HostelNG
-            </h1>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-              Reach thousands of university students actively searching for quality accommodation. List your property for free and only pay when you get bookings.
-            </p>
-            <Button className="gradient-primary border-0 shadow-primary text-primary-foreground px-8 font-semibold" size="lg" asChild>
-              <Link to="/signin">
-                Get Started — It's Free
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <p className="section-label mb-2">Simple Process</p>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-              How to List Your Hostel
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {steps.map((step, i) => {
-              const Icon = step.icon;
-              return (
-                <div key={i} className="relative bg-card rounded-2xl border border-border p-6 hover:shadow-card-hover transition-shadow">
-                  <div className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">
-                    {i + 1}
-                  </div>
-                  <Icon className="w-10 h-10 text-primary mb-4" />
-                  <h3 className="font-display font-bold text-lg text-foreground mb-2">{step.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits */}
-      <section className="py-20 bg-card">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <p className="section-label mb-2">Why List With Us</p>
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-                Benefits for Hostel Owners
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {perks.map((perk, i) => (
-                <div key={i} className="flex items-start gap-3 bg-background rounded-xl border border-border p-4">
-                  <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                  <span className="text-foreground text-sm leading-relaxed">{perk}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-12 text-center">
-              <Button className="gradient-primary border-0 shadow-primary text-primary-foreground px-8 font-semibold" size="lg" asChild>
-                <Link to="/signin">
-                  Start Listing Now
-                  <ArrowRight className="w-4 h-4 ml-2" />
+          <div className="max-w-3xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h1 className="font-display text-3xl font-bold text-foreground mb-2">
+                  List Your Hostel
+                </h1>
+                <p className="text-muted-foreground">
+                  Fill in the details below to add your hostel listing
+                </p>
+              </div>
+              <Button variant="outline" asChild>
+                <Link to="/dashboard">
+                  View My Hostels
                 </Link>
               </Button>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Registration Section - Only show for non-agents */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto">
-            <div className="bg-card rounded-2xl border border-border p-8 flex flex-col items-center justify-center min-h-[400px]">
-              <Building2 className="w-16 h-16 text-muted-foreground mb-4" />
-              <h3 className="font-display font-bold text-xl text-foreground mb-2">Ready to List Your Hostel?</h3>
-              <p className="text-muted-foreground text-sm mb-6 text-center">
-                Sign in as a hostel listing agent to access the dashboard and start adding your properties.
-              </p>
-              <div className="flex gap-4">
-                <Button variant="outline" asChild>
-                  <Link to="/register">Register as Agent</Link>
-                </Button>
-                <Button className="gradient-primary border-0 shadow-primary text-primary-foreground" asChild>
-                  <Link to="/signin">Sign In</Link>
-                </Button>
-              </div>
+            <div className="bg-card rounded-2xl border border-border p-8">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
+                    Hostel Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                    placeholder="e.g., Greenview Student Lodge"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="university" className="block text-sm font-medium text-foreground mb-2">
+                      University
+                    </label>
+                    <input
+                      type="text"
+                      id="university"
+                      name="university"
+                      required
+                      value={formData.university}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                      placeholder="e.g., University of Ibadan (UI)"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="location" className="block text-sm font-medium text-foreground mb-2">
+                      Location
+                    </label>
+                    <input
+                      type="text"
+                      id="location"
+                      name="location"
+                      required
+                      value={formData.location}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                      placeholder="e.g., Bodija, Ibadan"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="price" className="block text-sm font-medium text-foreground mb-2">
+                      Price per Year (₦)
+                    </label>
+                    <input
+                      type="number"
+                      id="price"
+                      name="price"
+                      required
+                      min="0"
+                      value={formData.price}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                      placeholder="e.g., 280000"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="rooms_available" className="block text-sm font-medium text-foreground mb-2">
+                      Rooms Available
+                    </label>
+                    <input
+                      type="number"
+                      id="rooms_available"
+                      name="rooms_available"
+                      required
+                      min="0"
+                      value={formData.rooms_available}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                      placeholder="e.g., 10"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="description" className="block text-sm font-medium text-foreground mb-2">
+                    Description
+                  </label>
+                  <textarea
+                    id="description"
+                    name="description"
+                    required
+                    rows={4}
+                    value={formData.description}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
+                    placeholder="Describe your hostel, facilities, and what makes it special..."
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="amenities" className="block text-sm font-medium text-foreground mb-2">
+                    Amenities (comma-separated)
+                  </label>
+                  <input
+                    type="text"
+                    id="amenities"
+                    name="amenities"
+                    required
+                    value={formData.amenities}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                    placeholder="e.g., 24/7 Security, Wi-Fi, Water Supply, Parking"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="contact_phone" className="block text-sm font-medium text-foreground mb-2">
+                      Contact Phone
+                    </label>
+                    <input
+                      type="tel"
+                      id="contact_phone"
+                      name="contact_phone"
+                      required
+                      value={formData.contact_phone}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                      placeholder="e.g., 08012345678"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="contact_email" className="block text-sm font-medium text-foreground mb-2">
+                      Contact Email
+                    </label>
+                    <input
+                      type="email"
+                      id="contact_email"
+                      name="contact_email"
+                      required
+                      value={formData.contact_email}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                      placeholder="e.g., contact@hostel.com"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-4 pt-4">
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 gradient-primary border-0 shadow-primary text-primary-foreground font-semibold"
+                  >
+                    {loading ? (
+                      "Submitting..."
+                    ) : (
+                      <>
+                        <Plus className="w-4 h-4 mr-2" />
+                        List Hostel
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       <Footer />
     </div>

@@ -7,8 +7,8 @@ import SearchBar from "@/components/SearchBar";
 import HostelCard from "@/components/HostelCard";
 import HowItWorks from "@/components/HowItWorks";
 import Footer from "@/components/Footer";
-import { hostels } from "@/data/hostels";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 import heroBg from "@/assets/hero-bg.jpg";
 import hostel3 from "@/assets/hostel-3.jpg";
 
@@ -34,8 +34,8 @@ const benefits = [
 
 const Index = () => {
   const [user, setUser] = useState<any>(null);
-  const featuredHostels = hostels.filter((h) => h.featured);
-  const allHostels = hostels.slice(0, 6);
+  const [hostels, setHostels] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Check current session
@@ -50,11 +50,37 @@ const Index = () => {
       setUser(session?.user ?? null);
     });
 
+    // Load hostels from database
+    loadHostels();
+
     return () => subscription.unsubscribe();
   }, []);
 
+  const loadHostels = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('hostels')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      console.log('Loaded hostels:', data); // Debug log
+      setHostels(data || []);
+    } catch (error: any) {
+      console.error('Failed to load hostels:', error);
+      toast.error('Failed to load hostels');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Check if user is an agent
   const isAgent = user?.user_metadata?.role === 'agent';
+  
+  // Show featured hostels if any, otherwise show all hostels (up to 6)
+  const featuredHostels = hostels.filter((h) => h.featured === true);
+  const displayHostels = featuredHostels.length > 0 ? featuredHostels.slice(0, 3) : hostels.slice(0, 6);
 
   return (
     <div className="min-h-screen bg-background">
@@ -170,19 +196,38 @@ const Index = () => {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredHostels.map((hostel) => (
-              <HostelCard key={hostel.id} hostel={hostel} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          ) : displayHostels.length === 0 ? (
+            <div className="text-center py-20">
+              <Building className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
+              <h3 className="font-display text-xl font-bold text-foreground mb-2">No hostels listed yet</h3>
+              <p className="text-muted-foreground text-sm mb-6">Be the first to list your hostel on HostelNG!</p>
+              <Button className="gradient-primary border-0 shadow-primary text-primary-foreground" asChild>
+                <Link to="/list-hostel">
+                  List Your Hostel <ArrowRight className="w-4 h-4 ml-2" />
+                </Link>
+              </Button>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {displayHostels.map((hostel) => (
+                  <HostelCard key={hostel.id} hostel={hostel} />
+                ))}
+              </div>
 
-          <div className="text-center mt-8 md:hidden">
-            <Button variant="outline" className="border-primary/30 text-primary hover:bg-secondary" asChild>
-              <Link to="/hostels">
-                View All Hostels <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
-            </Button>
-          </div>
+              <div className="text-center mt-8 md:hidden">
+                <Button variant="outline" className="border-primary/30 text-primary hover:bg-secondary" asChild>
+                  <Link to="/hostels">
+                    View All Hostels <ArrowRight className="w-4 h-4 ml-2" />
+                  </Link>
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </section>
 

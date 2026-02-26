@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Star, MapPin, Users, CheckCircle } from "lucide-react";
+import { Star, MapPin, Users, CheckCircle, Building2 } from "lucide-react";
 
 interface HostelCardProps {
   hostel: any;
@@ -7,28 +7,29 @@ interface HostelCardProps {
 
 const HostelCard = ({ hostel }: HostelCardProps) => {
   const topAmenities = hostel.amenities?.slice(0, 3) || [];
-  const hasImages = hostel.images && hostel.images.length > 0;
+  const hasImages = hostel.images && Array.isArray(hostel.images) && hostel.images.length > 0;
+  const imageUrl = hasImages ? hostel.images[0] : null;
 
   return (
     <Link to={`/hostels/${hostel.id}`} className="block group">
       <div className="bg-card rounded-2xl overflow-hidden card-hover border border-border/60">
         {/* Image */}
         <div className="relative overflow-hidden aspect-[4/3]">
-          {hasImages ? (
+          {imageUrl ? (
             <img
-              src={hostel.images[0]}
+              src={imageUrl}
               alt={hostel.name}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="w-full h-full bg-muted flex items-center justify-center">
-              <span className="text-muted-foreground">No image</span>
+            <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
+              <Building2 className="w-16 h-16 text-muted-foreground/30" />
             </div>
           )}
           {/* Overlays */}
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/30 via-transparent to-transparent" />
 
-          {/* Verified badge */}
+          {/* Featured badge */}
           {hostel.featured && (
             <div className="absolute top-3 left-3">
               <span className="badge-verified">
@@ -44,7 +45,7 @@ const HostelCard = ({ hostel }: HostelCardProps) => {
               Price per year
             </p>
             <p className="price-tag text-lg text-primary-foreground drop-shadow">
-              ₦{hostel.price?.toLocaleString()}
+              ₦{hostel.price?.toLocaleString() || '0'}
             </p>
           </div>
         </div>
@@ -76,7 +77,7 @@ const HostelCard = ({ hostel }: HostelCardProps) => {
                   {amenity}
                 </span>
               ))}
-              {hostel.amenities.length > 3 && (
+              {hostel.amenities && hostel.amenities.length > 3 && (
                 <span className="amenity-chip text-xs">+{hostel.amenities.length - 3} more</span>
               )}
             </div>
