@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Edit, Trash2, Eye, MapPin, DollarSign } from 'lucide-react';
+import { Edit, Trash2, Eye, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -140,7 +140,7 @@ const HostelList: React.FC<HostelListProps> = ({ userId, isSuperAdmin }) => {
                   </td>
                   <td className="p-4">
                     <div className="flex items-center gap-1 font-semibold text-foreground">
-                      <DollarSign className="w-4 h-4" />
+                      <span>₦</span>
                       {hostel.price?.toLocaleString()}
                     </div>
                   </td>

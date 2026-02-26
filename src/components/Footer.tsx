@@ -68,11 +68,18 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3 text-primary-foreground/60 text-sm">
                 <Phone className="w-4 h-4 shrink-0 text-accent" />
-                <span>+234 800 HOSTELNG</span>
+                <span>+234 706 1686 123</span>
               </li>
               <li className="flex items-center gap-3 text-primary-foreground/60 text-sm">
                 <Mail className="w-4 h-4 shrink-0 text-accent" />
-                <span>hello@hostelng.com</span>
+                <a 
+                  href="https://mail.google.com/mail/?view=cm&fs=1&to=Clonexoxo80@gmail.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-accent transition-colors"
+                >
+                  hello@hostelng.com
+                </a>
               </li>
             </ul>
           </div>
@@ -80,7 +87,7 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/10 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-primary-foreground/40 text-xs">
-            © 2025 HostelNG. All rights reserved. Made with ❤️ for Nigerian students.
+            © 2025 HostelNG. All rights reserved.
           </p>
           <div className="flex gap-6">
             {["Privacy Policy", "Terms of Use", "Cookie Policy"].map((item) => (

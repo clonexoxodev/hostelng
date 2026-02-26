@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { SlidersHorizontal, X, ChevronDown, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,8 @@ import Navbar from "@/components/Navbar";
 import HostelCard from "@/components/HostelCard";
 import SearchBar from "@/components/SearchBar";
 import Footer from "@/components/Footer";
-import { hostels, universities } from "@/data/hostels";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 const roomTypes = ["single", "double", "self-contain", "flat"];
 const genderOptions = ["mixed", "male", "female"];
@@ -19,7 +20,37 @@ const Hostels = () => {
   const [selectedGender, setSelectedGender] = useState<string[]>([]);
   const [selectedRoomType, setSelectedRoomType] = useState<string[]>([]);
   const [maxPrice, setMaxPrice] = useState(1000000);
-  const [sortBy, setSortBy] = useState("featured");
+  const [sortBy, setSortBy] = useState("recent");
+  const [hostels, setHostels] = useState<any[]>([]);
+  const [universities, setUniversities] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load hostels from database
+  useEffect(() => {
+    loadHostels();
+  }, []);
+
+  const loadHostels = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('hostels')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      setHostels(data || []);
+      
+      // Extract unique universities
+      const uniqueUniversities = [...new Set(data?.map(h => h.university) || [])];
+      setUniversities(uniqueUniversities as string[]);
+    } catch (error: any) {
+      console.error('Failed to load hostels:', error);
+      toast.error('Failed to load hostels');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const toggleFilter = (list: string[], item: string, setter: (v: string[]) => void) => {
     setter(list.includes(item) ? list.filter((i) => i !== item) : [...list, item]);
@@ -32,23 +63,19 @@ const Hostels = () => {
       result = result.filter((h) => h.university === selectedUniversity);
 
     if (selectedCity)
-      result = result.filter((h) => h.city.toLowerCase() === selectedCity.toLowerCase());
+      result = result.filter((h) => h.location?.toLowerCase().includes(selectedCity.toLowerCase()));
 
-    if (selectedGender.length)
-      result = result.filter((h) => selectedGender.includes(h.gender));
+    result = result.filter((h) => h.price <= maxPrice);
 
-    if (selectedRoomType.length)
-      result = result.filter((h) => h.rooms.some((r) => selectedRoomType.includes(r.type)));
-
-    result = result.filter((h) => h.minPrice <= maxPrice);
-
-    if (sortBy === "price-asc") result.sort((a, b) => a.minPrice - b.minPrice);
-    else if (sortBy === "price-desc") result.sort((a, b) => b.minPrice - a.minPrice);
-    else if (sortBy === "rating") result.sort((a, b) => b.rating - a.rating);
+    // Sort by selected option
+    if (sortBy === "price-asc") result.sort((a, b) => a.price - b.price);
+    else if (sortBy === "price-desc") result.sort((a, b) => b.price - a.price);
+    else if (sortBy === "rating") result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    else if (sortBy === "recent") result.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     else result.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
 
     return result;
-  }, [selectedUniversity, selectedCity, selectedGender, selectedRoomType, maxPrice, sortBy]);
+  }, [hostels, selectedUniversity, selectedCity, maxPrice, sortBy]);
 
   const clearFilters = () => {
     setSelectedUniversity("");
@@ -58,7 +85,18 @@ const Hostels = () => {
     setMaxPrice(1000000);
   };
 
-  const hasFilters = selectedUniversity || selectedCity || selectedGender.length || selectedRoomType.length || maxPrice < 1000000;
+  const hasFilters = selectedUniversity || selectedCity || maxPrice < 1000000;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -109,45 +147,9 @@ const Hostels = () => {
                 </div>
               </div>
 
-              {/* Gender */}
-              <div className="mb-5">
-                <label className="section-label text-[10px] block mb-2">Gender Policy</label>
-                <div className="flex flex-wrap gap-2">
-                  {genderOptions.map((g) => (
-                    <button
-                      key={g}
-                      onClick={() => toggleFilter(selectedGender, g, setSelectedGender)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize transition-all ${
-                        selectedGender.includes(g)
-                          ? "bg-primary text-primary-foreground border-primary"
-                          : "border-border text-foreground/70 hover:border-primary/50"
-                      }`}
-                    >
-                      {g === "mixed" ? "Mixed" : `${g}s only`}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Room Type */}
-              <div className="mb-5">
-                <label className="section-label text-[10px] block mb-2">Room Type</label>
-                <div className="flex flex-wrap gap-2">
-                  {roomTypes.map((rt) => (
-                    <button
-                      key={rt}
-                      onClick={() => toggleFilter(selectedRoomType, rt, setSelectedRoomType)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize transition-all ${
-                        selectedRoomType.includes(rt)
-                          ? "bg-primary text-primary-foreground border-primary"
-                          : "border-border text-foreground/70 hover:border-primary/50"
-                      }`}
-                    >
-                      {rt === "self-contain" ? "Self-Contain" : rt.charAt(0).toUpperCase() + rt.slice(1)}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              {/* Gender - Removed since not in database schema */}
+              
+              {/* Room Type - Removed since not in database schema */}
 
               {/* Max Price */}
               <div className="mb-2">
@@ -192,6 +194,7 @@ const Hostels = () => {
                     onChange={(e) => setSortBy(e.target.value)}
                     className="text-sm bg-card border border-border rounded-xl px-3 py-2 pr-8 outline-none text-foreground appearance-none cursor-pointer"
                   >
+                    <option value="recent">Most Recent</option>
                     <option value="featured">Featured</option>
                     <option value="rating">Highest Rated</option>
                     <option value="price-asc">Price: Low to High</option>

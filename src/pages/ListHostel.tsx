@@ -25,19 +25,36 @@ const perks = [
 const ListHostel = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      
-      // Redirect authenticated agents to dashboard
-      if (session?.user?.user_metadata?.role === 'agent') {
-        navigate('/dashboard');
+    // Only check auth if supabase is configured
+    if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+      console.warn('Supabase not configured, skipping auth check');
+      return;
+    }
+
+    const checkAuth = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Auth error:', error);
+          return;
+        }
+        
+        setUser(session?.user ?? null);
+        
+        // Redirect authenticated agents to dashboard
+        if (session?.user?.user_metadata?.role === 'agent') {
+          navigate('/dashboard');
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
       }
-      
-      setLoading(false);
-    });
+    };
+
+    checkAuth();
     
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
@@ -50,15 +67,6 @@ const ListHostel = () => {
     
     return () => subscription.unsubscribe();
   }, [navigate]);
-
-  // Show loading state while checking authentication
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background">
