@@ -9,6 +9,7 @@ import HostelDetail from "./pages/HostelDetail";
 import ListHostel from "./pages/ListHostel";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import EditHostel from "./pages/EditHostel";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/hostels/:id" element={<HostelDetail />} />
           <Route path="/list-hostel" element={<ListHostel />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/edit/:id" element={<EditHostel />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />

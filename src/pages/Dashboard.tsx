@@ -44,7 +44,7 @@ const Dashboard = () => {
       const { data, error } = await supabase
         .from('hostels')
         .select('*')
-        .eq('user_id', userId)
+        .eq('owner_id', userId)
         .order('created_at', { ascending: false });
 
       if (error) {

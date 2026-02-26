@@ -19,7 +19,7 @@ const Hostels = () => {
   const [selectedCity, setSelectedCity] = useState(searchParams.get("city") || "");
   const [selectedGender, setSelectedGender] = useState<string[]>([]);
   const [selectedRoomType, setSelectedRoomType] = useState<string[]>([]);
-  const [maxPrice, setMaxPrice] = useState(1000000);
+  const [maxPrice, setMaxPrice] = useState(50000000); // Increased to 50M to show all hostels
   const [sortBy, setSortBy] = useState("recent");
   const [hostels, setHostels] = useState<any[]>([]);
   const [universities, setUniversities] = useState<string[]>([]);
@@ -39,6 +39,8 @@ const Hostels = () => {
 
       if (error) throw error;
 
+      console.log('Loaded hostels on Browse page:', data); // Debug log
+      console.log('Total hostels:', data?.length); // Debug log
       setHostels(data || []);
       
       // Extract unique universities
@@ -59,17 +61,33 @@ const Hostels = () => {
   const filtered = useMemo(() => {
     let result = [...hostels];
 
+    console.log('Before filters:', result.length); // Debug log
+    console.log('All hostels:', result.map(h => ({ name: h.name, price: h.price }))); // Debug log
+
     if (selectedUniversity)
       result = result.filter((h) => h.university === selectedUniversity);
 
     if (selectedCity)
       result = result.filter((h) => h.location?.toLowerCase().includes(selectedCity.toLowerCase()));
 
-    result = result.filter((h) => h.price <= maxPrice);
+    console.log('After university/city filter:', result.length); // Debug log
+    console.log('Max price filter:', maxPrice); // Debug log
+
+    // Filter by price - handle null/undefined prices
+    result = result.filter((h) => {
+      const price = h.price || 0;
+      const passes = price <= maxPrice;
+      if (!passes) {
+        console.log(`Filtered out: ${h.name} with price ${price}`); // Debug log
+      }
+      return passes;
+    });
+
+    console.log('After price filter:', result.length); // Debug log
 
     // Sort by selected option
-    if (sortBy === "price-asc") result.sort((a, b) => a.price - b.price);
-    else if (sortBy === "price-desc") result.sort((a, b) => b.price - a.price);
+    if (sortBy === "price-asc") result.sort((a, b) => (a.price || 0) - (b.price || 0));
+    else if (sortBy === "price-desc") result.sort((a, b) => (b.price || 0) - (a.price || 0));
     else if (sortBy === "rating") result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     else if (sortBy === "recent") result.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     else result.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
@@ -82,10 +100,10 @@ const Hostels = () => {
     setSelectedCity("");
     setSelectedGender([]);
     setSelectedRoomType([]);
-    setMaxPrice(1000000);
+    setMaxPrice(50000000); // Reset to 50M
   };
 
-  const hasFilters = selectedUniversity || selectedCity || maxPrice < 1000000;
+  const hasFilters = selectedUniversity || selectedCity || maxPrice < 50000000;
 
   if (loading) {
     return (
@@ -157,8 +175,8 @@ const Hostels = () => {
                 <input
                   type="range"
                   min={50000}
-                  max={1000000}
-                  step={10000}
+                  max={50000000}
+                  step={100000}
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(Number(e.target.value))}
                   className="w-full accent-primary"
@@ -166,9 +184,9 @@ const Hostels = () => {
                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
                   <span>₦50k</span>
                   <span className="font-semibold text-primary">
-                    ₦{(maxPrice / 1000).toFixed(0)}k
+                    ₦{maxPrice >= 1000000 ? (maxPrice / 1000000).toFixed(1) + 'M' : (maxPrice / 1000).toFixed(0) + 'k'}
                   </span>
-                  <span>₦1M+</span>
+                  <span>₦50M+</span>
                 </div>
               </div>
             </div>
