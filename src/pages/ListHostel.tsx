@@ -70,7 +70,7 @@ const ListHostel = () => {
         contact_phone: formData.contact_phone,
         contact_email: formData.contact_email,
         rooms_available: parseInt(formData.rooms_available),
-        user_id: user.id,
+        owner_id: user.id, // Changed from user_id to owner_id
         featured: false,
         rating: 0,
       };

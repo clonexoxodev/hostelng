@@ -49,16 +49,30 @@ const EditHostel = () => {
 
       if (error) throw error;
 
-      // Check if user owns this hostel (compare user_id, not email)
+      // Debug logs
+      console.log('=== EDIT PERMISSION CHECK ===');
+      console.log('Hostel name:', data.name);
+      console.log('Hostel owner_id:', data.owner_id);
+      console.log('Current user_id:', userId);
+      console.log('Match?', data.owner_id === userId);
+
+      // Check if user owns this hostel (compare owner_id, not email)
       const { data: { session } } = await supabase.auth.getSession();
       const isSuperAdmin = session?.user?.email === 'clonexoxo80@gmail.com';
-      const isOwner = data.user_id === userId;
+      const isOwner = data.owner_id === userId;
+
+      console.log('Is owner?', isOwner);
+      console.log('Is superadmin?', isSuperAdmin);
+      console.log('User email:', session?.user?.email);
 
       if (!isOwner && !isSuperAdmin) {
+        console.log('❌ PERMISSION DENIED');
         toast.error("You don't have permission to edit this hostel");
         navigate("/dashboard");
         return;
       }
+
+      console.log('✅ PERMISSION GRANTED');
 
       // Populate form
       setFormData({

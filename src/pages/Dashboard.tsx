@@ -70,7 +70,7 @@ const Dashboard = () => {
         .from('hostels')
         .delete()
         .eq('id', id)
-        .eq('user_id', user.id); // Ensure user can only delete their own
+        .eq('owner_id', user.id); // Ensure user can only delete their own
 
       if (error) throw error;
 

@@ -52,7 +52,7 @@ const AdminDashboard = () => {
 
       // Load all users from auth (this requires admin access)
       // For now, we'll just show hostel owners from the hostels table
-      const uniqueUserIds = [...new Set(hostelsData?.map(h => h.user_id) || [])];
+      const uniqueUserIds = [...new Set(hostelsData?.map(h => h.owner_id) || [])];
       setUsers(uniqueUserIds.map(id => ({ id, email: 'User ' + id.slice(0, 8) })));
       
     } catch (error: any) {
