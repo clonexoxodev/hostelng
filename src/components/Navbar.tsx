@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Home, Search, Building, Phone, LogOut, User, LayoutDashboard } from "lucide-react";
+import { Menu, X, Home, Search, Building, Phone, LogOut, User, LayoutDashboard, Flag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 
@@ -35,6 +35,7 @@ const Navbar = () => {
   // Get user role from metadata
   const userRole = user?.user_metadata?.role;
   const isAgent = userRole === 'agent';
+  const isSuperAdmin = user?.email === 'clonexoxo80@gmail.com';
 
   // Filter nav links based on user role
   const navLinks = [
@@ -100,6 +101,19 @@ const Navbar = () => {
                     <Link to="/dashboard">
                       <LayoutDashboard className="w-4 h-4 mr-2" />
                       Dashboard
+                    </Link>
+                  </Button>
+                )}
+                {isSuperAdmin && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-orange-600 hover:bg-orange-50"
+                    asChild
+                  >
+                    <Link to="/admin/reports">
+                      <Flag className="w-4 h-4 mr-2" />
+                      Reports
                     </Link>
                   </Button>
                 )}
@@ -170,6 +184,16 @@ const Navbar = () => {
                     >
                       <LayoutDashboard className="w-4 h-4" />
                       Dashboard
+                    </Link>
+                  )}
+                  {isSuperAdmin && (
+                    <Link
+                      to="/admin/reports"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-orange-600 hover:bg-orange-50 transition-all"
+                    >
+                      <Flag className="w-4 h-4" />
+                      Reports
                     </Link>
                   )}
                   <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-secondary/60">

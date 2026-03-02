@@ -9,6 +9,9 @@ import HostelDetail from "./pages/HostelDetail";
 import ListHostel from "./pages/ListHostel";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminReports from "./pages/AdminReports";
+import StudentFAQs from "./pages/StudentFAQs";
+import SafetyTips from "./pages/SafetyTips";
 import EditHostel from "./pages/EditHostel";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
@@ -31,6 +34,9 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/edit/:id" element={<EditHostel />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/reports" element={<AdminReports />} />
+          <Route path="/faqs" element={<StudentFAQs />} />
+          <Route path="/safety-tips" element={<SafetyTips />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

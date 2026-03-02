@@ -14,6 +14,7 @@ interface HostelFormData {
   location: string;
   university: string;
   price: string;
+  listing_type: string;
   description: string;
   amenities: string;
   contact_phone: string;
@@ -33,6 +34,7 @@ const HostelForm = () => {
     location: '',
     university: '',
     price: '',
+    listing_type: 'semester',
     description: '',
     amenities: '',
     contact_phone: '',
@@ -63,6 +65,7 @@ const HostelForm = () => {
         location: data.location || '',
         university: data.university || '',
         price: data.price?.toString() || '',
+        listing_type: data.listing_type || 'semester',
         description: data.description || '',
         amenities: data.amenities?.join(', ') || '',
         contact_phone: data.contact_phone || '',
@@ -76,7 +79,7 @@ const HostelForm = () => {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -140,6 +143,7 @@ const HostelForm = () => {
         location: formData.location,
         university: formData.university,
         price: parseFloat(formData.price),
+        listing_type: formData.listing_type,
         description: formData.description,
         amenities: formData.amenities.split(',').map(a => a.trim()).filter(Boolean),
         contact_phone: formData.contact_phone,
@@ -235,9 +239,26 @@ const HostelForm = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="price">Price per Year (₦) *</Label>
+                <Label htmlFor="listing_type">Listing Type *</Label>
+                <select
+                  id="listing_type"
+                  name="listing_type"
+                  value={formData.listing_type}
+                  onChange={handleInputChange}
+                  required
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="semester">Semester</option>
+                  <option value="session">Session</option>
+                </select>
+              </div>
+
+              <div>
+                <Label htmlFor="price">
+                  Price (₦) per {formData.listing_type === 'semester' ? 'Semester' : 'Session'} *
+                </Label>
                 <Input
                   id="price"
                   name="price"

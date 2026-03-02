@@ -25,7 +25,7 @@ const trustedBy = [
 
 const benefits = [
   "All hostels verified by our team before listing",
-  "Secure payment with money-back guarantee",
+  "Direct contact with hostel owners",
   "Detailed photos & virtual tours",
   "Real student reviews you can trust",
   "24/7 customer support team",
@@ -244,7 +244,7 @@ const Index = () => {
                 The Safest Way to Find Student Housing
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8">
-                We know the Nigerian student housing market can be stressful, risky, and full of fraudsters. HostelNG is built to change that — with verified listings, secure payments, and real transparency.
+                We know the Nigerian student housing market can be stressful, risky, and full of fraudsters. HostelNG is built to change that — with verified listings, direct contact with owners, and real transparency.
               </p>
 
               <ul className="space-y-3">
@@ -323,7 +323,7 @@ const Index = () => {
               </Button>
             </div>
             <p className="mt-6 text-primary-foreground/50 text-xs">
-              Commission only charged upon successful student booking & payment. No upfront fees.
+              Commission only charged after successful student verification and payment to hostel owner. No upfront fees.
             </p>
           </div>
         </section>

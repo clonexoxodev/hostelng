@@ -32,15 +32,33 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-display font-bold text-sm mb-5 text-primary-foreground">For Students</h4>
+            <h4 className="font-display font-bold text-sm mb-5 text-primary-foreground">Quick Links</h4>
             <ul className="space-y-3">
-              {["Browse Hostels", "How It Works", "Pricing & Fees", "Student FAQs", "Safety Tips"].map((item) => (
-                <li key={item}>
-                  <Link to="#" className="text-primary-foreground/60 hover:text-accent text-sm transition-colors">
-                    {item}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <Link to="/hostels" className="text-primary-foreground/60 hover:text-accent text-sm transition-colors">
+                  Browse Hostels
+                </Link>
+              </li>
+              <li>
+                <Link to="/faqs" className="text-primary-foreground/60 hover:text-accent text-sm transition-colors">
+                  Student FAQs
+                </Link>
+              </li>
+              <li>
+                <Link to="/safety-tips" className="text-primary-foreground/60 hover:text-accent text-sm transition-colors">
+                  Safety Tips
+                </Link>
+              </li>
+              <li>
+                <Link to="/list-hostel" className="text-primary-foreground/60 hover:text-accent text-sm transition-colors">
+                  List Your Hostel
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="text-primary-foreground/60 hover:text-accent text-sm transition-colors">
+                  Contact Us
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -48,13 +66,21 @@ const Footer = () => {
           <div>
             <h4 className="font-display font-bold text-sm mb-5 text-primary-foreground">For Hostel Owners</h4>
             <ul className="space-y-3">
-              {["List Your Hostel", "Owner Dashboard", "Verification Process", "Commission Model", "Owner FAQs"].map((item) => (
-                <li key={item}>
-                  <Link to="#" className="text-primary-foreground/60 hover:text-accent text-sm transition-colors">
-                    {item}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <Link to="/list-hostel" className="text-primary-foreground/60 hover:text-accent text-sm transition-colors">
+                  List Your Hostel
+                </Link>
+              </li>
+              <li>
+                <Link to="/dashboard" className="text-primary-foreground/60 hover:text-accent text-sm transition-colors">
+                  Owner Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="text-primary-foreground/60 hover:text-accent text-sm transition-colors">
+                  Get Support
+                </Link>
+              </li>
             </ul>
           </div>
 

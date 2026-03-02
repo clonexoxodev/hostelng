@@ -253,7 +253,7 @@ const Contact = () => {
                   Emergency Support
                 </h3>
                 <p className="text-muted-foreground text-sm mb-3">
-                  For urgent issues with bookings or payments, call our 24/7 hotline:
+                  For urgent issues with bookings or hostel inquiries, call our 24/7 hotline:
                 </p>
                 <a
                   href="tel:+2348001234567"

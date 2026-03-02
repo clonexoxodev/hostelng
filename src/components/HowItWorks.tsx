@@ -1,4 +1,4 @@
-import { Search, Home, CheckCircle, CreditCard, Smile } from "lucide-react";
+import { Search, Home, CheckCircle, Phone, Smile } from "lucide-react";
 
 const steps = [
   {
@@ -6,7 +6,7 @@ const steps = [
     step: "01",
     title: "Search & Discover",
     description:
-      "Browse verified hostels near your university. Filter by price, room type, and amenities to find your perfect match.",
+      "Browse verified hostels near your university. Filter by price, location, and amenities to find your perfect match.",
     color: "bg-secondary text-primary",
   },
   {
@@ -14,23 +14,23 @@ const steps = [
     step: "02",
     title: "Explore Details",
     description:
-      "View high-quality photos, floor plans, and detailed facility information. No need for physical visits before deciding.",
+      "View high-quality photos and detailed facility information. Check amenities, location, and pricing.",
+    color: "bg-secondary text-primary",
+  },
+  {
+    icon: Phone,
+    step: "03",
+    title: "Contact Owner",
+    description:
+      "Connect directly with hostel owners via phone or email. Schedule a visit and ask any questions.",
     color: "bg-secondary text-primary",
   },
   {
     icon: CheckCircle,
-    step: "03",
-    title: "Reserve Your Room",
-    description:
-      "Choose your preferred room type and reservation dates. Complete a simple booking form in minutes.",
-    color: "bg-secondary text-primary",
-  },
-  {
-    icon: CreditCard,
     step: "04",
-    title: "Secure Payment",
+    title: "Verify & Pay Owner",
     description:
-      "Pay securely through our platform. Your funds are held safely and only released to the hostel owner after confirmation.",
+      "Visit the hostel, verify it meets your needs, and pay directly to the hostel owner. We collect a small commission after successful payment.",
     color: "bg-secondary text-primary",
   },
   {
@@ -38,7 +38,7 @@ const steps = [
     step: "05",
     title: "Move In!",
     description:
-      "Receive your digital confirmation and move-in details. Show up to your new home stress-free and ready to study!",
+      "Receive your confirmation and move-in details. Show up to your new home stress-free and ready to study!",
     color: "bg-secondary text-primary",
   },
 ];

@@ -223,20 +223,32 @@ const HostelDetail = () => {
             <div>
               <div className="bg-card rounded-2xl border border-border p-6 sticky top-24">
                 <div className="mb-4">
-                  <p className="text-muted-foreground text-xs mb-1">Price per year</p>
+                  <p className="text-muted-foreground text-xs mb-1">
+                    Price per {hostel.listing_type === 'semester' ? 'Semester' : 'Session'}
+                  </p>
                   <p className="price-tag text-3xl">
                     ₦{hostel.price?.toLocaleString()}
-                    <span className="text-muted-foreground text-sm font-normal">/year</span>
+                    <span className="text-muted-foreground text-sm font-normal">
+                      /{hostel.listing_type || 'year'}
+                    </span>
                   </p>
                 </div>
 
                 <div className="space-y-3 mb-6">
-                  <Button className="w-full gradient-primary border-0 shadow-primary text-primary-foreground" size="lg">
-                    Book Now
-                  </Button>
-                  <Button variant="outline" className="w-full border-primary/30 text-primary" size="lg">
-                    Schedule Visit
-                  </Button>
+                  <a 
+                    href={`tel:${hostel.contact_phone}`}
+                    className="w-full gradient-primary border-0 shadow-primary text-primary-foreground flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                  >
+                    <Phone className="w-4 h-4" />
+                    Call Owner
+                  </a>
+                  <a
+                    href={`mailto:${hostel.contact_email}`}
+                    className="w-full border border-primary/30 text-primary flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold hover:bg-secondary transition-colors"
+                  >
+                    <Mail className="w-4 h-4" />
+                    Email Owner
+                  </a>
                 </div>
 
                 <div className="border-t border-border pt-4 space-y-3">

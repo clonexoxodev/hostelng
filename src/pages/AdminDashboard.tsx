@@ -50,10 +50,35 @@ const AdminDashboard = () => {
       if (hostelsError) throw hostelsError;
       setHostels(hostelsData || []);
 
-      // Load all users from auth (this requires admin access)
-      // For now, we'll just show hostel owners from the hostels table
-      const uniqueUserIds = [...new Set(hostelsData?.map(h => h.owner_id) || [])];
-      setUsers(uniqueUserIds.map(id => ({ id, email: 'User ' + id.slice(0, 8) })));
+      // Load user profiles from 'profiles' table
+      const { data: profilesData, error: profilesError } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (profilesError) {
+        console.error('Error loading profiles:', profilesError);
+        // If profiles doesn't exist, get unique owners from hostels
+        const uniqueOwners = hostelsData?.reduce((acc: any[], hostel) => {
+          if (!acc.find(u => u.id === hostel.owner_id)) {
+            acc.push({
+              id: hostel.owner_id,
+              email: 'Unknown',
+              role: 'agent',
+              hostel_count: hostelsData.filter(h => h.owner_id === hostel.owner_id).length
+            });
+          }
+          return acc;
+        }, []) || [];
+        setUsers(uniqueOwners);
+      } else {
+        // Add hostel count to each user
+        const usersWithCount = profilesData?.map(profile => ({
+          ...profile,
+          hostel_count: hostelsData?.filter(h => h.owner_id === profile.id).length || 0
+        })) || [];
+        setUsers(usersWithCount);
+      }
       
     } catch (error: any) {
       console.error('Failed to load data:', error);
@@ -234,14 +259,58 @@ const AdminDashboard = () => {
 
           {/* Users Tab */}
           {activeTab === "users" && (
-            <div className="bg-card rounded-2xl border border-border p-8">
-              <div className="text-center py-12">
-                <Users className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
-                <p className="text-muted-foreground mb-2">User management coming soon</p>
-                <p className="text-sm text-muted-foreground">
-                  {users.length} unique hostel owner{users.length !== 1 ? 's' : ''}
-                </p>
+            <div className="bg-card rounded-2xl border border-border overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-secondary/50">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Email</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Full Name</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Role</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Phone</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Hostels</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Joined</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {users.map((user) => (
+                      <tr key={user.id} className="hover:bg-secondary/30 transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="font-medium text-foreground">{user.email || 'N/A'}</div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-muted-foreground">
+                          {user.full_name || 'N/A'}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            user.role === 'agent' 
+                              ? 'bg-primary/10 text-primary' 
+                              : 'bg-secondary text-muted-foreground'
+                          }`}>
+                            {user.role || 'N/A'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-muted-foreground">
+                          {user.phone || 'N/A'}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-foreground">
+                          {user.hostel_count || 0}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-muted-foreground">
+                          {user.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
+
+              {users.length === 0 && (
+                <div className="text-center py-12">
+                  <Users className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
+                  <p className="text-muted-foreground">No users found</p>
+                </div>
+              )}
             </div>
           )}
         </div>
