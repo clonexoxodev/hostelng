@@ -112,7 +112,7 @@ const Dashboard = () => {
               className="gradient-primary border-0 shadow-primary text-primary-foreground"
               asChild
             >
-              <Link to="/list-hostel">
+              <Link to="/dashboard/hostel/new">
                 <Plus className="w-4 h-4 mr-2" />
                 Add New Hostel
               </Link>
@@ -197,7 +197,7 @@ const Dashboard = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => navigate(`/dashboard/edit/${hostel.id}`)}
+                        onClick={() => navigate(`/dashboard/hostel/edit/${hostel.id}`)}
                       >
                         <Edit className="w-4 h-4 mr-2" />
                         Edit

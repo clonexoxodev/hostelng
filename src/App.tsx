@@ -8,6 +8,7 @@ import Hostels from "./pages/Hostels";
 import HostelDetail from "./pages/HostelDetail";
 import ListHostel from "./pages/ListHostel";
 import Dashboard from "./pages/Dashboard";
+import HostelForm from "./pages/HostelForm";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminReports from "./pages/AdminReports";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
@@ -33,6 +34,8 @@ const App = () => (
           <Route path="/hostels/:id" element={<HostelDetail />} />
           <Route path="/list-hostel" element={<ListHostel />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/hostel/new" element={<HostelForm />} />
+          <Route path="/dashboard/hostel/edit/:id" element={<HostelForm />} />
           <Route path="/dashboard/edit/:id" element={<EditHostel />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/reports" element={<AdminReports />} />
