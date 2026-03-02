@@ -10,6 +10,7 @@ import ListHostel from "./pages/ListHostel";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminReports from "./pages/AdminReports";
+import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import StudentFAQs from "./pages/StudentFAQs";
 import SafetyTips from "./pages/SafetyTips";
 import EditHostel from "./pages/EditHostel";
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/dashboard/edit/:id" element={<EditHostel />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/reports" element={<AdminReports />} />
+          <Route path="/superadmin" element={<SuperAdminDashboard />} />
           <Route path="/faqs" element={<StudentFAQs />} />
           <Route path="/safety-tips" element={<SafetyTips />} />
           <Route path="/contact" element={<Contact />} />

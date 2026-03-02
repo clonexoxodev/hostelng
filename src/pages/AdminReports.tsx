@@ -281,7 +281,7 @@ const AdminReports = () => {
 
       {/* Report Detail Dialog */}
       <Dialog open={!!selectedReport} onOpenChange={() => setSelectedReport(null)}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Report Details</DialogTitle>
             <DialogDescription>
@@ -290,7 +290,7 @@ const AdminReports = () => {
           </DialogHeader>
 
           {selectedReport && (
-            <div className="space-y-4">
+            <div className="space-y-4 pb-4">
               <div>
                 <p className="text-sm font-semibold text-foreground mb-1">Hostel</p>
                 <p className="text-sm text-muted-foreground">{selectedReport.hostels.name}</p>
@@ -356,15 +356,16 @@ const AdminReports = () => {
                   onChange={(e) => setAdminNotes(e.target.value)}
                   placeholder="Add notes about this report..."
                   rows={3}
+                  className="resize-none"
                 />
               </div>
 
-              <div className="flex gap-2 pt-4">
+              <div className="flex flex-col sm:flex-row gap-2 pt-4 sticky bottom-0 bg-background pb-2">
                 {selectedReport.status === 'pending' && (
                   <Button
                     onClick={() => updateReportStatus(selectedReport.id, 'reviewing')}
                     disabled={updating}
-                    className="flex-1"
+                    className="w-full sm:flex-1"
                   >
                     Mark as Reviewing
                   </Button>
@@ -374,7 +375,7 @@ const AdminReports = () => {
                     <Button
                       onClick={() => updateReportStatus(selectedReport.id, 'resolved')}
                       disabled={updating}
-                      className="flex-1 bg-green-600 hover:bg-green-700"
+                      className="w-full sm:flex-1 bg-green-600 hover:bg-green-700"
                     >
                       Resolve
                     </Button>
@@ -382,7 +383,7 @@ const AdminReports = () => {
                       onClick={() => updateReportStatus(selectedReport.id, 'dismissed')}
                       disabled={updating}
                       variant="outline"
-                      className="flex-1"
+                      className="w-full sm:flex-1"
                     >
                       Dismiss
                     </Button>

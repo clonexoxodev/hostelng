@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Home, Search, Building, Phone, LogOut, User, LayoutDashboard, Flag } from "lucide-react";
+import { Menu, X, Home, Search, Building, Phone, LogOut, User, LayoutDashboard, Flag, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 
@@ -91,6 +91,19 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <>
+                {isSuperAdmin && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/20"
+                    asChild
+                  >
+                    <Link to="/superadmin">
+                      <Shield className="w-4 h-4 mr-2" />
+                      Super Admin
+                    </Link>
+                  </Button>
+                )}
                 {isAgent && (
                   <Button
                     variant="ghost"
@@ -176,6 +189,16 @@ const Navbar = () => {
             <div className="pt-2 pb-1 flex flex-col gap-2">
               {user ? (
                 <>
+                  {isSuperAdmin && (
+                    <Link
+                      to="/superadmin"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/20 transition-all"
+                    >
+                      <Shield className="w-4 h-4" />
+                      Super Admin
+                    </Link>
+                  )}
                   {isAgent && (
                     <Link
                       to="/dashboard"
