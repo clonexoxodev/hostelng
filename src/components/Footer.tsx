@@ -9,9 +9,11 @@ const Footer = () => {
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-2.5 mb-5">
-              <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-display font-bold text-lg">H</span>
-              </div>
+              <img 
+                src="/logo.png" 
+                alt="HostelNG Logo" 
+                className="w-9 h-9 object-contain"
+              />
               <span className="font-display font-bold text-xl text-primary-foreground">HostelNG</span>
             </div>
             <p className="text-primary-foreground/60 text-sm leading-relaxed mb-6">
