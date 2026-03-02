@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/lib/supabase';
+import { watermarkImages } from '@/lib/watermark';
 import Navbar from '@/components/Navbar';
 import { toast } from 'sonner';
 
@@ -86,10 +87,24 @@ const HostelForm = () => {
     });
   };
 
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
-      setNewImages([...newImages, ...files]);
+      
+      // Show processing message
+      toast.info('Processing images with watermark...', { duration: 2000 });
+      
+      try {
+        // Add watermarks to images
+        const watermarkedFiles = await watermarkImages(files);
+        setNewImages([...newImages, ...watermarkedFiles]);
+        toast.success('Images processed successfully!');
+      } catch (error) {
+        console.error('Error processing images:', error);
+        toast.error('Failed to process images');
+        // Fallback to original images if watermarking fails
+        setNewImages([...newImages, ...files]);
+      }
     }
   };
 
@@ -344,6 +359,7 @@ const HostelForm = () => {
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     <Upload className="w-8 h-8 text-muted-foreground mb-2" />
                     <p className="text-sm text-muted-foreground">Click to upload images</p>
+                    <p className="text-xs text-muted-foreground mt-1">Watermark will be added automatically</p>
                   </div>
                   <input
                     type="file"
