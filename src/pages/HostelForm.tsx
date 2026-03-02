@@ -353,13 +353,15 @@ const HostelForm = () => {
             </div>
 
             <div>
-              <Label>Images</Label>
+              <Label className="text-base font-semibold">Upload Images *</Label>
+              <p className="text-xs text-muted-foreground mb-2">Add photos of your hostel (required)</p>
               <div className="mt-2">
-                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-accent/5">
+                <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-primary/50 rounded-lg cursor-pointer hover:bg-primary/5 hover:border-primary transition-all">
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <Upload className="w-8 h-8 text-muted-foreground mb-2" />
-                    <p className="text-sm text-muted-foreground">Click to upload images</p>
-                    <p className="text-xs text-muted-foreground mt-1">Watermark will be added automatically</p>
+                    <Upload className="w-10 h-10 text-primary mb-3" />
+                    <p className="text-base font-medium text-foreground mb-1">Click to upload images</p>
+                    <p className="text-xs text-muted-foreground">Watermark will be added automatically</p>
+                    <p className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB each</p>
                   </div>
                   <input
                     type="file"
@@ -399,14 +401,14 @@ const HostelForm = () => {
               {/* New Images Preview */}
               {newImages.length > 0 && (
                 <div className="mt-4">
-                  <p className="text-sm font-medium mb-2">New Images:</p>
+                  <p className="text-sm font-medium mb-2">Selected Images ({newImages.length}):</p>
                   <div className="grid grid-cols-3 gap-4">
                     {newImages.map((file, index) => (
                       <div key={index} className="relative group">
                         <img
                           src={URL.createObjectURL(file)}
                           alt={`New ${index + 1}`}
-                          className="w-full h-24 object-cover rounded-lg"
+                          className="w-full h-24 object-cover rounded-lg border-2 border-primary"
                         />
                         <button
                           type="button"
@@ -418,6 +420,15 @@ const HostelForm = () => {
                       </div>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* Show message if no images */}
+              {!isEdit && newImages.length === 0 && (
+                <div className="mt-3 p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 rounded-lg">
+                  <p className="text-sm text-amber-800 dark:text-amber-200">
+                    ⚠️ Please upload at least one image of your hostel
+                  </p>
                 </div>
               )}
             </div>
