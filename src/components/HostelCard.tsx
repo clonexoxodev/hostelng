@@ -124,6 +124,7 @@ const HostelCard = ({ hostel }: HostelCardProps) => {
         hostelName={hostel.name}
         open={showReport}
         onOpenChange={setShowReport}
+        triggerButton={false}
       />
     </>
   );

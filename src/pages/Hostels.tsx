@@ -9,17 +9,11 @@ import Footer from "@/components/Footer";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 
-const roomTypes = ["single", "double", "self-contain", "flat"];
-const genderOptions = ["mixed", "male", "female"];
-
 const Hostels = () => {
   const [searchParams] = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
   const [selectedUniversity, setSelectedUniversity] = useState(searchParams.get("university") || "");
   const [selectedCity, setSelectedCity] = useState(searchParams.get("city") || "");
-  const [selectedGender, setSelectedGender] = useState<string[]>([]);
-  const [selectedRoomType, setSelectedRoomType] = useState<string[]>([]);
-  const [maxPrice, setMaxPrice] = useState(50000000); // Increased to 50M to show all hostels
   const [sortBy, setSortBy] = useState("recent");
   const [hostels, setHostels] = useState<any[]>([]);
   const [universities, setUniversities] = useState<string[]>([]);
@@ -39,8 +33,6 @@ const Hostels = () => {
 
       if (error) throw error;
 
-      console.log('Loaded hostels on Browse page:', data); // Debug log
-      console.log('Total hostels:', data?.length); // Debug log
       setHostels(data || []);
       
       // Extract unique universities
@@ -54,36 +46,14 @@ const Hostels = () => {
     }
   };
 
-  const toggleFilter = (list: string[], item: string, setter: (v: string[]) => void) => {
-    setter(list.includes(item) ? list.filter((i) => i !== item) : [...list, item]);
-  };
-
   const filtered = useMemo(() => {
     let result = [...hostels];
-
-    console.log('Before filters:', result.length); // Debug log
-    console.log('All hostels:', result.map(h => ({ name: h.name, price: h.price }))); // Debug log
 
     if (selectedUniversity)
       result = result.filter((h) => h.university === selectedUniversity);
 
     if (selectedCity)
       result = result.filter((h) => h.location?.toLowerCase().includes(selectedCity.toLowerCase()));
-
-    console.log('After university/city filter:', result.length); // Debug log
-    console.log('Max price filter:', maxPrice); // Debug log
-
-    // Filter by price - handle null/undefined prices
-    result = result.filter((h) => {
-      const price = h.price || 0;
-      const passes = price <= maxPrice;
-      if (!passes) {
-        console.log(`Filtered out: ${h.name} with price ${price}`); // Debug log
-      }
-      return passes;
-    });
-
-    console.log('After price filter:', result.length); // Debug log
 
     // Sort by selected option
     if (sortBy === "price-asc") result.sort((a, b) => (a.price || 0) - (b.price || 0));
@@ -93,17 +63,14 @@ const Hostels = () => {
     else result.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
 
     return result;
-  }, [hostels, selectedUniversity, selectedCity, maxPrice, sortBy]);
+  }, [hostels, selectedUniversity, selectedCity, sortBy]);
 
   const clearFilters = () => {
     setSelectedUniversity("");
     setSelectedCity("");
-    setSelectedGender([]);
-    setSelectedRoomType([]);
-    setMaxPrice(50000000); // Reset to 50M
   };
 
-  const hasFilters = selectedUniversity || selectedCity || maxPrice < 50000000;
+  const hasFilters = selectedUniversity || selectedCity;
 
   if (loading) {
     return (
@@ -162,31 +129,6 @@ const Hostels = () => {
                     ))}
                   </select>
                   <ChevronDown className="absolute right-3 top-3 w-4 h-4 text-muted-foreground pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Gender - Removed since not in database schema */}
-              
-              {/* Room Type - Removed since not in database schema */}
-
-              {/* Max Price */}
-              <div className="mb-2">
-                <label className="section-label text-[10px] block mb-2">Max Price per Year</label>
-                <input
-                  type="range"
-                  min={50000}
-                  max={50000000}
-                  step={100000}
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(Number(e.target.value))}
-                  className="w-full accent-primary"
-                />
-                <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                  <span>₦50k</span>
-                  <span className="font-semibold text-primary">
-                    ₦{maxPrice >= 1000000 ? (maxPrice / 1000000).toFixed(1) + 'M' : (maxPrice / 1000).toFixed(0) + 'k'}
-                  </span>
-                  <span>₦50M+</span>
                 </div>
               </div>
             </div>
