@@ -52,16 +52,16 @@ const SearchBar = ({ compact = false, initialValues }: SearchBarProps) => {
     <div className="w-full bg-card rounded-2xl md:rounded-full shadow-card-hover border border-border/80 overflow-hidden">
       <div className="flex flex-col md:flex-row">
         {/* University */}
-        <div className="flex-1 flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-border/60">
+        <div className="flex-1 flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-border/60 relative">
           <div className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center shrink-0">
             <GraduationCap className="w-4 h-4 text-primary" />
           </div>
           <div className="flex-1 min-w-0">
-            <label className="section-label text-[10px] block mb-0.5">University</label>
+            <label className="section-label text-[10px] block mb-0.5 pointer-events-none">University</label>
             <select
               value={university}
               onChange={(e) => setUniversity(e.target.value)}
-              className="w-full text-sm bg-transparent outline-none text-foreground font-medium appearance-none cursor-pointer"
+              className="w-full text-sm bg-transparent outline-none text-foreground font-medium appearance-none cursor-pointer absolute inset-0 opacity-0"
             >
               <option value="">All Universities</option>
               {universities.map((u) => (
@@ -70,21 +70,24 @@ const SearchBar = ({ compact = false, initialValues }: SearchBarProps) => {
                 </option>
               ))}
             </select>
+            <div className="w-full text-sm text-foreground font-medium pointer-events-none">
+              {university || "All Universities"}
+            </div>
           </div>
-          <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0" />
+          <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0 pointer-events-none" />
         </div>
 
         {/* City */}
-        <div className="flex-1 flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-border/60">
+        <div className="flex-1 flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-border/60 relative">
           <div className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center shrink-0">
             <MapPin className="w-4 h-4 text-primary" />
           </div>
           <div className="flex-1 min-w-0">
-            <label className="section-label text-[10px] block mb-0.5">City</label>
+            <label className="section-label text-[10px] block mb-0.5 pointer-events-none">City</label>
             <select
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="w-full text-sm bg-transparent outline-none text-foreground font-medium appearance-none cursor-pointer"
+              className="w-full text-sm bg-transparent outline-none text-foreground font-medium appearance-none cursor-pointer absolute inset-0 opacity-0"
             >
               <option value="">All Cities</option>
               {cities.map((c) => (
@@ -93,8 +96,11 @@ const SearchBar = ({ compact = false, initialValues }: SearchBarProps) => {
                 </option>
               ))}
             </select>
+            <div className="w-full text-sm text-foreground font-medium pointer-events-none">
+              {city || "All Cities"}
+            </div>
           </div>
-          <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0" />
+          <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0 pointer-events-none" />
         </div>
 
         {/* Search Button */}
