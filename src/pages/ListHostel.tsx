@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import { CheckCircle2, Building2, Camera, FileText, ArrowRight, Plus } from "lucide-react";
+import { CheckCircle2, Building2, Camera, FileText, ArrowRight, Plus, Upload, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { supabase } from '@/lib/supabase';
+import { watermarkImages } from '@/lib/watermark';
 import { toast } from "sonner";
 
 const SUPERADMIN_EMAIL = "clonexoxo80@gmail.com";
@@ -13,17 +14,20 @@ const ListHostel = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     university: "",
     location: "",
     price: "",
+    listing_type: "semester",
     description: "",
     amenities: "",
     contact_phone: "",
     contact_email: "",
     rooms_available: "",
   });
+  const [newImages, setNewImages] = useState<File[]>([]);
 
   useEffect(() => {
     checkAuth();
@@ -45,15 +49,75 @@ const ListHostel = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      
+      // Show processing message
+      toast.info('Processing images with watermark...', { duration: 2000 });
+      
+      try {
+        // Add watermarks to images
+        const watermarkedFiles = await watermarkImages(files);
+        setNewImages([...newImages, ...watermarkedFiles]);
+        toast.success('Images processed successfully!');
+      } catch (error) {
+        console.error('Error processing images:', error);
+        toast.error('Failed to process images');
+        // Fallback to original images if watermarking fails
+        setNewImages([...newImages, ...files]);
+      }
+    }
+  };
+
+  const removeNewImage = (index: number) => {
+    setNewImages(newImages.filter((_, i) => i !== index));
+  };
+
+  const uploadImages = async (userId: string): Promise<string[]> => {
+    const uploadedUrls: string[] = [];
+
+    for (const file of newImages) {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${userId}/${Date.now()}-${Math.random()}.${fileExt}`;
+
+      const { data, error } = await supabase.storage
+        .from('hostel-images')
+        .upload(fileName, file);
+
+      if (error) throw error;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('hostel-images')
+        .getPublicUrl(fileName);
+
+      uploadedUrls.push(publicUrl);
+    }
+
+    return uploadedUrls;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate images
+    if (newImages.length === 0) {
+      toast.error("Please upload at least one image of your hostel");
+      return;
+    }
+
     setLoading(true);
 
     try {
+      // Upload images first
+      setUploading(true);
+      const uploadedImages = await uploadImages(user.id);
+      setUploading(false);
+
       // Parse amenities from comma-separated string to array
       const amenitiesArray = formData.amenities
         .split(",")
@@ -65,12 +129,14 @@ const ListHostel = () => {
         university: formData.university,
         location: formData.location,
         price: parseInt(formData.price),
+        listing_type: formData.listing_type,
         description: formData.description,
         amenities: amenitiesArray,
         contact_phone: formData.contact_phone,
         contact_email: formData.contact_email,
         rooms_available: parseInt(formData.rooms_available),
-        owner_id: user.id, // Changed from user_id to owner_id
+        images: uploadedImages,
+        owner_id: user.id,
         featured: false,
         rating: 0,
       };
@@ -90,6 +156,7 @@ const ListHostel = () => {
       toast.error(error.message || "Failed to list hostel");
     } finally {
       setLoading(false);
+      setUploading(false);
     }
   };
 
@@ -168,10 +235,27 @@ const ListHostel = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <label htmlFor="listing_type" className="block text-sm font-medium text-foreground mb-2">
+                      Listing Type
+                    </label>
+                    <select
+                      id="listing_type"
+                      name="listing_type"
+                      required
+                      value={formData.listing_type}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                    >
+                      <option value="semester">Semester</option>
+                      <option value="session">Session</option>
+                    </select>
+                  </div>
+
                   <div>
                     <label htmlFor="price" className="block text-sm font-medium text-foreground mb-2">
-                      Price per Year (₦)
+                      Price (₦) per {formData.listing_type === 'semester' ? 'Semester' : 'Session'}
                     </label>
                     <input
                       type="number"
@@ -182,7 +266,7 @@ const ListHostel = () => {
                       value={formData.price}
                       onChange={handleChange}
                       className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-                      placeholder="e.g., 280000"
+                      placeholder="e.g., 150000"
                     />
                   </div>
 
@@ -270,14 +354,79 @@ const ListHostel = () => {
                   </div>
                 </div>
 
+                <div>
+                  <label className="block text-base font-semibold text-foreground mb-2">
+                    Upload Images *
+                  </label>
+                  <p className="text-xs text-muted-foreground mb-3">Add photos of your hostel (required)</p>
+                  
+                  <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-primary/50 rounded-lg cursor-pointer hover:bg-primary/5 hover:border-primary transition-all">
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                      <Upload className="w-10 h-10 text-primary mb-3" />
+                      <p className="text-base font-medium text-foreground mb-1">Click to upload images</p>
+                      <p className="text-xs text-muted-foreground">Watermark will be added automatically</p>
+                      <p className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB each</p>
+                    </div>
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept="image/*"
+                      multiple
+                      onChange={handleImageSelect}
+                    />
+                  </label>
+
+                  {/* New Images Preview */}
+                  {newImages.length > 0 && (
+                    <div className="mt-4">
+                      <p className="text-sm font-medium mb-2">Selected Images ({newImages.length}):</p>
+                      <div className="grid grid-cols-3 gap-4">
+                        {newImages.map((file, index) => (
+                          <div key={index} className="relative group">
+                            <img
+                              src={URL.createObjectURL(file)}
+                              alt={`New ${index + 1}`}
+                              className="w-full h-24 object-cover rounded-lg border-2 border-primary"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removeNewImage(index)}
+                              className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Show message if no images */}
+                  {newImages.length === 0 && (
+                    <div className="mt-3 p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 rounded-lg">
+                      <p className="text-sm text-amber-800 dark:text-amber-200">
+                        ⚠️ Please upload at least one image of your hostel
+                      </p>
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex gap-4 pt-4">
                   <Button
                     type="submit"
-                    disabled={loading}
+                    disabled={loading || uploading}
                     className="flex-1 gradient-primary border-0 shadow-primary text-primary-foreground font-semibold"
                   >
-                    {loading ? (
-                      "Submitting..."
+                    {uploading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Uploading Images...
+                      </>
+                    ) : loading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Submitting...
+                      </>
                     ) : (
                       <>
                         <Plus className="w-4 h-4 mr-2" />

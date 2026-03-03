@@ -23,21 +23,20 @@ export const addWatermark = async (file: File): Promise<Blob> => {
       ctx.drawImage(img, 0, 0);
 
       // Configure watermark style
-      const fontSize = Math.max(img.width * 0.04, 20); // Responsive font size
+      const fontSize = Math.max(img.width * 0.05, 24); // Larger, more visible font
       ctx.font = `bold ${fontSize}px Arial`;
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-      ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
-      ctx.lineWidth = 2;
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)'; // More opaque
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.7)'; // Darker outline
+      ctx.lineWidth = 3;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
       // Add watermark text
       const watermarkText = 'HostelNG';
       
-      // Calculate position (bottom-right corner)
-      const padding = fontSize;
-      const x = canvas.width - padding;
-      const y = canvas.height - padding;
+      // Calculate position (centered horizontally, 70% down vertically)
+      const x = canvas.width / 2;
+      const y = canvas.height * 0.7;
 
       // Draw text with stroke (outline) for better visibility
       ctx.strokeText(watermarkText, x, y);
@@ -49,17 +48,17 @@ export const addWatermark = async (file: File): Promise<Blob> => {
       logo.src = '/logo.png';
       
       logo.onload = () => {
-        // Draw logo in bottom-left corner
-        const logoSize = Math.max(img.width * 0.08, 40);
-        const logoPadding = fontSize / 2;
+        // Draw logo in bottom-left corner, closer to edge
+        const logoSize = Math.max(img.width * 0.1, 50); // Larger logo
+        const logoPadding = fontSize * 0.3; // Reduced padding
         
         // Add semi-transparent background for logo
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'; // More opaque background
         ctx.fillRect(
-          logoPadding - 5,
-          canvas.height - logoSize - logoPadding - 5,
-          logoSize + 10,
-          logoSize + 10
+          logoPadding - 4,
+          canvas.height - logoSize - logoPadding - 4,
+          logoSize + 8,
+          logoSize + 8
         );
         
         // Draw logo
