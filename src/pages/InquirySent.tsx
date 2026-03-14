@@ -4,6 +4,17 @@ import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
+// Sanitize phone for wa.me — strips non-digits, converts 0XXXXXXXXXX → 234XXXXXXXXXX
+const toWhatsAppNumber = (phone: string): string => {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.startsWith('0')) return '234' + digits.slice(1);
+  if (digits.startsWith('234')) return digits;
+  return digits;
+};
+
+const buildWhatsAppUrl = (phone: string, message: string) =>
+  `https://wa.me/${toWhatsAppNumber(phone)}?text=${encodeURIComponent(message)}`;
+
 const InquirySent = () => {
   const { id } = useParams();
   const location = useLocation();
@@ -20,7 +31,7 @@ const InquirySent = () => {
   const agentPhone = state?.agentPhone || '';
   const agentWhatsapp = state?.agentWhatsapp || agentPhone;
   const whatsappUrl = agentWhatsapp
-    ? `https://wa.me/${agentWhatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Hi, I'm interested in ${state?.hostelName || 'your property'} listed on HostelNG.`)}`
+    ? buildWhatsAppUrl(agentWhatsapp, `Hi, I'm interested in ${state?.hostelName || 'your property'} listed on HostelNG.`)
     : null;
 
   return (

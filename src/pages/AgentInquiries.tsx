@@ -10,6 +10,17 @@ import Footer from '@/components/Footer';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
 
+// Sanitize phone for wa.me — strips non-digits, converts 0XXXXXXXXXX → 234XXXXXXXXXX
+const toWhatsAppNumber = (phone: string): string => {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.startsWith('0')) return '234' + digits.slice(1);
+  if (digits.startsWith('234')) return digits;
+  return digits;
+};
+
+const buildWhatsAppUrl = (phone: string, message: string) =>
+  `https://wa.me/${toWhatsAppNumber(phone)}?text=${encodeURIComponent(message)}`;
+
 const STATUS_OPTIONS = [
   { value: 'new', label: 'New', color: 'bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400' },
   { value: 'contacted', label: 'Contacted', color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-950/40 dark:text-yellow-400' },
@@ -266,7 +277,10 @@ const AgentInquiries = () => {
                       Call Student
                     </a>
                     <a
-                      href={`https://wa.me/${inq.student_phone?.replace(/\D/g, '')}?text=${encodeURIComponent(`Hi ${inq.student_name}, I'm responding to your inquiry about ${inq.hostel_title} on HostelNG.`)}`}
+                      href={buildWhatsAppUrl(
+                        inq.student_phone,
+                        `Hi ${inq.student_name}, I'm responding to your inquiry about ${inq.hostel_title} on HostelNG.`
+                      )}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex flex-col items-center justify-center gap-1 py-3 text-xs font-semibold text-foreground hover:bg-[#25D366] hover:text-white transition-colors group"
