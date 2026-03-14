@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Building2, Plus, Edit, Trash2, Eye } from "lucide-react";
+import { Building2, Plus, Edit, Trash2, Eye, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -14,6 +14,7 @@ const Dashboard = () => {
   const [user, setUser] = useState<any>(null);
   const [hostels, setHostels] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [newInquiryCount, setNewInquiryCount] = useState(0);
 
   useEffect(() => {
     checkAuth();
@@ -35,10 +36,19 @@ const Dashboard = () => {
     }
     
     loadHostels(session.user.id);
+    loadNewInquiryCount(session.user.id);
   };
 
-  const loadHostels = async (userId: string) => {
-    try {
+  const loadNewInquiryCount = async (userId: string) => {
+    const { count } = await supabase
+      .from('student_inquiries')
+      .select('id', { count: 'exact', head: true })
+      .eq('agent_id', userId)
+      .eq('status', 'new');
+    setNewInquiryCount(count || 0);
+  };
+
+  const loadHostels = async (userId: string) => {    try {
       console.log('Loading hostels for user:', userId); // Debug log
       
       const { data, error } = await supabase
@@ -108,15 +118,32 @@ const Dashboard = () => {
                 Manage your hostel listings
               </p>
             </div>
-            <Button 
-              className="gradient-primary border-0 shadow-primary text-primary-foreground"
-              asChild
-            >
-              <Link to="/dashboard/hostel/new">
-                <Plus className="w-4 h-4 mr-2" />
-                Add New Hostel
-              </Link>
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                asChild
+                className="relative"
+              >
+                <Link to="/dashboard/inquiries">
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  Student Inquiries
+                  {newInquiryCount > 0 && (
+                    <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">
+                      {newInquiryCount}
+                    </span>
+                  )}
+                </Link>
+              </Button>
+              <Button 
+                className="gradient-primary border-0 shadow-primary text-primary-foreground"
+                asChild
+              >
+                <Link to="/dashboard/hostel/new">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add New Hostel
+                </Link>
+              </Button>
+            </div>
           </div>
 
           {hostels.length === 0 ? (

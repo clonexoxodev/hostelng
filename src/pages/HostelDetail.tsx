@@ -2,13 +2,14 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
   Star, MapPin, CheckCircle, ChevronLeft, 
-  Users, Phone, Mail, ChevronRight, X, Building2
+  Users, Phone, Mail, ChevronRight, X, Building2, MessageSquare
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import InquiryForm from "@/components/InquiryForm";
 
 const HostelDetail = () => {
   const { id } = useParams();
@@ -17,6 +18,7 @@ const HostelDetail = () => {
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [inquiryOpen, setInquiryOpen] = useState(false);
 
   useEffect(() => {
     loadHostel();
@@ -222,7 +224,7 @@ const HostelDetail = () => {
             {/* Right Column - Booking Card */}
             <div>
               <div className="bg-card rounded-2xl border border-border p-6 sticky top-24">
-                <div className="mb-4">
+                <div className="mb-5">
                   <p className="text-muted-foreground text-xs mb-1">
                     Price per {hostel.listing_type === 'semester' ? 'Semester' : 'Session'}
                   </p>
@@ -234,20 +236,30 @@ const HostelDetail = () => {
                   </p>
                 </div>
 
-                <div className="space-y-3 mb-6">
-                  <a 
+                {/* Primary CTA - Contact Agent */}
+                <Button
+                  onClick={() => setInquiryOpen(true)}
+                  size="lg"
+                  className="w-full gradient-primary border-0 shadow-primary text-primary-foreground font-bold text-base mb-3"
+                >
+                  <MessageSquare className="w-5 h-5 mr-2" />
+                  Contact Agent
+                </Button>
+
+                <div className="grid grid-cols-2 gap-2 mb-5">
+                  <a
                     href={`tel:${hostel.contact_phone}`}
-                    className="w-full gradient-primary border-0 shadow-primary text-primary-foreground flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                    className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-secondary transition-colors"
                   >
-                    <Phone className="w-4 h-4" />
-                    Call Owner
+                    <Phone className="w-4 h-4 text-primary" />
+                    Call
                   </a>
                   <a
                     href={`mailto:${hostel.contact_email}`}
-                    className="w-full border border-primary/30 text-primary flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold hover:bg-secondary transition-colors"
+                    className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-secondary transition-colors"
                   >
-                    <Mail className="w-4 h-4" />
-                    Email Owner
+                    <Mail className="w-4 h-4 text-primary" />
+                    Email
                   </a>
                 </div>
 
@@ -273,6 +285,32 @@ const HostelDetail = () => {
       </div>
 
       <Footer />
+
+      {/* Inquiry Form Modal */}
+      {inquiryOpen && hostel && (
+        <InquiryForm
+          hostel={{
+            id: hostel.id,
+            name: hostel.name,
+            owner_id: hostel.owner_id,
+            contact_phone: hostel.contact_phone,
+            contact_email: hostel.contact_email,
+          }}
+          onClose={() => setInquiryOpen(false)}
+        />
+      )}
+
+      {/* Sticky mobile CTA */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-card border-t border-border p-4 shadow-lg">
+        <Button
+          onClick={() => setInquiryOpen(true)}
+          size="lg"
+          className="w-full gradient-primary border-0 shadow-primary text-primary-foreground font-bold text-base"
+        >
+          <MessageSquare className="w-5 h-5 mr-2" />
+          Contact Agent
+        </Button>
+      </div>
     </div>
   );
 };
