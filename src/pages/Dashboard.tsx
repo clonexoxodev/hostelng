@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Building2, Plus, Edit, Trash2, Eye, MessageSquare } from "lucide-react";
+import { Building2, Plus, Edit, Trash2, Eye, MessageSquare, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -118,12 +118,8 @@ const Dashboard = () => {
                 Manage your hostel listings
               </p>
             </div>
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                asChild
-                className="relative"
-              >
+            <div className="flex gap-3 flex-wrap">
+              <Button variant="outline" asChild className="relative">
                 <Link to="/dashboard/inquiries">
                   <MessageSquare className="w-4 h-4 mr-2" />
                   Student Inquiries
@@ -134,7 +130,13 @@ const Dashboard = () => {
                   )}
                 </Link>
               </Button>
-              <Button 
+              <Button variant="outline" asChild>
+                <Link to="/dashboard/reviews">
+                  <Star className="w-4 h-4 mr-2" />
+                  My Reviews
+                </Link>
+              </Button>
+              <Button
                 className="gradient-primary border-0 shadow-primary text-primary-foreground"
                 asChild
               >

@@ -36,10 +36,8 @@ const HostelCard = ({ hostel }: HostelCardProps) => {
                 <Building2 className="w-16 h-16 text-muted-foreground/30" />
               </div>
             )}
-            {/* Overlays */}
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/30 via-transparent to-transparent" />
 
-            {/* Featured badge */}
             {hostel.featured && (
               <div className="absolute top-3 left-3">
                 <span className="badge-verified">
@@ -49,16 +47,15 @@ const HostelCard = ({ hostel }: HostelCardProps) => {
               </div>
             )}
 
-            {/* Flag button */}
+            {/* Flag button — stops link navigation, opens report */}
             <button
               onClick={handleFlagClick}
-              className="absolute top-3 right-3 p-2 rounded-lg bg-background/90 hover:bg-background text-muted-foreground hover:text-red-600 transition-all opacity-0 group-hover:opacity-100 z-10"
-              title="Report this listing"
+              title="Report this listing if it is fake, spam, or inappropriate."
+              className="absolute top-3 right-3 p-2 rounded-lg bg-background/90 hover:bg-background text-muted-foreground hover:text-red-500 transition-all opacity-0 group-hover:opacity-100 z-10"
             >
               <Flag className="w-4 h-4" />
             </button>
 
-            {/* Price bottom overlay */}
             <div className="absolute bottom-3 left-3 right-3">
               <p className="text-primary-foreground text-xs font-medium mb-0.5 drop-shadow-sm">
                 {hostel.listing_type === 'semester' ? 'Per Semester' : hostel.listing_type === 'session' ? 'Per Session' : 'Price'}
@@ -88,13 +85,10 @@ const HostelCard = ({ hostel }: HostelCardProps) => {
               <span className="line-clamp-1">{hostel.location}</span>
             </div>
 
-            {/* Amenities */}
             {topAmenities.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mb-3">
                 {topAmenities.map((amenity: string, idx: number) => (
-                  <span key={idx} className="amenity-chip text-xs">
-                    {amenity}
-                  </span>
+                  <span key={idx} className="amenity-chip text-xs">{amenity}</span>
                 ))}
                 {hostel.amenities && hostel.amenities.length > 3 && (
                   <span className="amenity-chip text-xs">+{hostel.amenities.length - 3} more</span>
@@ -102,25 +96,21 @@ const HostelCard = ({ hostel }: HostelCardProps) => {
               </div>
             )}
 
-            {/* University & Rooms */}
             <div className="flex items-center justify-between pt-3 border-t border-border/60">
               <div className="flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                 <p className="text-xs text-muted-foreground line-clamp-1">{hostel.university}</p>
               </div>
               {hostel.rooms_available > 0 && (
-                <span className="text-xs text-primary font-medium">
-                  {hostel.rooms_available} rooms
-                </span>
+                <span className="text-xs text-primary font-medium">{hostel.rooms_available} rooms</span>
               )}
             </div>
           </div>
         </div>
       </Link>
 
-      {/* Report Dialog */}
-      <ReportDialog 
-        hostelId={hostel.id} 
+      <ReportDialog
+        hostelId={hostel.id}
         hostelName={hostel.name}
         open={showReport}
         onOpenChange={setShowReport}

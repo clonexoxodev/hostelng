@@ -1,7 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
-  Star, MapPin, CheckCircle, ChevronLeft, 
+  Star, MapPin, CheckCircle, ChevronLeft,
   Users, Phone, Mail, ChevronRight, X, Building2, MessageSquare
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,9 @@ import Footer from "@/components/Footer";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import InquiryForm from "@/components/InquiryForm";
+import ReviewList from "@/components/ReviewList";
+import StarRating from "@/components/StarRating";
+import ReportDialog from "@/components/ReportDialog";
 
 const HostelDetail = () => {
   const { id } = useParams();
@@ -19,10 +22,27 @@ const HostelDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [inquiryOpen, setInquiryOpen] = useState(false);
+  const [reviewStats, setReviewStats] = useState({ avg: 0, count: 0 });
+  const [reportOpen, setReportOpen] = useState(false);
 
   useEffect(() => {
     loadHostel();
   }, [id]);
+
+  useEffect(() => {
+    if (id) loadReviewStats(id);
+  }, [id]);
+
+  const loadReviewStats = async (hostelId: string) => {
+    const { data } = await supabase
+      .from('reviews')
+      .select('rating')
+      .eq('listing_id', hostelId);
+    if (data && data.length > 0) {
+      const avg = data.reduce((s, r) => s + r.rating, 0) / data.length;
+      setReviewStats({ avg, count: data.length });
+    }
+  };
 
   const loadHostel = async () => {
     try {
@@ -172,12 +192,11 @@ const HostelDetail = () => {
                     <span>{hostel.university}</span>
                   </div>
                 </div>
-                {hostel.rating > 0 && (
+                {reviewStats.count > 0 && (
                   <div className="flex items-center gap-2 mt-3">
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 fill-accent text-accent" />
-                      <span className="font-semibold text-foreground">{hostel.rating}</span>
-                    </div>
+                    <StarRating rating={reviewStats.avg} size="sm" />
+                    <span className="font-semibold text-foreground text-sm">{reviewStats.avg.toFixed(1)}</span>
+                    <span className="text-muted-foreground text-sm">({reviewStats.count} review{reviewStats.count !== 1 ? 's' : ''})</span>
                   </div>
                 )}
               </div>
@@ -219,6 +238,13 @@ const HostelDetail = () => {
                   </div>
                 </div>
               )}
+
+              {/* Reviews */}
+              <ReviewList
+                listingId={hostel.id}
+                listingName={hostel.name}
+                agentId={hostel.owner_id}
+              />
             </div>
 
             {/* Right Column - Booking Card */}
@@ -277,6 +303,15 @@ const HostelDetail = () => {
                       <span>{hostel.contact_email}</span>
                     </a>
                   )}
+                  <div className="pt-2 border-t border-border">
+                    <ReportDialog
+                      hostelId={hostel.id}
+                      hostelName={hostel.name}
+                      open={reportOpen}
+                      onOpenChange={setReportOpen}
+                      triggerButton={true}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

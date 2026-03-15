@@ -13,15 +13,93 @@ import { toast } from 'sonner';
 interface HostelFormData {
   name: string;
   location: string;
+  area: string;
   university: string;
   price: string;
   listing_type: string;
+  property_type: string;
+  room_type: string;
+  gender: string;
   description: string;
   amenities: string;
   contact_phone: string;
   contact_email: string;
   rooms_available: string;
 }
+
+const GENDER_OPTIONS = [
+  { value: "male_only",     label: "Male Only" },
+  { value: "female_only",   label: "Female Only" },
+  { value: "mixed",         label: "Mixed" },
+  { value: "not_specified", label: "Not Specified" },
+];
+
+const NIGERIAN_UNIVERSITIES = [
+  "Abia State University (ABSU)",
+  "Afe Babalola University (ABUAD)",
+  "Ahmadu Bello University (ABU)",
+  "Ajayi Crowther University (ACU)",
+  "Ambrose Alli University (AAU)",
+  "Babcock University",
+  "Bayero University Kano (BUK)",
+  "Benson Idahosa University",
+  "Bowen University",
+  "Covenant University",
+  "Crawford University",
+  "Cross River University of Technology (CRUTECH)",
+  "Delta State University (DELSU)",
+  "Ekiti State University (EKSU)",
+  "Enugu State University of Science and Technology (ESUT)",
+  "Federal University of Agriculture Abeokuta (FUNAAB)",
+  "Federal University of Technology Akure (FUTA)",
+  "Federal University of Technology Minna (FUTMINNA)",
+  "Federal University of Technology Owerri (FUTO)",
+  "Federal University Oye-Ekiti (FUOYE)",
+  "Fountain University",
+  "Igbinedion University",
+  "Imo State University (IMSU)",
+  "Joseph Ayo Babalola University (JABU)",
+  "Kogi State University",
+  "Kwara State University (KWASU)",
+  "Lagos State University (LASU)",
+  "Landmark University",
+  "Lead City University",
+  "Madonna University",
+  "Michael Okpara University of Agriculture (MOUAU)",
+  "Nnamdi Azikiwe University (UNIZIK)",
+  "Obafemi Awolowo University (OAU)",
+  "Olabisi Onabanjo University (OOU)",
+  "Pan-Atlantic University",
+  "Polytechnic Ibadan (IBADANPOLY)",
+  "Redeemer's University",
+  "Rivers State University (RSU)",
+  "University of Abuja (UNIABUJA)",
+  "University of Benin (UNIBEN)",
+  "University of Calabar (UNICAL)",
+  "University of Ibadan (UI)",
+  "University of Ilorin (UNILORIN)",
+  "University of Jos (UNIJOS)",
+  "University of Lagos (UNILAG)",
+  "University of Maiduguri (UNIMAID)",
+  "University of Nigeria Nsukka (UNN)",
+  "University of Port Harcourt (UNIPORT)",
+  "Veritas University",
+  "Wesley University",
+].sort();
+
+const PROPERTY_TYPES = [
+  { value: "hostel", label: "Hostel" },
+  { value: "shared_apartment", label: "Shared Apartment" },
+  { value: "private_apartment", label: "Private Apartment" },
+  { value: "self_contained", label: "Self Contained" },
+];
+
+const ROOM_TYPES = [
+  { value: "single", label: "Single Room" },
+  { value: "2_in_room", label: "2 in a room" },
+  { value: "3_in_room", label: "3 in a room" },
+  { value: "4_in_room", label: "4 in a room" },
+];
 
 const HostelForm = () => {
   const navigate = useNavigate();
@@ -33,9 +111,13 @@ const HostelForm = () => {
   const [formData, setFormData] = useState<HostelFormData>({
     name: '',
     location: '',
+    area: '',
     university: '',
     price: '',
     listing_type: 'semester',
+    property_type: '',
+    room_type: '',
+    gender: '',
     description: '',
     amenities: '',
     contact_phone: '',
@@ -64,9 +146,13 @@ const HostelForm = () => {
       setFormData({
         name: data.name || '',
         location: data.location || '',
+        area: data.area || '',
         university: data.university || '',
         price: data.price?.toString() || '',
         listing_type: data.listing_type || 'semester',
+        property_type: data.property_type || '',
+        room_type: data.room_type || '',
+        gender: data.gender || '',
         description: data.description || '',
         amenities: data.amenities?.join(', ') || '',
         contact_phone: data.contact_phone || '',
@@ -156,9 +242,13 @@ const HostelForm = () => {
       const hostelData = {
         name: formData.name,
         location: formData.location,
+        area: formData.area,
         university: formData.university,
         price: parseFloat(formData.price),
         listing_type: formData.listing_type,
+        property_type: formData.property_type,
+        room_type: formData.room_type,
+        gender: formData.gender,
         description: formData.description,
         amenities: formData.amenities.split(',').map(a => a.trim()).filter(Boolean),
         contact_phone: formData.contact_phone,
@@ -230,28 +320,98 @@ const HostelForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="location">Location *</Label>
-                <Input
-                  id="location"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  required
-                  placeholder="e.g., Bodija, Ibadan"
-                />
-              </div>
-
-              <div>
                 <Label htmlFor="university">University *</Label>
-                <Input
+                <select
                   id="university"
                   name="university"
                   value={formData.university}
                   onChange={handleInputChange}
                   required
-                  placeholder="e.g., University of Ibadan"
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="">Select university...</option>
+                  {NIGERIAN_UNIVERSITIES.map((u) => (
+                    <option key={u} value={u}>{u}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <Label htmlFor="area">Area / Neighbourhood *</Label>
+                <Input
+                  id="area"
+                  name="area"
+                  value={formData.area}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="e.g., Bodija, Omu-Aran, Agbowo"
                 />
               </div>
+            </div>
+
+            <div>
+              <Label htmlFor="location">Full Address / Location *</Label>
+              <Input
+                id="location"
+                name="location"
+                value={formData.location}
+                onChange={handleInputChange}
+                required
+                placeholder="e.g., 12 Bodija Road, opposite UI gate"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="property_type">Property Type *</Label>
+                <select
+                  id="property_type"
+                  name="property_type"
+                  value={formData.property_type}
+                  onChange={handleInputChange}
+                  required
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="">Select property type...</option>
+                  {PROPERTY_TYPES.map((t) => (
+                    <option key={t.value} value={t.value}>{t.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <Label htmlFor="room_type">Room Type *</Label>
+                <select
+                  id="room_type"
+                  name="room_type"
+                  value={formData.room_type}
+                  onChange={handleInputChange}
+                  required
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="">Select room type...</option>
+                  {ROOM_TYPES.map((t) => (
+                    <option key={t.value} value={t.value}>{t.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="gender">Gender *</Label>
+              <select
+                id="gender"
+                name="gender"
+                value={formData.gender}
+                onChange={handleInputChange}
+                required
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <option value="">Select gender...</option>
+                {GENDER_OPTIONS.map((g) => (
+                  <option key={g.value} value={g.value}>{g.label}</option>
+                ))}
+              </select>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
