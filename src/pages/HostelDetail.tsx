@@ -173,9 +173,9 @@ const HostelDetail = () => {
               <div className="mb-6">
                 <div className="flex items-center gap-2 mb-3">
                   {hostel.featured && (
-                    <span className="badge-verified">
+                    <span className="badge-verified" title="Recommended by our agent network">
                       <CheckCircle className="w-3 h-3" />
-                      Featured
+                      Top Pick
                     </span>
                   )}
                 </div>

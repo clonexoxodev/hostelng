@@ -29,8 +29,8 @@ const StudentFAQs = () => {
       answer: "On each hostel detail page, you'll find 'Call Owner' and 'Email Owner' buttons with the owner's contact information. Reach out directly to schedule viewings or ask questions."
     },
     {
-      question: "Are the hostels verified by HostelNG?",
-      answer: "We require hostel owners to provide accurate information and photos. However, we strongly recommend visiting any hostel in person before making payment decisions."
+      question: "Are the hostels on HostelNG inspected or certified?",
+      answer: "HostelNG is a listing marketplace — we connect students with hostel owners and agents, but we do not physically inspect or certify properties. We strongly recommend visiting any hostel in person before making payment decisions."
     },
     {
       question: "What should I do before paying for a hostel?",

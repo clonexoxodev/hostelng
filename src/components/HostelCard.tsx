@@ -40,9 +40,12 @@ const HostelCard = ({ hostel }: HostelCardProps) => {
 
             {hostel.featured && (
               <div className="absolute top-3 left-3">
-                <span className="badge-verified">
+                <span
+                  className="badge-verified"
+                  title="Recommended by our agent network"
+                >
                   <CheckCircle className="w-3 h-3" />
-                  Featured
+                  Top Pick
                 </span>
               </div>
             )}

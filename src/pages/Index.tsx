@@ -14,7 +14,7 @@ import heroBg from "@/assets/hero-bg.jpg";
 import hostel3 from "@/assets/hostel-3.jpg";
 
 const stats = [
-  { value: "60+", label: "Verified Hostels" },
+  { value: "60+", label: "Listed Hostels" },
   { value: "8,000+", label: "Happy Students" },
   { value: "6", label: "Institutions" },
   { value: "4.6★", label: "Average Rating" },
@@ -25,7 +25,7 @@ const trustedBy = [
 ];
 
 const benefits = [
-  "All hostels verified by our team before listing",
+  "Agent-posted listings from trusted hostel owners",
   "Direct contact with hostel owners",
   "Detailed photos & virtual tours",
   "Real student reviews you can trust",
@@ -119,7 +119,7 @@ const Index = () => {
         <div className="relative z-10 container mx-auto px-4 text-center py-24">
           <div className="inline-flex items-center gap-2 bg-primary-foreground/15 backdrop-blur-sm border border-primary-foreground/25 text-primary-foreground text-xs font-semibold px-4 py-2 rounded-full mb-6 animate-fade-in">
             <ShieldCheck className="w-3.5 h-3.5 text-accent" />
-            Nigeria's Top Verified Student Hostel Platform
+            Nigeria's #1 Student Hostel Discovery Platform
           </div>
 
           <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl text-primary-foreground leading-tight mb-6 animate-fade-up max-w-3xl mx-auto">
@@ -129,7 +129,7 @@ const Index = () => {
           </h1>
 
           <p className="text-primary-foreground/80 text-base md:text-lg max-w-xl mx-auto mb-10 leading-relaxed animate-fade-up" style={{ animationDelay: "0.15s" }}>
-            Browse hundreds of verified hostels near Nigerian universities. Secure your room online — no stress, no scams, no wasted journeys.
+            Browse hundreds of agent-posted hostels near Nigerian universities. Connect directly with owners — no stress, no scams, no wasted journeys.
           </p>
 
           {/* Search */}
@@ -260,7 +260,7 @@ const Index = () => {
                 The Safest Way to Find Student Housing
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8">
-                We know the Nigerian student housing market can be stressful, risky, and full of fraudsters. HostelNG is built to change that — with verified listings, direct contact with owners, and real transparency.
+                We know the Nigerian student housing market can be stressful, risky, and full of fraudsters. HostelNG is built to change that — with agent-posted listings, direct contact with owners, and real transparency.
               </p>
 
               <ul className="space-y-3">
@@ -289,9 +289,9 @@ const Index = () => {
               <div className="absolute -bottom-5 -left-5 bg-card rounded-2xl shadow-card-hover border border-border p-4 max-w-[200px]">
                 <div className="flex items-center gap-2 mb-1.5">
                   <ShieldCheck className="w-4 h-4 text-primary" />
-                  <span className="text-xs font-semibold text-foreground">Verified & Trusted</span>
+                  <span className="text-xs font-semibold text-foreground">Agent Network</span>
                 </div>
-                <p className="text-muted-foreground text-xs">All hostels verified by our inspection team before listing.</p>
+                <p className="text-muted-foreground text-xs">Listings posted by our trusted agent network.</p>
               </div>
 
               {/* Floating rating badge */}
@@ -339,7 +339,7 @@ const Index = () => {
               </Button>
             </div>
             <p className="mt-6 text-primary-foreground/50 text-xs">
-              Commission only charged after successful student verification and payment to hostel owner. No upfront fees.
+              Commission only charged after a student successfully contacts and pays the hostel owner. No upfront fees.
             </p>
           </div>
         </section>

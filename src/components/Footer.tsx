@@ -17,7 +17,7 @@ const Footer = () => {
               <span className="font-display font-bold text-xl text-primary-foreground">HostelNG</span>
             </div>
             <p className="text-primary-foreground/60 text-sm leading-relaxed mb-6">
-              Nigeria's most trusted platform for student hostel discovery and booking. Connecting students with verified, quality accommodation near their universities.
+              Nigeria's most trusted platform for student hostel discovery. Connecting students with quality accommodation near their universities.
             </p>
             <div className="flex gap-3">
               {[Facebook, Twitter, Instagram, Youtube].map((Icon, i) => (

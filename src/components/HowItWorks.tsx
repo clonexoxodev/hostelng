@@ -6,7 +6,7 @@ const steps = [
     step: "01",
     title: "Search & Discover",
     description:
-      "Browse verified hostels near your university. Filter by price, location, and amenities to find your perfect match.",
+      "Browse agent-posted hostels near your university. Filter by price, location, and amenities to find your perfect match.",
     color: "bg-secondary text-primary",
   },
   {
