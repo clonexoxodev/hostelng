@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Star, ShieldCheck, TrendingUp, ArrowRight, CheckCircle2, Home } from "lucide-react";
+import { Star, ShieldCheck, Building, TrendingUp, ArrowRight, CheckCircle2, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import SearchBar from "@/components/SearchBar";
