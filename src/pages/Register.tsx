@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import Navbar from '@/components/Navbar'
 
 export default function Register() {
+  const navigate = useNavigate()
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
@@ -22,8 +23,6 @@ export default function Register() {
     setError(null)
     setMessage(null)
 
-    console.log('Form submitted with:', { email, fullName, phone, role });
-
     if (password !== confirm) {
       setError('Passwords do not match')
       return
@@ -36,7 +35,6 @@ export default function Register() {
 
     setLoading(true)
     try {
-      console.log('Attempting to sign up...');
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -49,17 +47,13 @@ export default function Register() {
         }
       })
       
-      console.log('Signup response:', { data, error });
-      
       if (error) {
-        console.error('Signup error:', error);
         setError(error.message)
       } else {
-        console.log('Signup successful!');
-        setMessage('Registration successful. Check your email to confirm your account.')
+        setMessage('Registration successful! Check your email to confirm your account.')
+        setTimeout(() => navigate('/login'), 2000)
       }
     } catch (err: any) {
-      console.error('Unexpected error:', err);
       setError(err?.message || 'An unexpected error occurred')
     } finally {
       setLoading(false)

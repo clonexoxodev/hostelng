@@ -31,12 +31,17 @@ const AgentReviews = () => {
     try {
       const { data, error } = await supabase
         .from('reviews')
-        .select('*')
+        .select('*, hostels(name)')
         .eq('agent_id', userId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setReviews(data || []);
+      // Normalize: attach hostel name as hostel_title for display
+      const normalized = (data || []).map((r: any) => ({
+        ...r,
+        hostel_title: r.hostels?.name || r.hostel_title || null,
+      }));
+      setReviews(normalized);
     } catch {
       toast.error('Failed to load reviews');
     } finally {

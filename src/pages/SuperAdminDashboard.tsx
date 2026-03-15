@@ -58,12 +58,14 @@ const SuperAdminDashboard = () => {
         { data: hostelsData },
         { data: usersData },
         { data: reportsData },
+        { count: totalReportsCount },
         { data: inquiriesData },
         { data: homeRequestsData },
       ] = await Promise.all([
         supabase.from('hostels').select('*').order('created_at', { ascending: false }),
         supabase.from('profiles').select('*').order('created_at', { ascending: false }),
         supabase.from('reports').select('*, hostels(name, location)').order('created_at', { ascending: false }).limit(5),
+        supabase.from('reports').select('id', { count: 'exact', head: true }),
         supabase.from('student_inquiries').select('*').order('submitted_at', { ascending: false }),
         supabase.from('home_requests').select('*').order('submitted_at', { ascending: false }),
       ]);
@@ -78,7 +80,7 @@ const SuperAdminDashboard = () => {
         totalStudents:   usersData?.filter((u) => u.role === 'student').length || 0,
         totalInquiries:  inquiriesData?.length || 0,
         newInquiries:    inquiriesData?.filter((i) => i.status === 'new').length || 0,
-        totalReports:    reportsData?.length || 0,
+        totalReports:    totalReportsCount || 0,
         pendingReports:  reportsData?.filter((r) => r.status === 'pending').length || 0,
         featuredHostels: hostelsData?.filter((h) => h.featured).length || 0,
         recentHostels:   hostelsData?.filter((h) => new Date(h.created_at) > sevenDaysAgo).length || 0,

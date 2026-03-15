@@ -17,7 +17,10 @@ const EditHostel = () => {
     name: "",
     university: "",
     location: "",
+    area: "",
     price: "",
+    listing_type: "session",
+    gender: "",
     description: "",
     amenities: "",
     contact_phone: "",
@@ -49,37 +52,26 @@ const EditHostel = () => {
 
       if (error) throw error;
 
-      // Debug logs
-      console.log('=== EDIT PERMISSION CHECK ===');
-      console.log('Hostel name:', data.name);
-      console.log('Hostel owner_id:', data.owner_id);
-      console.log('Current user_id:', userId);
-      console.log('Match?', data.owner_id === userId);
-
-      // Check if user owns this hostel (compare owner_id, not email)
+      // Check if user owns this hostel
       const { data: { session } } = await supabase.auth.getSession();
       const isSuperAdmin = session?.user?.email === 'clonexoxo80@gmail.com';
       const isOwner = data.owner_id === userId;
 
-      console.log('Is owner?', isOwner);
-      console.log('Is superadmin?', isSuperAdmin);
-      console.log('User email:', session?.user?.email);
-
       if (!isOwner && !isSuperAdmin) {
-        console.log('❌ PERMISSION DENIED');
         toast.error("You don't have permission to edit this hostel");
         navigate("/dashboard");
         return;
       }
-
-      console.log('✅ PERMISSION GRANTED');
 
       // Populate form
       setFormData({
         name: data.name || "",
         university: data.university || "",
         location: data.location || "",
+        area: data.area || "",
         price: data.price?.toString() || "",
+        listing_type: data.listing_type || "session",
+        gender: data.gender || "",
         description: data.description || "",
         amenities: Array.isArray(data.amenities) ? data.amenities.join(", ") : "",
         contact_phone: data.contact_phone || "",
@@ -95,7 +87,7 @@ const EditHostel = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -113,7 +105,10 @@ const EditHostel = () => {
         name: formData.name,
         university: formData.university,
         location: formData.location,
+        area: formData.area,
         price: parseInt(formData.price),
+        listing_type: formData.listing_type,
+        gender: formData.gender,
         description: formData.description,
         amenities: amenitiesArray,
         contact_phone: formData.contact_phone,
@@ -226,8 +221,59 @@ const EditHostel = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
+                    <label htmlFor="area" className="block text-sm font-medium text-foreground mb-2">
+                      Area / Neighbourhood
+                    </label>
+                    <input
+                      type="text"
+                      id="area"
+                      name="area"
+                      value={formData.area}
+                      onChange={handleChange}
+                      placeholder="e.g. Sabo, Agbowo"
+                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="gender" className="block text-sm font-medium text-foreground mb-2">
+                      Gender
+                    </label>
+                    <select
+                      id="gender"
+                      name="gender"
+                      value={formData.gender}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                    >
+                      <option value="">Any Gender</option>
+                      <option value="male">Male Only</option>
+                      <option value="female">Female Only</option>
+                      <option value="mixed">Mixed</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="listing_type" className="block text-sm font-medium text-foreground mb-2">
+                      Listing Type
+                    </label>
+                    <select
+                      id="listing_type"
+                      name="listing_type"
+                      value={formData.listing_type}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                    >
+                      <option value="session">Per Session</option>
+                      <option value="semester">Per Semester</option>
+                    </select>
+                  </div>
+
+                  <div>
                     <label htmlFor="price" className="block text-sm font-medium text-foreground mb-2">
-                      Price per Year (₦)
+                      Price per {formData.listing_type === 'semester' ? 'Semester' : 'Session'} (₦)
                     </label>
                     <input
                       type="number"
@@ -240,7 +286,9 @@ const EditHostel = () => {
                       className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                     />
                   </div>
+                </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="rooms_available" className="block text-sm font-medium text-foreground mb-2">
                       Rooms Available

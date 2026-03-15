@@ -49,23 +49,15 @@ const Dashboard = () => {
   };
 
   const loadHostels = async (userId: string) => {    try {
-      console.log('Loading hostels for user:', userId); // Debug log
-      
       const { data, error } = await supabase
         .from('hostels')
         .select('*')
         .eq('owner_id', userId)
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error loading hostels:', error);
-        throw error;
-      }
-      
-      console.log('Loaded hostels for user:', data); // Debug log
+      if (error) throw error;
       setHostels(data || []);
     } catch (error: any) {
-      console.error('Failed to load hostels:', error);
       toast.error('Failed to load your hostels');
     } finally {
       setLoading(false);
@@ -197,7 +189,7 @@ const Dashboard = () => {
                         </div>
                         <div>
                           <span className="text-muted-foreground">Price:</span>
-                          <p className="text-foreground font-medium">₦{hostel.price?.toLocaleString()}/year</p>
+                          <p className="text-foreground font-medium">₦{hostel.price?.toLocaleString()}/{hostel.listing_type === 'semester' ? 'Semester' : 'Session'}</p>
                         </div>
                         <div>
                           <span className="text-muted-foreground">Rooms Available:</span>

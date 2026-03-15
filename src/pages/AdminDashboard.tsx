@@ -41,7 +41,6 @@ const AdminDashboard = () => {
 
   const loadData = async () => {
     try {
-      // Load all hostels
       const { data: hostelsData, error: hostelsError } = await supabase
         .from('hostels')
         .select('*')
@@ -50,14 +49,12 @@ const AdminDashboard = () => {
       if (hostelsError) throw hostelsError;
       setHostels(hostelsData || []);
 
-      // Load user profiles from 'profiles' table
       const { data: profilesData, error: profilesError } = await supabase
         .from('profiles')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (profilesError) {
-        console.error('Error loading profiles:', profilesError);
         // If profiles doesn't exist, get unique owners from hostels
         const uniqueOwners = hostelsData?.reduce((acc: any[], hostel) => {
           if (!acc.find(u => u.id === hostel.owner_id)) {
@@ -72,7 +69,6 @@ const AdminDashboard = () => {
         }, []) || [];
         setUsers(uniqueOwners);
       } else {
-        // Add hostel count to each user
         const usersWithCount = profilesData?.map(profile => ({
           ...profile,
           hostel_count: hostelsData?.filter(h => h.owner_id === profile.id).length || 0
@@ -81,7 +77,6 @@ const AdminDashboard = () => {
       }
       
     } catch (error: any) {
-      console.error('Failed to load data:', error);
       toast.error('Failed to load data');
     } finally {
       setLoading(false);
