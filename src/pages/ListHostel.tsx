@@ -18,9 +18,11 @@ const ListHostel = () => {
   const [formData, setFormData] = useState({
     name: "",
     university: "",
+    area: "",
     location: "",
     price: "",
     listing_type: "semester",
+    gender: "",
     description: "",
     amenities: "",
     contact_phone: "",
@@ -127,9 +129,11 @@ const ListHostel = () => {
       const hostelData = {
         name: formData.name,
         university: formData.university,
+        area: formData.area,
         location: formData.location,
         price: parseInt(formData.price),
         listing_type: formData.listing_type,
+        gender: formData.gender,
         description: formData.description,
         amenities: amenitiesArray,
         contact_phone: formData.contact_phone,
@@ -206,21 +210,64 @@ const ListHostel = () => {
                     <label htmlFor="university" className="block text-sm font-medium text-foreground mb-2">
                       University
                     </label>
-                    <input
-                      type="text"
+                    <select
                       id="university"
                       name="university"
                       required
                       value={formData.university}
                       onChange={handleChange}
                       className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-                      placeholder="e.g., University of Ibadan (UI)"
-                    />
+                    >
+                      <option value="">Select university...</option>
+                      {[
+                        "Abia State University (ABSU)", "Afe Babalola University (ABUAD)", "Ahmadu Bello University (ABU)",
+                        "Ajayi Crowther University (ACU)", "Ambrose Alli University (AAU)", "Babcock University",
+                        "Bayero University Kano (BUK)", "Benson Idahosa University", "Bowen University",
+                        "Covenant University", "Crawford University", "Cross River University of Technology (CRUTECH)",
+                        "Delta State University (DELSU)", "Ekiti State University (EKSU)",
+                        "Enugu State University of Science and Technology (ESUT)",
+                        "Federal University of Agriculture Abeokuta (FUNAAB)",
+                        "Federal University of Technology Akure (FUTA)",
+                        "Federal University of Technology Minna (FUTMINNA)",
+                        "Federal University of Technology Owerri (FUTO)",
+                        "Federal University Oye-Ekiti (FUOYE)", "Fountain University", "Igbinedion University",
+                        "Imo State University (IMSU)", "Joseph Ayo Babalola University (JABU)",
+                        "Kogi State University", "Kwara State University (KWASU)", "Lagos State University (LASU)",
+                        "Landmark University", "Lead City University", "Madonna University",
+                        "Michael Okpara University of Agriculture (MOUAU)", "Nnamdi Azikiwe University (UNIZIK)",
+                        "Obafemi Awolowo University (OAU)", "Olabisi Onabanjo University (OOU)",
+                        "Pan-Atlantic University", "Polytechnic Ibadan (IBADANPOLY)", "Redeemer's University",
+                        "Rivers State University (RSU)", "University of Abuja (UNIABUJA)",
+                        "University of Benin (UNIBEN)", "University of Calabar (UNICAL)",
+                        "University of Ibadan (UI)", "University of Ilorin (UNILORIN)",
+                        "University of Jos (UNIJOS)", "University of Lagos (UNILAG)",
+                        "University of Maiduguri (UNIMAID)", "University of Nigeria Nsukka (UNN)",
+                        "University of Port Harcourt (UNIPORT)", "Veritas University", "Wesley University",
+                      ].sort().map((u) => <option key={u} value={u}>{u}</option>)}
+                    </select>
                   </div>
 
                   <div>
+                    <label htmlFor="area" className="block text-sm font-medium text-foreground mb-2">
+                      Area / Neighbourhood
+                    </label>
+                    <input
+                      type="text"
+                      id="area"
+                      name="area"
+                      required
+                      value={formData.area}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                      placeholder="e.g., Bodija, Omu-Aran, Agbowo"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
                     <label htmlFor="location" className="block text-sm font-medium text-foreground mb-2">
-                      Location
+                      Full Address / Location
                     </label>
                     <input
                       type="text"
@@ -230,8 +277,28 @@ const ListHostel = () => {
                       value={formData.location}
                       onChange={handleChange}
                       className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-                      placeholder="e.g., Bodija, Ibadan"
+                      placeholder="e.g., 12 Bodija Road, opposite UI gate"
                     />
+                  </div>
+
+                  <div>
+                    <label htmlFor="gender" className="block text-sm font-medium text-foreground mb-2">
+                      Gender
+                    </label>
+                    <select
+                      id="gender"
+                      name="gender"
+                      required
+                      value={formData.gender}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                    >
+                      <option value="">Select gender...</option>
+                      <option value="male_only">Male Only</option>
+                      <option value="female_only">Female Only</option>
+                      <option value="mixed">Mixed</option>
+                      <option value="not_specified">Not Specified</option>
+                    </select>
                   </div>
                 </div>
 

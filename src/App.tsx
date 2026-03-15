@@ -22,6 +22,8 @@ import Register from "./pages/Register";
 import AgentInquiries from "./pages/AgentInquiries";
 import InquirySent from "./pages/InquirySent";
 import AgentReviews from "./pages/AgentReviews";
+import AdminInquiries from "./pages/AdminInquiries";
+import AdminRequestHome from "./pages/AdminRequestHome";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +53,8 @@ const App = () => (
           <Route path="/dashboard/inquiries" element={<AgentInquiries />} />
           <Route path="/inquiry-sent/:id" element={<InquirySent />} />
           <Route path="/dashboard/reviews" element={<AgentReviews />} />
+          <Route path="/superadmin/inquiries" element={<AdminInquiries />} />
+          <Route path="/superadmin/home-requests" element={<AdminRequestHome />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

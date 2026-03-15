@@ -17,8 +17,6 @@ interface HostelFormData {
   university: string;
   price: string;
   listing_type: string;
-  property_type: string;
-  room_type: string;
   gender: string;
   description: string;
   amenities: string;
@@ -87,20 +85,6 @@ const NIGERIAN_UNIVERSITIES = [
   "Wesley University",
 ].sort();
 
-const PROPERTY_TYPES = [
-  { value: "hostel", label: "Hostel" },
-  { value: "shared_apartment", label: "Shared Apartment" },
-  { value: "private_apartment", label: "Private Apartment" },
-  { value: "self_contained", label: "Self Contained" },
-];
-
-const ROOM_TYPES = [
-  { value: "single", label: "Single Room" },
-  { value: "2_in_room", label: "2 in a room" },
-  { value: "3_in_room", label: "3 in a room" },
-  { value: "4_in_room", label: "4 in a room" },
-];
-
 const HostelForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -115,8 +99,6 @@ const HostelForm = () => {
     university: '',
     price: '',
     listing_type: 'semester',
-    property_type: '',
-    room_type: '',
     gender: '',
     description: '',
     amenities: '',
@@ -150,8 +132,6 @@ const HostelForm = () => {
         university: data.university || '',
         price: data.price?.toString() || '',
         listing_type: data.listing_type || 'semester',
-        property_type: data.property_type || '',
-        room_type: data.room_type || '',
         gender: data.gender || '',
         description: data.description || '',
         amenities: data.amenities?.join(', ') || '',
@@ -246,8 +226,6 @@ const HostelForm = () => {
         university: formData.university,
         price: parseFloat(formData.price),
         listing_type: formData.listing_type,
-        property_type: formData.property_type,
-        room_type: formData.room_type,
         gender: formData.gender,
         description: formData.description,
         amenities: formData.amenities.split(',').map(a => a.trim()).filter(Boolean),
@@ -359,42 +337,6 @@ const HostelForm = () => {
                 required
                 placeholder="e.g., 12 Bodija Road, opposite UI gate"
               />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="property_type">Property Type *</Label>
-                <select
-                  id="property_type"
-                  name="property_type"
-                  value={formData.property_type}
-                  onChange={handleInputChange}
-                  required
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                >
-                  <option value="">Select property type...</option>
-                  {PROPERTY_TYPES.map((t) => (
-                    <option key={t.value} value={t.value}>{t.label}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <Label htmlFor="room_type">Room Type *</Label>
-                <select
-                  id="room_type"
-                  name="room_type"
-                  value={formData.room_type}
-                  onChange={handleInputChange}
-                  required
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                >
-                  <option value="">Select room type...</option>
-                  {ROOM_TYPES.map((t) => (
-                    <option key={t.value} value={t.value}>{t.label}</option>
-                  ))}
-                </select>
-              </div>
             </div>
 
             <div>

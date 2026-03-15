@@ -1,10 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { SlidersHorizontal, X, ChevronDown, Search } from "lucide-react";
+import { SlidersHorizontal, X, ChevronDown, Search, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import HostelCard from "@/components/HostelCard";
 import Footer from "@/components/Footer";
+import RequestHomeForm from "@/components/RequestHomeForm";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 
@@ -51,6 +52,7 @@ const FilterSelect = ({
 const Hostels = () => {
   const [searchParams] = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
+  const [showRequestForm, setShowRequestForm] = useState(false);
 
   // Filter state
   const [university, setUniversity] = useState(searchParams.get("university") || "");
@@ -274,21 +276,56 @@ const Hostels = () => {
                 <p className="text-muted-foreground text-sm mb-6">
                   Try adjusting your filters to see more results.
                 </p>
-                <Button onClick={clearFilters} variant="outline" className="border-primary/30 text-primary">
-                  Clear Filters
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Button onClick={clearFilters} variant="outline" className="border-primary/30 text-primary">
+                    Clear Filters
+                  </Button>
+                  <Button
+                    onClick={() => setShowRequestForm(true)}
+                    className="gradient-primary border-0 text-primary-foreground font-semibold"
+                  >
+                    <Home className="w-4 h-4 mr-2" />
+                    Request a Home Instead
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-4">
+                  Can't find what you need? Let an agent find the perfect home for you.
+                </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                {filtered.map((hostel) => (
-                  <HostelCard key={hostel.id} hostel={hostel} />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                  {filtered.map((hostel) => (
+                    <HostelCard key={hostel.id} hostel={hostel} />
+                  ))}
+                </div>
+
+                {/* Request a Home banner — shown below results */}
+                <div className="mt-10 bg-card border border-border rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-primary/10 shrink-0">
+                      <Home className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground text-sm">Still haven't found the right place?</p>
+                      <p className="text-xs text-muted-foreground">Tell us your requirements and an agent will find options for you.</p>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => setShowRequestForm(true)}
+                    className="gradient-primary border-0 text-primary-foreground font-semibold shrink-0"
+                  >
+                    <Home className="w-4 h-4 mr-2" />
+                    Request a Home
+                  </Button>
+                </div>
+              </>
             )}
           </main>
         </div>
       </div>
 
+      {showRequestForm && <RequestHomeForm onClose={() => setShowRequestForm(false)} />}
       <Footer />
     </div>
   );

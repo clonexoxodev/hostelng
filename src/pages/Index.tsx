@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Star, ShieldCheck, Building, TrendingUp, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Star, ShieldCheck, Building, TrendingUp, ArrowRight, CheckCircle2, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import SearchBar from "@/components/SearchBar";
 import HostelCard from "@/components/HostelCard";
 import HowItWorks from "@/components/HowItWorks";
 import Footer from "@/components/Footer";
+import RequestHomeForm from "@/components/RequestHomeForm";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import heroBg from "@/assets/hero-bg.jpg";
@@ -36,6 +37,7 @@ const Index = () => {
   const [user, setUser] = useState<any>(null);
   const [hostels, setHostels] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showRequestForm, setShowRequestForm] = useState(false);
 
   useEffect(() => {
     // Check current session
@@ -147,6 +149,20 @@ const Index = () => {
                 {q}
               </Link>
             ))}
+          </div>
+
+          {/* Request a Home CTA */}
+          <div className="mt-8 animate-fade-in" style={{ animationDelay: "0.5s" }}>
+            <div className="inline-flex items-center gap-3 bg-card/20 backdrop-blur-sm border border-primary-foreground/20 rounded-2xl px-5 py-3">
+              <span className="text-primary-foreground/80 text-sm">Can't find what you need?</span>
+              <button
+                onClick={() => setShowRequestForm(true)}
+                className="flex items-center gap-2 bg-accent hover:opacity-90 text-accent-foreground text-sm font-semibold px-4 py-2 rounded-xl transition-opacity"
+              >
+                <Home className="w-4 h-4" />
+                Request a Home
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -329,6 +345,7 @@ const Index = () => {
         </section>
       )}
 
+      {showRequestForm && <RequestHomeForm onClose={() => setShowRequestForm(false)} />}
       <Footer />
     </div>
   );
