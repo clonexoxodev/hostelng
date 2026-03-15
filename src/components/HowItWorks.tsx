@@ -30,7 +30,7 @@ const steps = [
     step: "04",
     title: "Verify & Pay Owner",
     description:
-      "Visit the hostel, verify it meets your needs, and pay directly to the hostel owner. We collect a small commission after successful payment.",
+      "Visit the hostel, confirm it meets your needs, and pay directly to the hostel owner. No platform fees involved.",
     color: "bg-secondary text-primary",
   },
   {

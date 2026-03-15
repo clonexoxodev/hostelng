@@ -302,7 +302,7 @@ const Index = () => {
               Own a Student Hostel?
             </h2>
             <p className="text-primary-foreground/80 max-w-xl mx-auto text-base leading-relaxed mb-10">
-              List your property on HostelNG for free. Reach thousands of university students looking for quality accommodation. We only earn when you earn.
+              List your property on HostelNG for free. Reach thousands of university students looking for quality accommodation near their campus.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -325,7 +325,7 @@ const Index = () => {
               </Button>
             </div>
             <p className="mt-6 text-primary-foreground/50 text-xs">
-              Commission only charged after a student successfully contacts and pays the hostel owner. No upfront fees.
+              Free to list. Students contact you directly — no middlemen, no hidden charges.
             </p>
           </div>
         </section>
