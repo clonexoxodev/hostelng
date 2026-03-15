@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Star, ShieldCheck, Building, TrendingUp, ArrowRight, CheckCircle2, Home } from "lucide-react";
+import { Star, ShieldCheck, TrendingUp, ArrowRight, CheckCircle2, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import SearchBar from "@/components/SearchBar";
@@ -66,11 +66,8 @@ const Index = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-
-      console.log('Loaded hostels:', data); // Debug log
       setHostels(data || []);
     } catch (error: any) {
-      console.error('Failed to load hostels:', error);
       toast.error('Failed to load hostels');
     } finally {
       setLoading(false);
@@ -79,10 +76,9 @@ const Index = () => {
 
   // Check if user is an agent
   const isAgent = user?.user_metadata?.role === 'agent';
-  
-  // Show featured hostels if any, otherwise show all hostels (up to 6)
+
+  // Only show hostels explicitly marked as featured by Super Admin
   const featuredHostels = hostels.filter((h) => h.featured === true);
-  const displayHostels = featuredHostels.length > 0 ? featuredHostels.slice(0, 3) : hostels.slice(0, 6);
 
   return (
     <div className="min-h-screen bg-background">
@@ -195,7 +191,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Featured Hostels */}
+      {/* Featured Hostels — only shown when Super Admin has selected featured posts */}
+      {(loading || featuredHostels.length > 0) && (
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="flex items-end justify-between mb-10">
@@ -216,25 +213,13 @@ const Index = () => {
             <div className="flex items-center justify-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
-          ) : displayHostels.length === 0 ? (
-            <div className="text-center py-20">
-              <Building className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
-              <h3 className="font-display text-xl font-bold text-foreground mb-2">No hostels listed yet</h3>
-              <p className="text-muted-foreground text-sm mb-6">Be the first to list your hostel on HostelNG!</p>
-              <Button className="gradient-primary border-0 shadow-primary text-primary-foreground" asChild>
-                <Link to="/list-hostel">
-                  List Your Hostel <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
-              </Button>
-            </div>
           ) : (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {displayHostels.map((hostel) => (
+                {featuredHostels.slice(0, 6).map((hostel) => (
                   <HostelCard key={hostel.id} hostel={hostel} />
                 ))}
               </div>
-
               <div className="text-center mt-8 md:hidden">
                 <Button variant="outline" className="border-primary/30 text-primary hover:bg-secondary" asChild>
                   <Link to="/hostels">
@@ -246,6 +231,7 @@ const Index = () => {
           )}
         </div>
       </section>
+      )}
 
       {/* How It Works */}
       <HowItWorks />

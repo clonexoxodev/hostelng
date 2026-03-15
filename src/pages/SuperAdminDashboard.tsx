@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import {
   Building2, Users, Flag, TrendingUp, MessageSquare,
   UserCheck, AlertTriangle, CheckCircle, Clock, Eye,
-  BarChart3, ChevronRight, ExternalLink, Home,
+  BarChart3, ChevronRight, ExternalLink, Home, Star,
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -248,6 +248,7 @@ const SuperAdminDashboard = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
                 { title: 'All Listings',    desc: 'Manage hostel listings',        icon: Building2,     link: '/admin',                      color: 'text-blue-600' },
+                { title: 'Featured Posts',  desc: 'Curate homepage featured section', icon: Star,         link: '/admin?tab=featured',          color: 'text-yellow-500' },
                 { title: 'All Inquiries',   desc: 'Monitor student inquiries',     icon: MessageSquare, link: '/superadmin/inquiries',        color: 'text-primary' },
                 { title: 'Home Requests',   desc: 'Assign housing requests',       icon: Home,          link: '/superadmin/home-requests',    color: 'text-accent' },
                 { title: 'Reports',         desc: 'Handle flagged listings',       icon: Flag,          link: '/admin/reports',               color: 'text-red-600' },

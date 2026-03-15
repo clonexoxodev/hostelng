@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Building2, Trash2, Edit, Users, Eye } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Building2, Trash2, Edit, Users, Eye, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -11,11 +11,16 @@ const SUPERADMIN_EMAIL = "clonexoxo80@gmail.com";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState<any>(null);
   const [hostels, setHostels] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"hostels" | "users">("hostels");
+  const [activeTab, setActiveTab] = useState<"hostels" | "users" | "featured">(() => {
+    const params = new URLSearchParams(location.search);
+    return (params.get('tab') as any) || 'hostels';
+  });
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   useEffect(() => {
     checkAuth();
@@ -103,6 +108,7 @@ const AdminDashboard = () => {
   };
 
   const toggleFeatured = async (id: string, currentStatus: boolean) => {
+    setTogglingId(id);
     try {
       const { error } = await supabase
         .from('hostels')
@@ -111,13 +117,17 @@ const AdminDashboard = () => {
 
       if (error) throw error;
 
-      toast.success(`Hostel ${!currentStatus ? 'featured' : 'unfeatured'}`);
+      toast.success(`Hostel ${!currentStatus ? 'added to Featured' : 'removed from Featured'}`);
       setHostels(hostels.map(h => h.id === id ? { ...h, featured: !currentStatus } : h));
     } catch (error: any) {
-      console.error('Error:', error);
       toast.error("Failed to update hostel");
+    } finally {
+      setTogglingId(null);
     }
   };
+
+  const featuredHostels = hostels.filter(h => h.featured);
+  const regularHostels = hostels.filter(h => !h.featured);
 
   if (loading) {
     return (
@@ -159,6 +169,17 @@ const AdminDashboard = () => {
               Hostels ({hostels.length})
             </button>
             <button
+              onClick={() => setActiveTab("featured")}
+              className={`px-6 py-3 font-medium transition-colors ${
+                activeTab === "featured"
+                  ? "text-primary border-b-2 border-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Star className="w-4 h-4 inline mr-2" />
+              Featured Posts ({featuredHostels.length})
+            </button>
+            <button
               onClick={() => setActiveTab("users")}
               className={`px-6 py-3 font-medium transition-colors ${
                 activeTab === "users"
@@ -170,6 +191,114 @@ const AdminDashboard = () => {
               Users ({users.length})
             </button>
           </div>
+
+          {/* Featured Posts Tab */}
+          {activeTab === "featured" && (
+            <div className="space-y-6">
+              {/* Info banner */}
+              <div className="bg-primary/5 border border-primary/20 rounded-xl px-5 py-4 flex items-start gap-3">
+                <Star className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Featured Hostels control</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Only posts you mark here will appear in the "Featured Hostels" section on the homepage. Agents cannot feature their own listings.
+                  </p>
+                </div>
+              </div>
+
+              {/* Currently Featured */}
+              <div>
+                <h3 className="font-display font-bold text-base text-foreground mb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-primary inline-block" />
+                  Currently Featured ({featuredHostels.length})
+                </h3>
+                {featuredHostels.length === 0 ? (
+                  <div className="bg-card border border-border rounded-xl p-8 text-center text-muted-foreground text-sm">
+                    No featured posts yet. Select from the list below.
+                  </div>
+                ) : (
+                  <div className="bg-card rounded-xl border border-border overflow-hidden">
+                    <table className="w-full text-sm">
+                      <thead className="bg-secondary/50">
+                        <tr>
+                          <th className="px-5 py-3 text-left font-semibold text-foreground">Hostel</th>
+                          <th className="px-5 py-3 text-left font-semibold text-foreground">University</th>
+                          <th className="px-5 py-3 text-left font-semibold text-foreground">Price</th>
+                          <th className="px-5 py-3 text-right font-semibold text-foreground">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border">
+                        {featuredHostels.map((h) => (
+                          <tr key={h.id} className="hover:bg-secondary/30 transition-colors">
+                            <td className="px-5 py-3 font-medium text-foreground">{h.name}</td>
+                            <td className="px-5 py-3 text-muted-foreground">{h.university}</td>
+                            <td className="px-5 py-3 text-foreground">₦{h.price?.toLocaleString()}</td>
+                            <td className="px-5 py-3 text-right">
+                              <button
+                                disabled={togglingId === h.id}
+                                onClick={() => toggleFeatured(h.id, true)}
+                                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors disabled:opacity-50"
+                              >
+                                Remove from Featured
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              {/* All other listings */}
+              <div>
+                <h3 className="font-display font-bold text-base text-foreground mb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-muted-foreground inline-block" />
+                  All Other Listings ({regularHostels.length})
+                </h3>
+                {regularHostels.length === 0 ? (
+                  <div className="bg-card border border-border rounded-xl p-8 text-center text-muted-foreground text-sm">
+                    All listings are currently featured.
+                  </div>
+                ) : (
+                  <div className="bg-card rounded-xl border border-border overflow-hidden">
+                    <table className="w-full text-sm">
+                      <thead className="bg-secondary/50">
+                        <tr>
+                          <th className="px-5 py-3 text-left font-semibold text-foreground">Hostel</th>
+                          <th className="px-5 py-3 text-left font-semibold text-foreground">University</th>
+                          <th className="px-5 py-3 text-left font-semibold text-foreground">Price</th>
+                          <th className="px-5 py-3 text-left font-semibold text-foreground">Added</th>
+                          <th className="px-5 py-3 text-right font-semibold text-foreground">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border">
+                        {regularHostels.map((h) => (
+                          <tr key={h.id} className="hover:bg-secondary/30 transition-colors">
+                            <td className="px-5 py-3 font-medium text-foreground">{h.name}</td>
+                            <td className="px-5 py-3 text-muted-foreground">{h.university}</td>
+                            <td className="px-5 py-3 text-foreground">₦{h.price?.toLocaleString()}</td>
+                            <td className="px-5 py-3 text-muted-foreground">
+                              {new Date(h.created_at).toLocaleDateString('en-NG', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            </td>
+                            <td className="px-5 py-3 text-right">
+                              <button
+                                disabled={togglingId === h.id}
+                                onClick={() => toggleFeatured(h.id, false)}
+                                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary/10 text-primary hover:bg-primary/20 transition-colors disabled:opacity-50"
+                              >
+                                {togglingId === h.id ? 'Saving…' : '+ Add to Featured'}
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Hostels Tab */}
           {activeTab === "hostels" && (
@@ -200,13 +329,14 @@ const AdminDashboard = () => {
                         <td className="px-6 py-4">
                           <button
                             onClick={() => toggleFeatured(hostel.id, hostel.featured)}
-                            className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            disabled={togglingId === hostel.id}
+                            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors disabled:opacity-50 ${
                               hostel.featured
-                                ? "bg-primary/10 text-primary"
-                                : "bg-secondary text-muted-foreground"
+                                ? "bg-primary/10 text-primary hover:bg-primary/20"
+                                : "bg-secondary text-muted-foreground hover:bg-secondary/80"
                             }`}
                           >
-                            {hostel.featured ? "Featured" : "Regular"}
+                            {hostel.featured ? "★ Featured" : "Regular"}
                           </button>
                         </td>
                         <td className="px-6 py-4">
