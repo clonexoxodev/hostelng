@@ -9,7 +9,14 @@ interface SearchBarProps {
   initialValues?: { university?: string; city?: string };
 }
 
-const cities = ["Lagos", "Ibadan", "Ile-Ife", "Nsukka", "Zaria", "Enugu", "Benin City", "Akure", "Ota"];
+const cities = [
+  "Ado-Ekiti",       // EKSU, Federal Polytechnic Ado-Ekiti
+  "Oye-Ekiti",       // FUOYE
+  "Ikole-Ekiti",     // FUOYE (Ikole campus)
+  "Ikere-Ekiti",     // BOUESTI, College of Education
+  "Iyin-Ekiti",      // Federal University of Technology and Environmental Sciences
+  "Isan-Ekiti",      // Ekiti State Polytechnic
+];
 
 const SearchBar = ({ compact = false, initialValues }: SearchBarProps) => {
   const [university, setUniversity] = useState(initialValues?.university || "");
@@ -83,13 +90,13 @@ const SearchBar = ({ compact = false, initialValues }: SearchBarProps) => {
             <MapPin className="w-4 h-4 text-primary" />
           </div>
           <div className="flex-1 min-w-0">
-            <label className="section-label text-[10px] block mb-0.5 pointer-events-none">City</label>
+            <label className="section-label text-[10px] block mb-0.5 pointer-events-none">Area (Ekiti State)</label>
             <select
               value={city}
               onChange={(e) => setCity(e.target.value)}
               className="w-full text-sm bg-transparent outline-none text-foreground font-medium appearance-none cursor-pointer absolute inset-0 opacity-0"
             >
-              <option value="">All Cities</option>
+              <option value="">All Areas</option>
               {cities.map((c) => (
                 <option key={c} value={c}>
                   {c}
@@ -97,7 +104,7 @@ const SearchBar = ({ compact = false, initialValues }: SearchBarProps) => {
               ))}
             </select>
             <div className="w-full text-sm text-foreground font-medium pointer-events-none">
-              {city || "All Cities"}
+              {city || "All Areas"}
             </div>
           </div>
           <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0 pointer-events-none" />

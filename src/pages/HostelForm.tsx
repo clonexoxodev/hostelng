@@ -33,57 +33,14 @@ const GENDER_OPTIONS = [
 ];
 
 const NIGERIAN_UNIVERSITIES = [
-  "Abia State University (ABSU)",
-  "Afe Babalola University (ABUAD)",
-  "Ahmadu Bello University (ABU)",
-  "Ajayi Crowther University (ACU)",
-  "Ambrose Alli University (AAU)",
-  "Babcock University",
-  "Bayero University Kano (BUK)",
-  "Benson Idahosa University",
-  "Bowen University",
-  "Covenant University",
-  "Crawford University",
-  "Cross River University of Technology (CRUTECH)",
-  "Delta State University (DELSU)",
   "Ekiti State University (EKSU)",
-  "Enugu State University of Science and Technology (ESUT)",
-  "Federal University of Agriculture Abeokuta (FUNAAB)",
-  "Federal University of Technology Akure (FUTA)",
-  "Federal University of Technology Minna (FUTMINNA)",
-  "Federal University of Technology Owerri (FUTO)",
   "Federal University Oye-Ekiti (FUOYE)",
-  "Fountain University",
-  "Igbinedion University",
-  "Imo State University (IMSU)",
-  "Joseph Ayo Babalola University (JABU)",
-  "Kogi State University",
-  "Kwara State University (KWASU)",
-  "Lagos State University (LASU)",
-  "Landmark University",
-  "Lead City University",
-  "Madonna University",
-  "Michael Okpara University of Agriculture (MOUAU)",
-  "Nnamdi Azikiwe University (UNIZIK)",
-  "Obafemi Awolowo University (OAU)",
-  "Olabisi Onabanjo University (OOU)",
-  "Pan-Atlantic University",
-  "Polytechnic Ibadan (IBADANPOLY)",
-  "Redeemer's University",
-  "Rivers State University (RSU)",
-  "University of Abuja (UNIABUJA)",
-  "University of Benin (UNIBEN)",
-  "University of Calabar (UNICAL)",
-  "University of Ibadan (UI)",
-  "University of Ilorin (UNILORIN)",
-  "University of Jos (UNIJOS)",
-  "University of Lagos (UNILAG)",
-  "University of Maiduguri (UNIMAID)",
-  "University of Nigeria Nsukka (UNN)",
-  "University of Port Harcourt (UNIPORT)",
-  "Veritas University",
-  "Wesley University",
-].sort();
+  "Bamidele Olumilua University of Education, Science and Technology (BOUESTI)",
+  "Federal University of Technology and Environmental Sciences, Iyin-Ekiti",
+  "Federal Polytechnic Ado-Ekiti",
+  "Ekiti State Polytechnic, Isan-Ekiti",
+  "College of Education, Ikere-Ekiti",
+];
 
 const HostelForm = () => {
   const navigate = useNavigate();
@@ -316,14 +273,22 @@ const HostelForm = () => {
 
               <div>
                 <Label htmlFor="area">Area / Neighbourhood *</Label>
-                <Input
+                <select
                   id="area"
                   name="area"
                   value={formData.area}
                   onChange={handleInputChange}
                   required
-                  placeholder="e.g., Bodija, Omu-Aran, Agbowo"
-                />
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="">Select area...</option>
+                  <option value="Ado-Ekiti">Ado-Ekiti</option>
+                  <option value="Oye-Ekiti">Oye-Ekiti</option>
+                  <option value="Ikole-Ekiti">Ikole-Ekiti</option>
+                  <option value="Ikere-Ekiti">Ikere-Ekiti</option>
+                  <option value="Iyin-Ekiti">Iyin-Ekiti</option>
+                  <option value="Isan-Ekiti">Isan-Ekiti</option>
+                </select>
               </div>
             </div>
 

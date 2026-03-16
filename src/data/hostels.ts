@@ -183,12 +183,13 @@ export const hostels: Hostel[] = [
 ];
 
 export const universities = [
-  "University of Ibadan (UI)",
-  "Polytechnic Ibadan (IBADANPOLY)",
-  "Ajayi Crowther University (ACU)",
   "Ekiti State University (EKSU)",
-  "Federal Polytechnic Ado-Ekiti (FEDPOLYADOEKITI)",
-  "Afe Babalola University (ABUAD)",
+  "Federal University Oye-Ekiti (FUOYE)",
+  "Bamidele Olumilua University of Education, Science and Technology (BOUESTI)",
+  "Federal University of Technology and Environmental Sciences, Iyin-Ekiti",
+  "Federal Polytechnic Ado-Ekiti",
+  "Ekiti State Polytechnic, Isan-Ekiti",
+  "College of Education, Ikere-Ekiti",
 ];
 
 export const formatPrice = (price: number): string => {

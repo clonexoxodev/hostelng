@@ -21,7 +21,7 @@ const stats = [
 ];
 
 const trustedBy = [
-  "UI", "IBADANPOLY", "ACU", "EKSU", "FEDPOLYADOEKITI", "ABUAD",
+  "EKSU", "FUOYE", "FEDPOLYADOEKITI",
 ];
 
 const benefits = [
@@ -136,7 +136,7 @@ const Index = () => {
           {/* Popular searches */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2 animate-fade-in" style={{ animationDelay: "0.4s" }}>
             <span className="text-primary-foreground/60 text-xs">Popular:</span>
-            {["UNILAG Lagos", "OAU Ile-Ife", "UI Ibadan", "ABU Zaria"].map((q) => (
+            {["EKSU Ado-Ekiti", "FUOYE Oye-Ekiti", "FEDPOLYADOEKITI"].map((q) => (
               <Link
                 key={q}
                 to={`/hostels?q=${encodeURIComponent(q)}`}
@@ -178,16 +178,19 @@ const Index = () => {
       {/* Trusted by universities */}
       <section className="py-10 bg-card border-y border-border">
         <div className="container mx-auto px-4">
-          <p className="text-center text-muted-foreground text-xs uppercase tracking-widest font-semibold mb-6">
-            Serving students near these universities
+          <p className="text-center text-muted-foreground text-xs uppercase tracking-widest font-semibold mb-3">
+            Currently serving students near these institutions in Ekiti State
           </p>
-          <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+          <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-4">
             {trustedBy.map((uni) => (
               <span key={uni} className="text-foreground/60 font-display font-bold text-sm md:text-base hover:text-primary transition-colors cursor-default">
                 {uni}
               </span>
             ))}
           </div>
+          <p className="text-center text-muted-foreground text-xs">
+            🌍 We are currently focused on Ekiti State. More locations will be added as the platform expands.
+          </p>
         </div>
       </section>
 

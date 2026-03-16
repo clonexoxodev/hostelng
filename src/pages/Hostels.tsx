@@ -9,6 +9,25 @@ import RequestHomeForm from "@/components/RequestHomeForm";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 
+const EKITI_UNIVERSITIES = [
+  "Ekiti State University (EKSU)",
+  "Federal University Oye-Ekiti (FUOYE)",
+  "Bamidele Olumilua University of Education, Science and Technology (BOUESTI)",
+  "Federal University of Technology and Environmental Sciences, Iyin-Ekiti",
+  "Federal Polytechnic Ado-Ekiti",
+  "Ekiti State Polytechnic, Isan-Ekiti",
+  "College of Education, Ikere-Ekiti",
+];
+
+const EKITI_AREAS = [
+  "Ado-Ekiti",
+  "Oye-Ekiti",
+  "Ikole-Ekiti",
+  "Ikere-Ekiti",
+  "Iyin-Ekiti",
+  "Isan-Ekiti",
+];
+
 const GENDER_OPTIONS = [
   { value: "male_only",     label: "Male Only" },
   { value: "female_only",   label: "Female Only" },
@@ -62,9 +81,8 @@ const Hostels = () => {
   const [sortBy, setSortBy]         = useState("recent");
 
   // Data
-  const [hostels, setHostels]           = useState<any[]>([]);
-  const [universities, setUniversities] = useState<string[]>([]);
-  const [loading, setLoading]           = useState(true);
+  const [hostels, setHostels] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => { loadHostels(); }, []);
 
@@ -77,9 +95,6 @@ const Hostels = () => {
 
       if (error) throw error;
       setHostels(data || []);
-
-      const uniq = [...new Set((data || []).map((h: any) => h.university).filter(Boolean))].sort();
-      setUniversities(uniq as string[]);
     } catch {
       toast.error("Failed to load listings");
     } finally {
@@ -96,10 +111,7 @@ const Hostels = () => {
       result = result.filter((h) => h.university === university);
 
     if (area.trim())
-      result = result.filter((h) =>
-        h.area?.toLowerCase().includes(area.toLowerCase()) ||
-        h.location?.toLowerCase().includes(area.toLowerCase())
-      );
+      result = result.filter((h) => h.area === area);
 
     if (gender)
       result = result.filter((h) => h.gender === gender);
@@ -144,9 +156,12 @@ const Hostels = () => {
           <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-1">
             Browse Listings
           </h1>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-sm mb-2">
             {filtered.length} listing{filtered.length !== 1 ? "s" : ""} found
           </p>
+          <div className="inline-flex items-center gap-2 bg-primary/8 border border-primary/20 text-primary text-xs font-medium px-3 py-1.5 rounded-full">
+            Currently showing listings in Ekiti State only — more locations coming soon.
+          </div>
         </div>
       </div>
 
@@ -171,20 +186,17 @@ const Hostels = () => {
               {/* University */}
               <FilterSelect label="University" value={university} onChange={setUniversity}>
                 <option value="">All Universities</option>
-                {universities.map((u) => <option key={u} value={u}>{u}</option>)}
+                {EKITI_UNIVERSITIES.map((u) => <option key={u} value={u}>{u}</option>)}
               </FilterSelect>
+              <p className="text-[10px] text-muted-foreground -mt-3 mb-4">
+                Showing Ekiti State universities only
+              </p>
 
               {/* Area */}
-              <div className="mb-5">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Area / Neighbourhood</p>
-                <input
-                  type="text"
-                  value={area}
-                  onChange={(e) => setArea(e.target.value)}
-                  placeholder="e.g., Omu-Aran, Bodija, Akoka..."
-                  className="w-full text-sm bg-secondary border border-border rounded-xl px-3 py-2.5 outline-none text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-                />
-              </div>
+              <FilterSelect label="Area / Neighbourhood" value={area} onChange={setArea}>
+                <option value="">All Areas</option>
+                {EKITI_AREAS.map((a) => <option key={a} value={a}>{a}</option>)}
+              </FilterSelect>
 
               {/* Price Range */}
               <FilterSelect label="Price Range" value={priceRange} onChange={setPriceRange}>
