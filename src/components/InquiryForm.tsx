@@ -17,9 +17,10 @@ interface InquiryFormProps {
     contact_email?: string;
   };
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
-const InquiryForm = ({ hostel, onClose }: InquiryFormProps) => {
+const InquiryForm = ({ hostel, onClose, onSuccess }: InquiryFormProps) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -74,15 +75,20 @@ const InquiryForm = ({ hostel, onClose }: InquiryFormProps) => {
       if (error) throw error;
 
       onClose();
-      // Navigate to confirmation page with agent contact info
-      navigate(`/inquiry-sent/${hostel.id}`, {
-        state: {
-          hostelName: hostel.name,
-          studentName: formData.student_name,
-          agentPhone: hostel.contact_phone,
-          agentEmail: hostel.contact_email,
-        },
-      });
+      if (onSuccess) {
+        onSuccess();
+        toast.success('Inquiry sent! Agent contact details are now visible below.');
+      } else {
+        // fallback: navigate to confirmation page
+        navigate(`/inquiry-sent/${hostel.id}`, {
+          state: {
+            hostelName: hostel.name,
+            studentName: formData.student_name,
+            agentPhone: hostel.contact_phone,
+            agentEmail: hostel.contact_email,
+          },
+        });
+      }
     } catch (error: any) {
       toast.error(error.message || 'Failed to send inquiry. Please try again.');
     } finally {

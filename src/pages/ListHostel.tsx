@@ -174,10 +174,10 @@ const ListHostel = () => {
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h1 className="font-display text-3xl font-bold text-foreground mb-2">
-                  List Your Hostel
+                  List Your Property
                 </h1>
                 <p className="text-muted-foreground">
-                  Fill in the details below to add your hostel listing
+                  Fill in the details below to add your listing
                 </p>
               </div>
               <Button variant="outline" asChild>
@@ -191,7 +191,7 @@ const ListHostel = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                    Hostel Name
+                    Heading
                   </label>
                   <input
                     type="text"
@@ -201,7 +201,7 @@ const ListHostel = () => {
                     value={formData.name}
                     onChange={handleChange}
                     className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-                    placeholder="e.g., Greenview Student Lodge"
+                    placeholder="e.g., Self-contained room near FUOYE campus"
                   />
                 </div>
 

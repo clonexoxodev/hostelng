@@ -22,6 +22,7 @@ const HostelDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [inquiryOpen, setInquiryOpen] = useState(false);
+  const [contactRevealed, setContactRevealed] = useState(false);
   const [reviewStats, setReviewStats] = useState({ avg: 0, count: 0 });
   const [reportOpen, setReportOpen] = useState(false);
 
@@ -374,38 +375,57 @@ const HostelDetail = () => {
                   Contact Agent
                 </Button>
 
-                <div className="grid grid-cols-2 gap-2 mb-5">
-                  <a
-                    href={`tel:${hostel.contact_phone}`}
-                    className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-secondary transition-colors"
-                  >
-                    <Phone className="w-4 h-4 text-primary" />
-                    Call
-                  </a>
-                  <a
-                    href={`mailto:${hostel.contact_email}`}
-                    className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-secondary transition-colors"
-                  >
-                    <Mail className="w-4 h-4 text-primary" />
-                    Email
-                  </a>
-                </div>
-
-                <div className="border-t border-border pt-4 space-y-3">
-                  <h3 className="font-display font-bold text-sm text-foreground mb-3">Contact Information</h3>
-                  {hostel.contact_phone && (
-                    <a href={`tel:${hostel.contact_phone}`} className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors">
-                      <Phone className="w-4 h-4" />
-                      <span>{hostel.contact_phone}</span>
-                    </a>
-                  )}
-                  {hostel.contact_email && (
-                    <a href={`mailto:${hostel.contact_email}`} className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors">
-                      <Mail className="w-4 h-4" />
-                      <span>{hostel.contact_email}</span>
-                    </a>
-                  )}
-                  <div className="pt-2 border-t border-border">
+                {/* Contact details — revealed after inquiry submitted */}
+                {contactRevealed ? (
+                  <div className="border-t border-border pt-4 space-y-3">
+                    <div className="flex items-center gap-2 mb-3">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <h3 className="font-display font-bold text-sm text-foreground">Agent Contact Details</h3>
+                    </div>
+                    {hostel.contact_phone && (
+                      <a href={`tel:${hostel.contact_phone}`} className="flex items-center gap-3 text-sm text-foreground hover:text-primary transition-colors font-medium">
+                        <Phone className="w-4 h-4 text-primary" />
+                        <span>{hostel.contact_phone}</span>
+                      </a>
+                    )}
+                    {hostel.contact_email && (
+                      <a href={`mailto:${hostel.contact_email}`} className="flex items-center gap-3 text-sm text-foreground hover:text-primary transition-colors font-medium">
+                        <Mail className="w-4 h-4 text-primary" />
+                        <span>{hostel.contact_email}</span>
+                      </a>
+                    )}
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      {hostel.contact_phone && (
+                        <a
+                          href={`tel:${hostel.contact_phone}`}
+                          className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-secondary transition-colors"
+                        >
+                          <Phone className="w-4 h-4 text-primary" />
+                          Call
+                        </a>
+                      )}
+                      {hostel.contact_email && (
+                        <a
+                          href={`mailto:${hostel.contact_email}`}
+                          className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-secondary transition-colors"
+                        >
+                          <Mail className="w-4 h-4 text-primary" />
+                          Email
+                        </a>
+                      )}
+                    </div>
+                    <div className="pt-2 border-t border-border">
+                      <ReportDialog
+                        hostelId={hostel.id}
+                        hostelName={hostel.name}
+                        open={reportOpen}
+                        onOpenChange={setReportOpen}
+                        triggerButton={true}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="border-t border-border pt-4">
                     <ReportDialog
                       hostelId={hostel.id}
                       hostelName={hostel.name}
@@ -414,7 +434,7 @@ const HostelDetail = () => {
                       triggerButton={true}
                     />
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -434,6 +454,7 @@ const HostelDetail = () => {
             contact_email: hostel.contact_email,
           }}
           onClose={() => setInquiryOpen(false)}
+          onSuccess={() => setContactRevealed(true)}
         />
       )}
 

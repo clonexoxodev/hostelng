@@ -242,14 +242,14 @@ const HostelForm = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <Label htmlFor="name">Hostel Name *</Label>
+              <Label htmlFor="name">Heading *</Label>
               <Input
                 id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
                 required
-                placeholder="e.g., Sunshine Hostel"
+                placeholder="e.g., Self-contained room near EKSU gate"
               />
             </div>
 
