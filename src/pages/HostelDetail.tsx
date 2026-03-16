@@ -135,25 +135,42 @@ const HostelDetail = () => {
         {/* Image Gallery */}
         {hasImages && (
           <div className="container mx-auto px-4 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-2 rounded-2xl overflow-hidden">
+            {/* Desktop: hero + side grid */}
+            <div className="hidden md:grid grid-cols-[2fr_1fr] gap-2 rounded-2xl overflow-hidden h-[420px]">
+              {/* Main image */}
               <div
-                className="aspect-[4/3] md:aspect-[3/2] cursor-pointer overflow-hidden"
+                className="cursor-pointer overflow-hidden bg-muted"
                 onClick={() => { setSelectedImage(0); setLightboxOpen(true); }}
               >
-                <img src={hostel.images[0]} alt={hostel.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                <img
+                  src={hostel.images[0]}
+                  alt={hostel.name}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
               </div>
+
+              {/* Side thumbnails */}
               {hostel.images.length > 1 && (
-                <div className="hidden md:grid grid-rows-2 gap-2">
+                <div className="grid grid-rows-2 gap-2">
                   {hostel.images.slice(1, 3).map((img: string, i: number) => (
                     <div
                       key={i}
-                      className="relative cursor-pointer overflow-hidden"
+                      className="relative cursor-pointer overflow-hidden bg-muted"
                       onClick={() => { setSelectedImage(i + 1); setLightboxOpen(true); }}
                     >
-                      <img src={img} alt={`View ${i + 2}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                      <img
+                        src={img}
+                        alt={`View ${i + 2}`}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
                       {i === 1 && hostel.images.length > 3 && (
-                        <div className="absolute inset-0 bg-foreground/50 flex items-center justify-center">
-                          <span className="text-primary-foreground font-semibold text-sm">+{hostel.images.length - 3} more</span>
+                        <div
+                          className="absolute inset-0 bg-foreground/60 flex items-center justify-center cursor-pointer"
+                          onClick={() => { setSelectedImage(i + 1); setLightboxOpen(true); }}
+                        >
+                          <span className="text-white font-semibold text-sm">+{hostel.images.length - 3} more</span>
                         </div>
                       )}
                     </div>
@@ -161,6 +178,91 @@ const HostelDetail = () => {
                 </div>
               )}
             </div>
+
+            {/* Desktop thumbnail strip (if more than 3 images) */}
+            {hostel.images.length > 3 && (
+              <div className="hidden md:flex gap-2 mt-2 overflow-x-auto pb-1">
+                {hostel.images.map((img: string, i: number) => (
+                  <button
+                    key={i}
+                    onClick={() => { setSelectedImage(i); setLightboxOpen(true); }}
+                    className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                      selectedImage === i ? "border-primary" : "border-transparent opacity-70 hover:opacity-100"
+                    }`}
+                  >
+                    <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Mobile: carousel */}
+            <div className="md:hidden relative rounded-2xl overflow-hidden bg-muted">
+              <div className="aspect-[4/3] overflow-hidden">
+                <img
+                  src={hostel.images[selectedImage]}
+                  alt={hostel.name}
+                  className="w-full h-full object-cover transition-opacity duration-300"
+                  loading="lazy"
+                  onClick={() => setLightboxOpen(true)}
+                />
+              </div>
+
+              {/* Carousel arrows */}
+              {hostel.images.length > 1 && (
+                <>
+                  <button
+                    onClick={() => setSelectedImage((p) => (p === 0 ? hostel.images.length - 1 : p - 1))}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-1.5 transition-colors"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => setSelectedImage((p) => (p === hostel.images.length - 1 ? 0 : p + 1))}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-1.5 transition-colors"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </>
+              )}
+
+              {/* Dot indicators */}
+              {hostel.images.length > 1 && (
+                <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
+                  {hostel.images.map((_: string, i: number) => (
+                    <button
+                      key={i}
+                      onClick={() => setSelectedImage(i)}
+                      className={`rounded-full transition-all ${
+                        selectedImage === i ? "w-4 h-2 bg-white" : "w-2 h-2 bg-white/50"
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Image counter */}
+              <div className="absolute top-3 right-3 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
+                {selectedImage + 1} / {hostel.images.length}
+              </div>
+            </div>
+
+            {/* Mobile thumbnail strip */}
+            {hostel.images.length > 1 && (
+              <div className="md:hidden flex gap-2 mt-2 overflow-x-auto pb-1">
+                {hostel.images.map((img: string, i: number) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedImage(i)}
+                    className={`shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${
+                      selectedImage === i ? "border-primary" : "border-transparent opacity-60 hover:opacity-100"
+                    }`}
+                  >
+                    <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
