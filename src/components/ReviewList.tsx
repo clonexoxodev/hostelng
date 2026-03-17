@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Star, PenLine } from 'lucide-react';
+import { Star, PenLine, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import StarRating from '@/components/StarRating';
 import ReviewForm from '@/components/ReviewForm';
@@ -21,14 +21,20 @@ const ReviewList = ({ listingId, listingName, agentId }: ReviewListProps) => {
 
   const loadReviews = useCallback(async () => {
     setLoading(true);
+    // Fetch ALL reviews for this agent across all their listings
     const { data } = await supabase
       .from('reviews')
-      .select('*')
-      .eq('listing_id', listingId)
+      .select('*, hostels(name)')
+      .eq('agent_id', agentId)
       .order('created_at', { ascending: false });
-    setReviews(data || []);
+
+    const normalized = (data || []).map((r: any) => ({
+      ...r,
+      hostel_title: r.hostels?.name || null,
+    }));
+    setReviews(normalized);
     setLoading(false);
-  }, [listingId]);
+  }, [agentId]);
 
   useEffect(() => { loadReviews(); }, [loadReviews]);
 
@@ -43,7 +49,7 @@ const ReviewList = ({ listingId, listingName, agentId }: ReviewListProps) => {
       {/* Section header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <h2 className="font-display font-bold text-xl text-foreground">Reviews</h2>
+          <h2 className="font-display font-bold text-xl text-foreground">Agent Reviews</h2>
           {reviews.length > 0 && (
             <div className="flex items-center gap-1.5">
               <StarRating rating={avgRating} size="sm" />
@@ -100,7 +106,7 @@ const ReviewList = ({ listingId, listingName, agentId }: ReviewListProps) => {
       ) : reviews.length === 0 ? (
         <div className="bg-secondary rounded-xl p-6 text-center">
           <Star className="w-8 h-8 text-muted-foreground/30 mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">No reviews yet. Be the first to review this hostel.</p>
+          <p className="text-sm text-muted-foreground">No reviews yet for this agent.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -122,11 +128,19 @@ const ReviewList = ({ listingId, listingName, agentId }: ReviewListProps) => {
                     <StarRating rating={review.rating} size="sm" />
                   </div>
                 </div>
-                <span className="text-xs text-muted-foreground shrink-0">
-                  {new Date(review.created_at).toLocaleDateString('en-NG', {
-                    day: 'numeric', month: 'short', year: 'numeric',
-                  })}
-                </span>
+                <div className="text-right shrink-0">
+                  <span className="text-xs text-muted-foreground block">
+                    {new Date(review.created_at).toLocaleDateString('en-NG', {
+                      day: 'numeric', month: 'short', year: 'numeric',
+                    })}
+                  </span>
+                  {review.hostel_title && (
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground justify-end mt-0.5">
+                      <Building2 className="w-3 h-3 shrink-0" />
+                      <span className="truncate max-w-[120px]">{review.hostel_title}</span>
+                    </span>
+                  )}
+                </div>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">{review.review_text}</p>
             </div>

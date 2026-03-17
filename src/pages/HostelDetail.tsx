@@ -35,10 +35,20 @@ const HostelDetail = () => {
   }, [id]);
 
   const loadReviewStats = async (hostelId: string) => {
+    // First get the agent_id for this hostel, then fetch all their reviews
+    const { data: hostelData } = await supabase
+      .from('hostels')
+      .select('owner_id')
+      .eq('id', hostelId)
+      .single();
+
+    if (!hostelData?.owner_id) return;
+
     const { data } = await supabase
       .from('reviews')
       .select('rating')
-      .eq('listing_id', hostelId);
+      .eq('agent_id', hostelData.owner_id);
+
     if (data && data.length > 0) {
       const avg = data.reduce((s, r) => s + r.rating, 0) / data.length;
       setReviewStats({ avg, count: data.length });
@@ -299,7 +309,7 @@ const HostelDetail = () => {
                   <div className="flex items-center gap-2 mt-3">
                     <StarRating rating={reviewStats.avg} size="sm" />
                     <span className="font-semibold text-foreground text-sm">{reviewStats.avg.toFixed(1)}</span>
-                    <span className="text-muted-foreground text-sm">({reviewStats.count} review{reviewStats.count !== 1 ? 's' : ''})</span>
+                    <span className="text-muted-foreground text-sm">({reviewStats.count} agent review{reviewStats.count !== 1 ? 's' : ''})</span>
                   </div>
                 )}
               </div>

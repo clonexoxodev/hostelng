@@ -126,7 +126,7 @@ const ReviewForm = ({ listingId, listingName, agentId, onClose, onSuccess }: Rev
               id="review-text"
               value={reviewText}
               onChange={(e) => setReviewText(e.target.value.slice(0, MAX_CHARS))}
-              placeholder="Share your experience with this hostel..."
+              placeholder="Share your experience with this agent..."
               rows={3}
               className="resize-none"
               required
