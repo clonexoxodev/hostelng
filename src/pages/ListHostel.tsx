@@ -227,8 +227,6 @@ const ListHostel = () => {
                   <input id="rooms_available" name="rooms_available" type="number" required min="1" value={formData.rooms_available} onChange={handleChange}
                     className={inputCls} placeholder="e.g., 5" />
                 </div>
-                  <p className="text-xs text-muted-foreground mt-1">Separate each amenity with a comma.</p>
-                </div>
               </div>
             </div>
 
