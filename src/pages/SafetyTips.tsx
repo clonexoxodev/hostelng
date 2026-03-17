@@ -116,14 +116,22 @@ const SafetyTips = () => {
                 <p className="text-red-800 dark:text-red-200 mb-4">
                   If you encounter a suspicious listing, experience a scam attempt, or feel unsafe during a hostel viewing, report it immediately using our report feature or contact us directly.
                 </p>
-                <a
-                  href="https://mail.google.com/mail/?view=cm&fs=1&to=Clonexoxo80@gmail.com&su=Safety%20Report"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition-colors"
-                >
-                  Report an Issue
-                </a>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <a
+                    href="mailto:HostelNg1@outlook.com?subject=Safety%20Report"
+                    className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition-colors"
+                  >
+                    Email a Report
+                  </a>
+                  <a
+                    href="https://wa.me/2347061686123?text=Safety%20Report:%20"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg border border-red-600 text-red-700 dark:text-red-300 font-medium hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
+                  >
+                    WhatsApp Us
+                  </a>
+                </div>
               </div>
             </div>
           </div>

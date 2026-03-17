@@ -84,17 +84,25 @@ const StudentFAQs = () => {
             <h3 className="font-display text-xl font-bold text-foreground mb-3">
               Still have questions?
             </h3>
-            <p className="text-muted-foreground mb-6">
-              Can't find the answer you're looking for? Our support team is here to help.
+            <p className="text-muted-foreground mb-4">
+              Can't find the answer you're looking for? Reach out to our support team.
             </p>
-            <a
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=Clonexoxo80@gmail.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-lg gradient-primary text-primary-foreground font-medium hover:shadow-lg transition-shadow"
-            >
-              Contact Support
-            </a>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <a
+                href="mailto:HostelNg1@outlook.com"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg gradient-primary text-primary-foreground font-medium hover:shadow-lg transition-shadow"
+              >
+                Email Support
+              </a>
+              <a
+                href="https://wa.me/2347061686123"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-primary/30 text-primary font-medium hover:bg-primary/5 transition-colors"
+              >
+                WhatsApp Us
+              </a>
+            </div>
           </div>
         </div>
       </main>

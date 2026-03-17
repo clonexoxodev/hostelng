@@ -38,19 +38,19 @@ const Contact = () => {
     {
       icon: Mail,
       title: "Email Us",
-      content: "support@hostelng.com",
-      link: "mailto:support@hostelng.com",
+      content: "HostelNg1@outlook.com",
+      link: "mailto:HostelNg1@outlook.com",
     },
     {
       icon: Phone,
-      title: "Call Us",
-      content: "+234 800 123 4567",
-      link: "tel:+2348001234567",
+      title: "Call / WhatsApp",
+      content: "+234 706 168 6123",
+      link: "https://wa.me/2347061686123",
     },
     {
       icon: MapPin,
-      title: "Visit Us",
-      content: "Lagos, Nigeria",
+      title: "Location",
+      content: "Ekiti, Nigeria",
       link: null,
     },
   ];
@@ -250,17 +250,19 @@ const Contact = () => {
               {/* Emergency Contact */}
               <div className="bg-card border border-border rounded-2xl p-6">
                 <h3 className="font-display font-bold text-foreground mb-2">
-                  Emergency Support
+                  Need Urgent Help?
                 </h3>
                 <p className="text-muted-foreground text-sm mb-3">
-                  For urgent issues with bookings or hostel inquiries, call our 24/7 hotline:
+                  Call or WhatsApp us directly for urgent support:
                 </p>
                 <a
-                  href="tel:+2348001234567"
+                  href="https://wa.me/2347061686123"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center gap-2 text-primary font-semibold hover:underline"
                 >
                   <Phone className="w-4 h-4" />
-                  +234 800 123 4567
+                  +234 706 168 6123
                 </a>
               </div>
             </div>

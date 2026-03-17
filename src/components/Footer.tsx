@@ -92,21 +92,26 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-3 text-primary-foreground/60 text-sm">
                 <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-accent" />
-                <span>14 Victoria Island, Lagos, Nigeria</span>
+                <span>Ekiti, Nigeria</span>
               </li>
               <li className="flex items-center gap-3 text-primary-foreground/60 text-sm">
                 <Phone className="w-4 h-4 shrink-0 text-accent" />
-                <span>+234 706 1686 123</span>
-              </li>
-              <li className="flex items-center gap-3 text-primary-foreground/60 text-sm">
-                <Mail className="w-4 h-4 shrink-0 text-accent" />
-                <a 
-                  href="https://mail.google.com/mail/?view=cm&fs=1&to=Clonexoxo80@gmail.com" 
-                  target="_blank" 
+                <a
+                  href="https://wa.me/2347061686123"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-accent transition-colors"
                 >
-                  hello@hostelng.com
+                  +234 706 168 6123
+                </a>
+              </li>
+              <li className="flex items-center gap-3 text-primary-foreground/60 text-sm">
+                <Mail className="w-4 h-4 shrink-0 text-accent" />
+                <a
+                  href="mailto:HostelNg1@outlook.com"
+                  className="hover:text-accent transition-colors"
+                >
+                  HostelNg1@outlook.com
                 </a>
               </li>
             </ul>
