@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, GraduationCap, Building2, ArrowLeft, CheckCircle2, Loader2 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import Navbar from '@/components/Navbar'
 
-export default function Register() {
-  const navigate = useNavigate()
-  const [fullName, setFullName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirm, setConfirm] = useState('')
-  const [role, setRole] = useState<'student' | 'agent' | ''>('');
+type Role = 'student' | 'agent'
+type Step = 'pick-role' | 'form'
+
+const inputCls =
+  'w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors text-sm'
+const labelCls = 'block text-sm font-semibold text-foreground mb-1.5'
+
+export default function Registtate<'student' | 'agent' | ''>('');
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [error, setError] = useState<string | null>(null)
