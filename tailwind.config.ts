@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         display: ["Inter", "sans-serif"],
-        body: ["Poppins", "sans-serif"],
+        body: ["Plus Jakarta Sans", "Inter", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
