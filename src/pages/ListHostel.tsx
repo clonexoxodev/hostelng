@@ -20,8 +20,6 @@ const UNIVERSITIES = [
   "College of Education, Ikere-Ekiti",
 ];
 
-const AREAS = ["Ado-Ekiti", "Oye-Ekiti", "Ikole-Ekiti", "Ikere-Ekiti", "Iyin-Ekiti", "Isan-Ekiti"];
-
 const inputCls = "w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors text-sm";
 const selectCls = inputCls;
 const labelCls = "block text-sm font-semibold text-foreground mb-1.5";
@@ -46,7 +44,6 @@ const ListHostel = () => {
   const [formData, setFormData] = useState({
     name: "",
     university: "",
-    area: "",
     location: "",
     price: "",
     listing_type: "semester",
@@ -57,7 +54,6 @@ const ListHostel = () => {
     rooms_available: "",
   });
   const [newImages, setNewImages] = useState<File[]>([]);
-  const [customArea, setCustomArea] = useState("");
 
   useEffect(() => { checkAuth(); }, []);
 
@@ -111,7 +107,6 @@ const ListHostel = () => {
       const { error } = await supabase.from("hostels").insert([{
         name: formData.name,
         university: formData.university,
-        area: formData.area === "other" ? customArea : formData.area,
         location: formData.location,
         price: parseInt(formData.price),
         listing_type: formData.listing_type,
@@ -172,24 +167,6 @@ const ListHostel = () => {
                       <option value="">Select university...</option>
                       {UNIVERSITIES.map(u => <option key={u} value={u}>{u}</option>)}
                     </select>
-                  </div>
-                  <div>
-                    <label htmlFor="area" className={labelCls}>Area / Town *</label>
-                    <select id="area" name="area" required value={formData.area} onChange={handleChange} className={selectCls}>
-                      <option value="">Select area...</option>
-                      {AREAS.map(a => <option key={a} value={a}>{a}</option>)}
-                      <option value="other">Other</option>
-                    </select>
-                    {formData.area === "other" && (
-                      <input
-                        type="text"
-                        required
-                        value={customArea}
-                        onChange={e => setCustomArea(e.target.value)}
-                        className={`${selectCls} mt-2`}
-                        placeholder="Enter your area / neighbourhood"
-                      />
-                    )}
                   </div>
                 </div>
                 <div>

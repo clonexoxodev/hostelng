@@ -19,15 +19,6 @@ const EKITI_UNIVERSITIES = [
   "College of Education, Ikere-Ekiti",
 ];
 
-const EKITI_AREAS = [
-  "Ado-Ekiti",
-  "Oye-Ekiti",
-  "Ikole-Ekiti",
-  "Ikere-Ekiti",
-  "Iyin-Ekiti",
-  "Isan-Ekiti",
-];
-
 const GENDER_OPTIONS = [
   { value: "male_only",     label: "Male Only" },
   { value: "female_only",   label: "Female Only" },
@@ -75,7 +66,6 @@ const Hostels = () => {
 
   // Filter state
   const [university, setUniversity] = useState(searchParams.get("university") || "");
-  const [area, setArea]             = useState(searchParams.get("area") || "");
   const [priceRange, setPriceRange] = useState("0");
   const [gender, setGender]         = useState("");
   const [sortBy, setSortBy]         = useState("recent");
@@ -110,9 +100,6 @@ const Hostels = () => {
     if (university)
       result = result.filter((h) => h.university === university);
 
-    if (area.trim())
-      result = result.filter((h) => h.area === area);
-
     if (gender)
       result = result.filter((h) => h.gender === gender);
 
@@ -125,14 +112,14 @@ const Hostels = () => {
     else result.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
     return result;
-  }, [hostels, university, area, gender, priceRange, sortBy]);
+  }, [hostels, university, gender, priceRange, sortBy]);
 
   const clearFilters = () => {
-    setUniversity(""); setArea(""); setPriceRange("0"); setGender("");
+    setUniversity(""); setPriceRange("0"); setGender("");
   };
 
   const activeCount =
-    [university, area, gender].filter(Boolean).length +
+    [university, gender].filter(Boolean).length +
     (priceRange !== "0" ? 1 : 0);
 
   if (loading) {
@@ -192,12 +179,6 @@ const Hostels = () => {
                 Showing Ekiti State universities only
               </p>
 
-              {/* Area */}
-              <FilterSelect label="Area / Neighbourhood" value={area} onChange={setArea}>
-                <option value="">All Areas</option>
-                {EKITI_AREAS.map((a) => <option key={a} value={a}>{a}</option>)}
-              </FilterSelect>
-
               {/* Price Range */}
               <FilterSelect label="Price Range" value={priceRange} onChange={setPriceRange}>
                 {PRICE_RANGES.map((r, i) => (
@@ -220,12 +201,6 @@ const Hostels = () => {
                     <span className="flex items-center gap-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
                       {university.split("(")[0].trim()}
                       <button onClick={() => setUniversity("")}><X className="w-3 h-3" /></button>
-                    </span>
-                  )}
-                  {area && (
-                    <span className="flex items-center gap-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
-                      {area}
-                      <button onClick={() => setArea("")}><X className="w-3 h-3" /></button>
                     </span>
                   )}
                   {priceRange !== "0" && (

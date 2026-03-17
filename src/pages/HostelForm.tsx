@@ -17,8 +17,6 @@ const UNIVERSITIES = [
   "College of Education, Ikere-Ekiti",
 ];
 
-const AREAS = ["Ado-Ekiti", "Oye-Ekiti", "Ikole-Ekiti", "Ikere-Ekiti", "Iyin-Ekiti", "Isan-Ekiti"];
-
 const inputCls = "w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors text-sm";
 const labelCls = "block text-sm font-semibold text-foreground mb-1.5";
 
@@ -35,7 +33,7 @@ const SectionHeader = ({ icon: Icon, title, subtitle }: { icon: any; title: stri
 );
 
 interface FormData {
-  name: string; location: string; area: string; university: string;
+  name: string; location: string; university: string;
   price: string; listing_type: string; gender: string; description: string;
   contact_phone: string; contact_email: string; rooms_available: string;
 }
@@ -47,13 +45,12 @@ const HostelForm = () => {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState<FormData>({
-    name: '', location: '', area: '', university: '', price: '',
+    name: '', location: '', university: '', price: '',
     listing_type: 'semester', gender: '', description: '',
     contact_phone: '', contact_email: '', rooms_available: '',
   });
   const [images, setImages] = useState<string[]>([]);
   const [newImages, setNewImages] = useState<File[]>([]);
-  const [customArea, setCustomArea] = useState("");
 
   useEffect(() => { if (isEdit) loadHostel(); }, [id]);
 
@@ -62,18 +59,13 @@ const HostelForm = () => {
       const { data, error } = await supabase.from('hostels').select('*').eq('id', id).single();
       if (error) throw error;
       setFormData({
-        name: data.name || '', location: data.location || '', area: data.area || '',
+        name: data.name || '', location: data.location || '',
         university: data.university || '', price: data.price?.toString() || '',
         listing_type: data.listing_type || 'semester', gender: data.gender || '',
         description: data.description || '',
         contact_phone: data.contact_phone || '', contact_email: data.contact_email || '',
         rooms_available: data.rooms_available?.toString() || '',
       });
-      // If saved area isn't in the preset list, treat it as custom
-      if (data.area && !AREAS.includes(data.area)) {
-        setFormData(prev => ({ ...prev, area: 'other' }));
-        setCustomArea(data.area);
-      }
       setImages(data.images || []);
     } catch (error: any) {
       toast.error('Failed to load listing: ' + error.message);
@@ -125,7 +117,6 @@ const HostelForm = () => {
       setUploading(false);
       const hostelData = {
         name: formData.name, location: formData.location,
-        area: formData.area === 'other' ? customArea : formData.area,
         university: formData.university, price: parseFloat(formData.price),
         listing_type: formData.listing_type, gender: formData.gender,
         description: formData.description,
@@ -187,24 +178,6 @@ const HostelForm = () => {
                       <option value="">Select university...</option>
                       {UNIVERSITIES.map(u => <option key={u} value={u}>{u}</option>)}
                     </select>
-                  </div>
-                  <div>
-                    <label htmlFor="area" className={labelCls}>Area / Town *</label>
-                    <select id="area" name="area" required value={formData.area} onChange={handleChange} className={inputCls}>
-                      <option value="">Select area...</option>
-                      {AREAS.map(a => <option key={a} value={a}>{a}</option>)}
-                      <option value="other">Other</option>
-                    </select>
-                    {formData.area === 'other' && (
-                      <input
-                        type="text"
-                        required
-                        value={customArea}
-                        onChange={e => setCustomArea(e.target.value)}
-                        className={`${inputCls} mt-2`}
-                        placeholder="Enter your area / neighbourhood"
-                      />
-                    )}
                   </div>
                 </div>
                 <div>
