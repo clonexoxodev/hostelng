@@ -25,12 +25,12 @@ const trustedBy = [
 ];
 
 const benefits = [
-  "Agent-posted listings from trusted hostel owners",
-  "Direct contact with hostel owners",
+  "Listings from verified landlords, agents & property managers",
+  "Direct contact with property owners",
   "Detailed photos & virtual tours",
   "Real student reviews you can trust",
   "24/7 customer support team",
-  "Free listing for hostel owners",
+  "Free listing for property owners",
 ];
 
 const Index = () => {
@@ -125,7 +125,7 @@ const Index = () => {
           </h1>
 
           <p className="text-primary-foreground/80 text-base md:text-lg max-w-xl mx-auto mb-10 leading-relaxed animate-fade-up" style={{ animationDelay: "0.15s" }}>
-            Browse hundreds of agent-posted hostels near Nigerian universities. Connect directly with owners — no stress, no scams, no wasted journeys.
+            Browse hundreds of verified listings near Nigerian universities. Connect directly with landlords and property owners — no stress, no scams, no wasted journeys.
           </p>
 
           {/* Search */}
@@ -249,7 +249,7 @@ const Index = () => {
                 The Safest Way to Find Student Housing
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8">
-                We know the Nigerian student housing market can be stressful, risky, and full of fraudsters. HostelNG is built to change that — with agent-posted listings, direct contact with owners, and real transparency.
+                We know the Nigerian student housing market can be stressful, risky, and full of fraudsters. HostelNG is built to change that — with listings from trusted landlords and property owners, direct contact, and real transparency.
               </p>
 
               <ul className="space-y-3">
@@ -278,9 +278,9 @@ const Index = () => {
               <div className="absolute -bottom-5 -left-5 bg-card rounded-2xl shadow-card-hover border border-border p-4 max-w-[200px]">
                 <div className="flex items-center gap-2 mb-1.5">
                   <ShieldCheck className="w-4 h-4 text-primary" />
-                  <span className="text-xs font-semibold text-foreground">Agent Network</span>
+                  <span className="text-xs font-semibold text-foreground">Trusted Listers</span>
                 </div>
-                <p className="text-muted-foreground text-xs">Listings posted by our trusted agent network.</p>
+                <p className="text-muted-foreground text-xs">Listings from landlords, agents & property managers.</p>
               </div>
 
               {/* Floating rating badge */}
@@ -302,10 +302,10 @@ const Index = () => {
           <div className="container mx-auto px-4 text-center">
             <Building className="w-12 h-12 text-primary-foreground/70 mx-auto mb-5" />
             <h2 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
-              Own a Student Hostel?
+              Have a Property to List?
             </h2>
             <p className="text-primary-foreground/80 max-w-xl mx-auto text-base leading-relaxed mb-10">
-              List your property on HostelNG for free. Reach thousands of university students looking for quality accommodation near their campus.
+              Whether you're a landlord, agent, or property manager — list your property on HostelNG for free and reach thousands of students looking for accommodation near their campus.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button

@@ -136,7 +136,7 @@ const HostelDetail = () => {
             <div className="flex flex-wrap items-center gap-2 mb-3">
               {hostel.featured && (
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-accent/15 text-accent border border-accent/25"
-                  title="Recommended by our agent network">
+                  title="Recommended by our network">
                   <CheckCircle className="w-3 h-3" /> Top Pick
                 </span>
               )}
@@ -178,7 +178,7 @@ const HostelDetail = () => {
                 <StarRating rating={reviewStats.avg} size="sm" />
                 <span className="font-bold text-foreground text-sm">{reviewStats.avg.toFixed(1)}</span>
                 <span className="text-muted-foreground text-sm">
-                  ({reviewStats.count} agent review{reviewStats.count !== 1 ? 's' : ''})
+                  ({reviewStats.count} review{reviewStats.count !== 1 ? 's' : ''})
                 </span>
               </div>
             )}
@@ -286,7 +286,7 @@ const HostelDetail = () => {
                 </p>
                 <Button onClick={() => setInquiryOpen(true)} size="lg"
                   className="w-full gradient-primary border-0 shadow-primary text-primary-foreground font-bold">
-                  <MessageSquare className="w-5 h-5 mr-2" /> Contact Agent
+                  <MessageSquare className="w-5 h-5 mr-2" /> Contact Owner
                 </Button>
               </div>
 
@@ -361,14 +361,14 @@ const HostelDetail = () => {
 
                 <Button onClick={() => setInquiryOpen(true)} size="lg"
                   className="w-full gradient-primary border-0 shadow-primary text-primary-foreground font-bold text-base">
-                  <MessageSquare className="w-5 h-5 mr-2" /> Contact Agent
+                  <MessageSquare className="w-5 h-5 mr-2" /> Contact Owner
                 </Button>
 
                 {contactRevealed ? (
                   <div className="space-y-3 pt-1">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-green-500 shrink-0" />
-                      <p className="text-sm font-semibold text-foreground">Agent Contact Details</p>
+                      <p className="text-sm font-semibold text-foreground">Owner Contact Details</p>
                     </div>
                     {hostel.contact_phone && (
                       <a href={`tel:${hostel.contact_phone}`}
@@ -401,7 +401,7 @@ const HostelDetail = () => {
                   </div>
                 ) : (
                   <p className="text-xs text-muted-foreground text-center">
-                    Submit an inquiry to view agent contact details
+                    Submit an inquiry to view owner contact details
                   </p>
                 )}
 
@@ -439,7 +439,7 @@ const HostelDetail = () => {
           </div>
           <Button onClick={() => setInquiryOpen(true)} size="lg"
             className="gradient-primary border-0 shadow-primary text-primary-foreground font-bold px-6">
-            <MessageSquare className="w-4 h-4 mr-2" /> Contact Agent
+            <MessageSquare className="w-4 h-4 mr-2" /> Contact Owner
           </Button>
         </div>
       </div>

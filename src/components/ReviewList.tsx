@@ -49,7 +49,7 @@ const ReviewList = ({ listingId, listingName, agentId }: ReviewListProps) => {
       {/* Section header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <h2 className="font-display font-bold text-xl text-foreground">Agent Reviews</h2>
+          <h2 className="font-display font-bold text-xl text-foreground">Reviews</h2>
           {reviews.length > 0 && (
             <div className="flex items-center gap-1.5">
               <StarRating rating={avgRating} size="sm" />
@@ -106,7 +106,7 @@ const ReviewList = ({ listingId, listingName, agentId }: ReviewListProps) => {
       ) : reviews.length === 0 ? (
         <div className="bg-secondary rounded-xl p-6 text-center">
           <Star className="w-8 h-8 text-muted-foreground/30 mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">No reviews yet for this agent.</p>
+          <p className="text-sm text-muted-foreground">No reviews yet for this property.</p>
         </div>
       ) : (
         <div className="space-y-3">

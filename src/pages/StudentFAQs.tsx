@@ -30,7 +30,7 @@ const StudentFAQs = () => {
     },
     {
       question: "Are the hostels on HostelNG inspected or certified?",
-      answer: "HostelNG is a listing marketplace — we connect students with hostel owners and agents, but we do not physically inspect or certify properties. We strongly recommend visiting any hostel in person before making payment decisions."
+      answer: "HostelNG is a listing marketplace — we connect students with property owners and listers, but we do not physically inspect or certify properties. We strongly recommend visiting any hostel in person before making payment decisions."
     },
     {
       question: "What should I do before paying for a hostel?",

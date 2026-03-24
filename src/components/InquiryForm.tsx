@@ -77,7 +77,7 @@ const InquiryForm = ({ hostel, onClose, onSuccess }: InquiryFormProps) => {
       onClose();
       if (onSuccess) {
         onSuccess();
-        toast.success('Inquiry sent! Agent contact details are now visible below.');
+        toast.success('Inquiry sent! Owner contact details are now visible below.');
       } else {
         // fallback: navigate to confirmation page
         navigate(`/inquiry-sent/${hostel.id}`, {
@@ -102,7 +102,7 @@ const InquiryForm = ({ hostel, onClose, onSuccess }: InquiryFormProps) => {
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-border">
           <div>
-            <h2 className="font-display text-xl font-bold text-foreground">Contact Agent</h2>
+            <h2 className="font-display text-xl font-bold text-foreground">Contact Owner</h2>
             <p className="text-sm text-muted-foreground mt-0.5 truncate max-w-[280px]">{hostel.name}</p>
           </div>
           <button
@@ -190,7 +190,7 @@ const InquiryForm = ({ hostel, onClose, onSuccess }: InquiryFormProps) => {
           </div>
 
           <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 text-xs text-muted-foreground">
-            Your contact details will be shared with the agent so they can reach you directly.
+            Your contact details will be shared with the property owner so they can reach you directly.
           </div>
 
           <div className="flex gap-3 pt-2">

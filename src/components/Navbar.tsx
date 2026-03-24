@@ -41,7 +41,7 @@ const Navbar = () => {
   const navLinks = [
     { to: "/", label: "Home", icon: Home, showFor: 'all' },
     { to: "/hostels", label: "Browse Hostels", icon: Search, showFor: 'all' },
-    { to: "/list-hostel", label: "List Your Hostel", icon: Building, showFor: 'agent' },
+    { to: "/list-hostel", label: "List Your Property", icon: Building, showFor: 'agent' },
     { to: "/contact", label: "Contact", icon: Phone, showFor: 'all' },
   ];
 

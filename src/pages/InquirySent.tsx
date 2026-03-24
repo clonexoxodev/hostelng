@@ -49,15 +49,15 @@ const InquirySent = () => {
               Inquiry Sent!
             </h1>
             <p className="text-muted-foreground">
-              Your request has been sent to the agent for{' '}
+              Your request has been sent to the property owner for{' '}
               <span className="font-medium text-foreground">{state?.hostelName || 'this property'}</span>.
               You can also contact them directly below.
             </p>
           </div>
 
-          {/* Agent Contact Card */}
+          {/* Owner Contact Card */}
           <div className="bg-card rounded-2xl border border-border p-6 mb-6">
-            <h2 className="font-display font-bold text-lg text-foreground mb-4">Agent Contact Details</h2>
+            <h2 className="font-display font-bold text-lg text-foreground mb-4">Owner Contact Details</h2>
 
             <div className="space-y-3 mb-6">
               {state?.agentName && (
@@ -68,7 +68,7 @@ const InquirySent = () => {
                     </span>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Agent Name</p>
+                    <p className="text-xs text-muted-foreground">Owner Name</p>
                     <p className="font-medium text-foreground">{state.agentName}</p>
                   </div>
                 </div>

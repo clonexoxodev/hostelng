@@ -87,7 +87,7 @@ const Dashboard = () => {
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div>
-              <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-1">Agent Dashboard</h1>
+              <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-1">Listing Dashboard</h1>
               <p className="text-muted-foreground text-sm">
                 {hostels.length} listing{hostels.length !== 1 ? 's' : ''} · {user?.email}
               </p>

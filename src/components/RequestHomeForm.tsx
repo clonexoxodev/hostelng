@@ -118,7 +118,7 @@ const RequestHomeForm = ({ onClose }: RequestHomeFormProps) => {
             </div>
             <h3 className="font-display text-xl font-bold text-foreground mb-2">Request Submitted!</h3>
             <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-              Your housing request has been received. An agent will review your requirements and reach out to you shortly.
+              Your housing request has been received. A property owner will review your requirements and reach out to you shortly.
             </p>
             <Button onClick={onClose} className="gradient-primary border-0 text-primary-foreground px-8">
               Done
@@ -259,7 +259,7 @@ const RequestHomeForm = ({ onClose }: RequestHomeFormProps) => {
             </div>
 
             <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 text-xs text-muted-foreground">
-              An agent will review your request and contact you directly with suitable options.
+              A property owner will review your request and contact you directly with suitable options.
             </div>
 
             <div className="flex gap-3 pt-1">

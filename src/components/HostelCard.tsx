@@ -51,7 +51,7 @@ const HostelCard = ({ hostel }: HostelCardProps) => {
             <div className="absolute top-3 left-3 flex gap-1.5">
               {hostel.featured && (
                 <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-accent text-accent-foreground shadow-sm"
-                  title="Recommended by our agent network">
+                  title="Recommended by our network">
                   <CheckCircle className="w-2.5 h-2.5" />
                   Top Pick
                 </span>

@@ -97,7 +97,7 @@ export default function Register() {
                 <div>
                   <p className="font-display font-bold text-lg text-foreground mb-1">I'm a Student</p>
                   <p className="text-muted-foreground text-xs leading-relaxed">
-                    Browse listings, contact agents, and find your perfect student accommodation.
+                    Browse listings, contact property owners, and find your perfect student accommodation.
                   </p>
                 </div>
                 <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
@@ -105,7 +105,7 @@ export default function Register() {
                 </span>
               </button>
 
-              {/* Agent card */}
+              {/* Property owner card */}
               <button
                 onClick={() => pickRole('agent')}
                 className="group flex flex-col items-center text-center gap-4 p-8 bg-card border-2 border-border rounded-2xl hover:border-primary hover:shadow-lg transition-all duration-200"
@@ -114,9 +114,9 @@ export default function Register() {
                   <Building2 className="w-8 h-8 text-accent" />
                 </div>
                 <div>
-                  <p className="font-display font-bold text-lg text-foreground mb-1">I'm an Agent</p>
+                  <p className="font-display font-bold text-lg text-foreground mb-1">I'm a Property Owner / Agent</p>
                   <p className="text-muted-foreground text-xs leading-relaxed">
-                    List your properties, manage inquiries, and connect with thousands of students.
+                    For landlords, agents, and property managers who want to list available housing.
                   </p>
                 </div>
                 <span className="text-xs font-semibold text-accent bg-accent/10 px-3 py-1 rounded-full">
@@ -159,7 +159,7 @@ export default function Register() {
               </div>
               <div>
                 <h1 className="font-display text-2xl font-bold text-foreground">
-                  {isAgent ? 'Agent Registration' : 'Student Registration'}
+                  {isAgent ? 'Property Owner / Agent Registration' : 'Student Registration'}
                 </h1>
                 <p className="text-muted-foreground text-xs">
                   {isAgent
@@ -248,7 +248,7 @@ export default function Register() {
             {isAgent && (
               <div className="bg-card rounded-2xl border border-border p-5 space-y-4">
                 <div>
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Agent Profile</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Lister Profile</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Optional — helps students trust your listings</p>
                 </div>
 
@@ -312,7 +312,7 @@ export default function Register() {
               className="w-full py-3 px-4 gradient-primary border-0 text-primary-foreground font-bold rounded-xl flex items-center justify-center gap-2 disabled:opacity-60 transition-opacity text-sm">
               {loading
                 ? <><Loader2 className="w-4 h-4 animate-spin" /> Creating account...</>
-                : <><CheckCircle2 className="w-4 h-4" /> Create {isAgent ? 'Agent' : 'Student'} Account</>
+                : <><CheckCircle2 className="w-4 h-4" /> Create {isAgent ? 'Lister' : 'Student'} Account</>
               }
             </button>
 

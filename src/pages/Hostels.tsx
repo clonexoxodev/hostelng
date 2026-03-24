@@ -276,7 +276,7 @@ const Hostels = () => {
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground mt-4">
-                  Can't find what you need? Let an agent find the perfect home for you.
+                  Can't find what you need? Let a property owner find the perfect home for you.
                 </p>
               </div>
             ) : (
@@ -295,7 +295,7 @@ const Hostels = () => {
                     </div>
                     <div>
                       <p className="font-semibold text-foreground text-sm">Still haven't found the right place?</p>
-                      <p className="text-xs text-muted-foreground">Tell us your requirements and an agent will find options for you.</p>
+                      <p className="text-xs text-muted-foreground">Tell us your requirements and a lister will find options for you.</p>
                     </div>
                   </div>
                   <Button

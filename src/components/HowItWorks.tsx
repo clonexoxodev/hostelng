@@ -5,7 +5,7 @@ const steps = [
     icon: Search,
     step: "01",
     title: "Search & Discover",
-    description: "Browse agent-posted listings near your university. Filter by price, gender, and institution.",
+    description: "Browse listings from landlords and property owners near your university. Filter by price, gender, and institution.",
   },
   {
     icon: Home,
@@ -16,8 +16,8 @@ const steps = [
   {
     icon: Phone,
     step: "03",
-    title: "Contact Agent",
-    description: "Submit a quick inquiry to unlock the agent's contact details. No spam, no middlemen.",
+    title: "Contact Owner",
+    description: "Submit a quick inquiry to unlock the property owner's contact details. No spam, no middlemen.",
   },
   {
     icon: CheckCircle,
