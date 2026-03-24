@@ -9,11 +9,12 @@ interface ReviewListProps {
   listingId: string;
   listingName: string;
   agentId: string;
+  requireAuth?: () => boolean;
 }
 
 const PREVIEW_COUNT = 4;
 
-const ReviewList = ({ listingId, listingName, agentId }: ReviewListProps) => {
+const ReviewList = ({ listingId, listingName, agentId, requireAuth }: ReviewListProps) => {
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
@@ -61,7 +62,7 @@ const ReviewList = ({ listingId, listingName, agentId }: ReviewListProps) => {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => setFormOpen(true)}
+          onClick={() => { if (requireAuth ? requireAuth() : true) setFormOpen(true); }}
           className="border-primary/30 text-primary hover:bg-primary/5"
         >
           <PenLine className="w-3.5 h-3.5 mr-1.5" />

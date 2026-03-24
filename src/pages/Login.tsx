@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Eye, EyeOff, Mail, Lock, LogIn, Loader2 } from 'lucide-react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import Navbar from '@/components/Navbar'
 
@@ -9,6 +9,8 @@ const labelCls = 'block text-sm font-semibold text-foreground mb-1.5'
 
 export default function Login() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const returnTo = searchParams.get('returnTo') || null
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -27,7 +29,9 @@ export default function Login() {
       } else {
         const role = data.user?.user_metadata?.role
         const userEmail = data.user?.email
-        if (userEmail === 'clonexoxo80@gmail.com') {
+        if (returnTo) {
+          navigate(decodeURIComponent(returnTo))
+        } else if (userEmail === 'clonexoxo80@gmail.com') {
           navigate('/superadmin')
         } else if (role === 'agent') {
           navigate('/dashboard')
@@ -102,7 +106,7 @@ export default function Login() {
 
           <p className="text-center text-sm text-muted-foreground mt-6">
             Don't have an account?{' '}
-            <Link to="/register" className="text-primary font-semibold hover:underline">Create one free</Link>
+            <Link to={returnTo ? `/register?returnTo=${returnTo}` : '/register'} className="text-primary font-semibold hover:underline">Create one free</Link>
           </p>
 
         </div>

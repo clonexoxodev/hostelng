@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
   MapPin, CheckCircle, ChevronLeft, BedDouble,
@@ -23,6 +23,8 @@ const genderLabel: Record<string, string> = {
 const HostelDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [user, setUser] = useState<any>(null);
   const [hostel, setHostel] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -34,6 +36,18 @@ const HostelDetail = () => {
 
   useEffect(() => { loadHostel(); }, [id]);
   useEffect(() => { if (id) loadReviewStats(id); }, [id]);
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => setUser(s?.user ?? null));
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const requireAuth = (): boolean => {
+    if (user) return true;
+    const returnTo = encodeURIComponent(location.pathname);
+    navigate(`/register?returnTo=${returnTo}`);
+    return false;
+  };
 
   const loadReviewStats = async (hostelId: string) => {
     const { data: hostelData } = await supabase
@@ -284,7 +298,7 @@ const HostelDetail = () => {
                 <p className="font-display font-bold text-3xl text-primary mb-4">
                   ₦{hostel.price?.toLocaleString()}
                 </p>
-                <Button onClick={() => setInquiryOpen(true)} size="lg"
+                <Button onClick={() => { if (requireAuth()) setInquiryOpen(true); }} size="lg"
                   className="w-full gradient-primary border-0 shadow-primary text-primary-foreground font-bold">
                   <MessageSquare className="w-5 h-5 mr-2" /> Contact Owner
                 </Button>
@@ -319,7 +333,7 @@ const HostelDetail = () => {
               </div>
 
               {/* Reviews */}
-              <ReviewList listingId={hostel.id} listingName={hostel.name} agentId={hostel.owner_id} />
+              <ReviewList listingId={hostel.id} listingName={hostel.name} agentId={hostel.owner_id} requireAuth={requireAuth} />
             </div>
 
             {/* Right sidebar */}
@@ -359,7 +373,7 @@ const HostelDetail = () => {
                   )}
                 </div>
 
-                <Button onClick={() => setInquiryOpen(true)} size="lg"
+                <Button onClick={() => { if (requireAuth()) setInquiryOpen(true); }} size="lg"
                   className="w-full gradient-primary border-0 shadow-primary text-primary-foreground font-bold text-base">
                   <MessageSquare className="w-5 h-5 mr-2" /> Contact Owner
                 </Button>
@@ -407,7 +421,7 @@ const HostelDetail = () => {
 
                 <div className="pt-2 border-t border-border">
                   <ReportDialog hostelId={hostel.id} hostelName={hostel.name}
-                    open={reportOpen} onOpenChange={setReportOpen} triggerButton={true} />
+                    open={reportOpen} onOpenChange={(v) => { if (v && !requireAuth()) return; setReportOpen(v); }} triggerButton={true} />
                 </div>
               </div>
             </div>
@@ -437,7 +451,7 @@ const HostelDetail = () => {
               ₦{hostel.price?.toLocaleString()}
             </p>
           </div>
-          <Button onClick={() => setInquiryOpen(true)} size="lg"
+          <Button onClick={() => { if (requireAuth()) setInquiryOpen(true); }} size="lg"
             className="gradient-primary border-0 shadow-primary text-primary-foreground font-bold px-6">
             <MessageSquare className="w-4 h-4 mr-2" /> Contact Owner
           </Button>

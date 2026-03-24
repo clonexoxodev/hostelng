@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Star, ShieldCheck, Building, TrendingUp, ArrowRight, CheckCircle2, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -34,6 +34,8 @@ const benefits = [
 ];
 
 const Index = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState<any>(null);
   const [hostels, setHostels] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -76,6 +78,14 @@ const Index = () => {
 
   // Check if user is an agent
   const isAgent = user?.user_metadata?.role === 'agent';
+
+  const handleRequestHome = () => {
+    if (!user) {
+      navigate(`/register?returnTo=${encodeURIComponent(location.pathname)}`);
+      return;
+    }
+    setShowRequestForm(true);
+  };
 
   // Only show hostels explicitly marked as featured by Super Admin
   const featuredHostels = hostels.filter((h) => h.featured === true);
@@ -152,7 +162,7 @@ const Index = () => {
             <div className="inline-flex items-center gap-3 bg-card/20 backdrop-blur-sm border border-primary-foreground/20 rounded-2xl px-5 py-3">
               <span className="text-primary-foreground/80 text-sm">Can't find what you need?</span>
               <button
-                onClick={() => setShowRequestForm(true)}
+                onClick={handleRequestHome}
                 className="flex items-center gap-2 bg-accent hover:opacity-90 text-accent-foreground text-sm font-semibold px-4 py-2 rounded-xl transition-opacity"
               >
                 <Home className="w-4 h-4" />

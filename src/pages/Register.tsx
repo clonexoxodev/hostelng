@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Eye, EyeOff, GraduationCap, Building2, ArrowLeft, CheckCircle2, Loader2, User, Phone, Mail, Lock, Briefcase, FileText } from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import Navbar from '@/components/Navbar'
 
@@ -12,6 +12,8 @@ const labelCls = 'block text-sm font-semibold text-foreground mb-1.5'
 
 export default function Register() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const returnTo = searchParams.get('returnTo') || null
   const [step, setStep] = useState<Step>('pick-role')
   const [role, setRole] = useState<Role>('')
 
@@ -64,7 +66,8 @@ export default function Register() {
         setError(error.message)
       } else {
         setMessage('Account created! Check your email to confirm, then sign in.')
-        setTimeout(() => navigate('/login'), 2500)
+        const loginPath = returnTo ? `/login?returnTo=${returnTo}` : '/login'
+        setTimeout(() => navigate(loginPath), 2500)
       }
     } catch (err: any) {
       setError(err?.message || 'An unexpected error occurred')
@@ -127,7 +130,7 @@ export default function Register() {
 
             <p className="text-center text-sm text-muted-foreground mt-8">
               Already have an account?{' '}
-              <Link to="/login" className="text-primary font-semibold hover:underline">Sign in</Link>
+              <Link to={returnTo ? `/login?returnTo=${returnTo}` : '/login'} className="text-primary font-semibold hover:underline">Sign in</Link>
             </p>
           </div>
         </main>
