@@ -298,10 +298,54 @@ const HostelDetail = () => {
                 <p className="font-display font-bold text-3xl text-primary mb-4">
                   ₦{hostel.price?.toLocaleString()}
                 </p>
-                <Button onClick={() => { if (requireAuth()) setInquiryOpen(true); }} size="lg"
-                  className="w-full gradient-primary border-0 shadow-primary text-primary-foreground font-bold">
-                  <MessageSquare className="w-5 h-5 mr-2" /> Contact Owner
-                </Button>
+
+                {contactRevealed ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 mb-3">
+                      <CheckCircle className="w-4 h-4 text-green-500 shrink-0" />
+                      <p className="text-sm font-semibold text-foreground">Owner Contact Details</p>
+                    </div>
+                    {hostel.contact_phone && (
+                      <a href={`tel:${hostel.contact_phone}`}
+                        className="flex items-center gap-3 text-sm p-3 rounded-xl bg-secondary hover:bg-secondary/80 transition-colors">
+                        <Phone className="w-4 h-4 text-primary shrink-0" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">Phone</p>
+                          <p className="font-semibold text-foreground">{hostel.contact_phone}</p>
+                        </div>
+                      </a>
+                    )}
+                    {hostel.contact_email && (
+                      <a href={`mailto:${hostel.contact_email}`}
+                        className="flex items-center gap-3 text-sm p-3 rounded-xl bg-secondary hover:bg-secondary/80 transition-colors">
+                        <Mail className="w-4 h-4 text-primary shrink-0" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">Email</p>
+                          <p className="font-semibold text-foreground truncate">{hostel.contact_email}</p>
+                        </div>
+                      </a>
+                    )}
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      {hostel.contact_phone && (
+                        <a href={`tel:${hostel.contact_phone}`}
+                          className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-border text-sm font-semibold text-foreground hover:bg-secondary transition-colors">
+                          <Phone className="w-3.5 h-3.5 text-primary" /> Call
+                        </a>
+                      )}
+                      {hostel.contact_email && (
+                        <a href={`mailto:${hostel.contact_email}`}
+                          className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-border text-sm font-semibold text-foreground hover:bg-secondary transition-colors">
+                          <Mail className="w-3.5 h-3.5 text-primary" /> Email
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <Button onClick={() => { if (requireAuth()) setInquiryOpen(true); }} size="lg"
+                    className="w-full gradient-primary border-0 shadow-primary text-primary-foreground font-bold">
+                    <MessageSquare className="w-5 h-5 mr-2" /> Contact Owner
+                  </Button>
+                )}
               </div>
 
               {/* Description */}
@@ -443,7 +487,7 @@ const HostelDetail = () => {
       {/* Sticky mobile bottom bar */}
       <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-card/95 backdrop-blur-sm border-t border-border px-4 py-3 shadow-lg">
         <div className="flex items-center gap-3">
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <p className="text-[11px] text-muted-foreground leading-none mb-0.5">
               Per {hostel.listing_type === 'semester' ? 'Semester' : hostel.listing_type === 'annually' ? 'Year (Annually)' : 'Session'}
             </p>
@@ -451,10 +495,18 @@ const HostelDetail = () => {
               ₦{hostel.price?.toLocaleString()}
             </p>
           </div>
-          <Button onClick={() => { if (requireAuth()) setInquiryOpen(true); }} size="lg"
-            className="gradient-primary border-0 shadow-primary text-primary-foreground font-bold px-6">
-            <MessageSquare className="w-4 h-4 mr-2" /> Contact Owner
-          </Button>
+          {contactRevealed && hostel.contact_phone ? (
+            <a href={`tel:${hostel.contact_phone}`} className="shrink-0">
+              <Button size="lg" className="gradient-primary border-0 shadow-primary text-primary-foreground font-bold px-6">
+                <Phone className="w-4 h-4 mr-2" /> Call Owner
+              </Button>
+            </a>
+          ) : (
+            <Button onClick={() => { if (requireAuth()) setInquiryOpen(true); }} size="lg"
+              className="shrink-0 gradient-primary border-0 shadow-primary text-primary-foreground font-bold px-6">
+              <MessageSquare className="w-4 h-4 mr-2" /> Contact Owner
+            </Button>
+          )}
         </div>
       </div>
     </div>

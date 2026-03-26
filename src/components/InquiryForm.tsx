@@ -97,13 +97,13 @@ const InquiryForm = ({ hostel, onClose, onSuccess }: InquiryFormProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/60 backdrop-blur-sm">
-      <div className="bg-card rounded-2xl border border-border shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-foreground/60 backdrop-blur-sm">
+      <div className="bg-card sm:rounded-2xl rounded-t-2xl border border-border shadow-2xl w-full sm:max-w-lg max-h-[92vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border">
           <div>
-            <h2 className="font-display text-xl font-bold text-foreground">Contact Owner</h2>
-            <p className="text-sm text-muted-foreground mt-0.5 truncate max-w-[280px]">{hostel.name}</p>
+            <h2 className="font-display text-lg sm:text-xl font-bold text-foreground">Contact Owner</h2>
+            <p className="text-sm text-muted-foreground mt-0.5 truncate max-w-[240px] sm:max-w-[280px]">{hostel.name}</p>
           </div>
           <button
             onClick={onClose}
@@ -114,7 +114,7 @@ const InquiryForm = ({ hostel, onClose, onSuccess }: InquiryFormProps) => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="student_name" className="flex items-center gap-1.5 mb-1.5">

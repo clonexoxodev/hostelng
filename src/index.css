@@ -91,6 +91,17 @@
     font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  input, select, textarea {
+    font-size: 16px;
+  }
+
+  @media (min-width: 640px) {
+    input, select, textarea {
+      font-size: inherit;
+    }
   }
 
   h1, h2, h3, h4 {
