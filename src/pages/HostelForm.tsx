@@ -227,11 +227,12 @@ const HostelForm = () => {
                   <select id="listing_type" name="listing_type" required value={formData.listing_type} onChange={handleChange} className={inputCls}>
                     <option value="semester">Per Semester</option>
                     <option value="session">Per Session</option>
+                    <option value="annually">Annually / Yearly</option>
                   </select>
                 </div>
                 <div>
                   <label htmlFor="price" className={labelCls}>
-                    Price (₦) per {formData.listing_type === 'semester' ? 'Semester' : 'Session'} *
+                    Price (₦) per {formData.listing_type === 'semester' ? 'Semester' : formData.listing_type === 'annually' ? 'Year' : 'Session'} *
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-medium">₦</span>

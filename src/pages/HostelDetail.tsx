@@ -156,7 +156,7 @@ const HostelDetail = () => {
               )}
               {hostel.listing_type && (
                 <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
-                  Per {hostel.listing_type === 'semester' ? 'Semester' : 'Session'}
+                  Per {hostel.listing_type === 'semester' ? 'Semester' : hostel.listing_type === 'annually' ? 'Year (Annually)' : 'Session'}
                 </span>
               )}
               {genderLabel[hostel.gender] && (
@@ -293,7 +293,7 @@ const HostelDetail = () => {
               {/* Mobile price + CTA */}
               <div className="lg:hidden bg-card rounded-2xl border border-border p-5">
                 <p className="text-xs text-muted-foreground mb-1">
-                  Price per {hostel.listing_type === 'semester' ? 'Semester' : 'Session'}
+                  Price per {hostel.listing_type === 'semester' ? 'Semester' : hostel.listing_type === 'annually' ? 'Year (Annually)' : 'Session'}
                 </p>
                 <p className="font-display font-bold text-3xl text-primary mb-4">
                   ₦{hostel.price?.toLocaleString()}
@@ -318,7 +318,7 @@ const HostelDetail = () => {
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {[
                     { label: "Price", value: `₦${hostel.price?.toLocaleString()}` },
-                    { label: "Payment", value: hostel.listing_type === 'semester' ? 'Per Semester' : 'Per Session' },
+                    { label: "Payment", value: hostel.listing_type === 'semester' ? 'Per Semester' : hostel.listing_type === 'annually' ? 'Annually / Yearly' : 'Per Session' },
                     { label: "Rooms Available", value: hostel.rooms_available || '—' },
                     { label: "Gender", value: genderLabel[hostel.gender] || 'Not specified' },
                     { label: "University", value: hostel.university?.split('(')[0]?.trim() || '—' },
@@ -342,7 +342,7 @@ const HostelDetail = () => {
 
                 <div className="pb-4 border-b border-border">
                   <p className="text-xs text-muted-foreground mb-1">
-                    Price per {hostel.listing_type === 'semester' ? 'Semester' : 'Session'}
+                    Price per {hostel.listing_type === 'semester' ? 'Semester' : hostel.listing_type === 'annually' ? 'Year (Annually)' : 'Session'}
                   </p>
                   <p className="font-display font-bold text-3xl text-primary">
                     ₦{hostel.price?.toLocaleString()}
@@ -445,7 +445,7 @@ const HostelDetail = () => {
         <div className="flex items-center gap-3">
           <div className="flex-1">
             <p className="text-[11px] text-muted-foreground leading-none mb-0.5">
-              Per {hostel.listing_type === 'semester' ? 'Semester' : 'Session'}
+              Per {hostel.listing_type === 'semester' ? 'Semester' : hostel.listing_type === 'annually' ? 'Year (Annually)' : 'Session'}
             </p>
             <p className="font-display font-bold text-lg text-primary leading-none">
               ₦{hostel.price?.toLocaleString()}

@@ -75,7 +75,7 @@ const HostelCard = ({ hostel }: HostelCardProps) => {
             {/* Price overlay */}
             <div className="absolute bottom-3 left-3">
               <p className="text-white/80 text-[10px] font-medium mb-0.5">
-                {hostel.listing_type === 'semester' ? 'Per Semester' : hostel.listing_type === 'session' ? 'Per Session' : ''}
+                {hostel.listing_type === 'semester' ? 'Per Semester' : hostel.listing_type === 'session' ? 'Per Session' : hostel.listing_type === 'annually' ? 'Annually / Yearly' : ''}
               </p>
               <p className="text-white font-bold text-lg leading-none drop-shadow">
                 ₦{hostel.price?.toLocaleString() || '0'}

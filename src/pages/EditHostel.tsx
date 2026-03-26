@@ -268,12 +268,13 @@ const EditHostel = () => {
                     >
                       <option value="session">Per Session</option>
                       <option value="semester">Per Semester</option>
+                      <option value="annually">Annually / Yearly</option>
                     </select>
                   </div>
 
                   <div>
                     <label htmlFor="price" className="block text-sm font-medium text-foreground mb-2">
-                      Price per {formData.listing_type === 'semester' ? 'Semester' : 'Session'} (₦)
+                      Price per {formData.listing_type === 'semester' ? 'Semester' : formData.listing_type === 'annually' ? 'Year' : 'Session'} (₦)
                     </label>
                     <input
                       type="number"

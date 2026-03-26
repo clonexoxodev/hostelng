@@ -173,7 +173,7 @@ const Dashboard = () => {
                         <p className="text-primary-foreground font-bold text-base drop-shadow">
                           ₦{hostel.price?.toLocaleString()}
                           <span className="text-xs font-normal opacity-80 ml-1">
-                            /{hostel.listing_type === 'semester' ? 'sem' : 'session'}
+                            /{hostel.listing_type === 'semester' ? 'sem' : hostel.listing_type === 'annually' ? 'yr' : 'session'}
                           </span>
                         </p>
                       </div>
