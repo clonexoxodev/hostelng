@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { Star, MapPin, Users, CheckCircle, Building2, Flag, BedDouble } from "lucide-react";
 import ReportDialog from "./ReportDialog";
+import SaveButton from "./SaveButton";
 import { useState } from "react";
 
 interface HostelCardProps {
   hostel: any;
+  user?: any;
 }
 
 const genderLabel: Record<string, string> = {
@@ -14,7 +16,7 @@ const genderLabel: Record<string, string> = {
   not_specified: "",
 };
 
-const HostelCard = ({ hostel }: HostelCardProps) => {
+const HostelCard = ({ hostel, user }: HostelCardProps) => {
   const hasImages = hostel.images && Array.isArray(hostel.images) && hostel.images.length > 0;
   const imageUrl = hasImages ? hostel.images[0] : null;
   const [showReport, setShowReport] = useState(false);
@@ -63,14 +65,17 @@ const HostelCard = ({ hostel }: HostelCardProps) => {
               )}
             </div>
 
-            {/* Flag button */}
-            <button
-              onClick={handleFlagClick}
-              title="Report this listing"
-              className="absolute top-3 right-3 p-1.5 rounded-lg bg-background/80 hover:bg-background text-muted-foreground hover:text-red-500 transition-all opacity-0 group-hover:opacity-100 shadow-sm"
-            >
-              <Flag className="w-3.5 h-3.5" />
-            </button>
+            {/* Top-right actions: save + flag — always visible */}
+            <div className="absolute top-3 right-3 flex gap-1.5">
+              <SaveButton hostelId={hostel.id} user={user} variant="icon" className="shadow-sm" />
+              <button
+                onClick={handleFlagClick}
+                title="Report this listing"
+                className="p-1.5 rounded-lg bg-background/80 hover:bg-background text-muted-foreground hover:text-red-500 transition-all shadow-sm opacity-0 group-hover:opacity-100"
+              >
+                <Flag className="w-3.5 h-3.5" />
+              </button>
+            </div>
 
             {/* Price overlay */}
             <div className="absolute bottom-3 left-3">

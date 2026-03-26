@@ -13,6 +13,7 @@ import InquiryForm from "@/components/InquiryForm";
 import ReviewList from "@/components/ReviewList";
 import StarRating from "@/components/StarRating";
 import ReportDialog from "@/components/ReportDialog";
+import SaveButton from "@/components/SaveButton";
 
 const genderLabel: Record<string, string> = {
   male_only: "Male Only",
@@ -46,6 +47,14 @@ const HostelDetail = () => {
     if (user) return true;
     const returnTo = encodeURIComponent(location.pathname);
     navigate(`/register?returnTo=${returnTo}`);
+    return false;
+  };
+
+  // Only used for reviews and reports — contact/inquiry is open to all
+  const requireAuthForAction = (reason: string): boolean => {
+    if (user) return true;
+    const returnTo = encodeURIComponent(location.pathname);
+    navigate(`/register?returnTo=${returnTo}&reason=${reason}`);
     return false;
   };
 
@@ -196,6 +205,11 @@ const HostelDetail = () => {
                 </span>
               </div>
             )}
+
+            {/* Save button — visible on mobile, desktop has it in sidebar */}
+            <div className="lg:hidden mt-3">
+              <SaveButton hostelId={hostel.id} user={user} variant="full" />
+            </div>
           </div>
 
           {/* ══ IMAGE GALLERY — below title ══ */}
@@ -341,7 +355,7 @@ const HostelDetail = () => {
                     </div>
                   </div>
                 ) : (
-                  <Button onClick={() => { if (requireAuth()) setInquiryOpen(true); }} size="lg"
+                  <Button onClick={() => setInquiryOpen(true)} size="lg"
                     className="w-full gradient-primary border-0 shadow-primary text-primary-foreground font-bold">
                     <MessageSquare className="w-5 h-5 mr-2" /> Contact Owner
                   </Button>
@@ -377,7 +391,7 @@ const HostelDetail = () => {
               </div>
 
               {/* Reviews */}
-              <ReviewList listingId={hostel.id} listingName={hostel.name} agentId={hostel.owner_id} requireAuth={requireAuth} />
+              <ReviewList listingId={hostel.id} listingName={hostel.name} agentId={hostel.owner_id} requireAuth={() => requireAuthForAction('review')} />
             </div>
 
             {/* Right sidebar */}
@@ -417,7 +431,7 @@ const HostelDetail = () => {
                   )}
                 </div>
 
-                <Button onClick={() => { if (requireAuth()) setInquiryOpen(true); }} size="lg"
+                <Button onClick={() => setInquiryOpen(true)} size="lg"
                   className="w-full gradient-primary border-0 shadow-primary text-primary-foreground font-bold text-base">
                   <MessageSquare className="w-5 h-5 mr-2" /> Contact Owner
                 </Button>
@@ -463,9 +477,19 @@ const HostelDetail = () => {
                   </p>
                 )}
 
+                {/* Save listing */}
+                <div className="pt-1">
+                  <SaveButton hostelId={hostel.id} user={user} variant="full" className="w-full justify-center" />
+                  {!user && (
+                    <p className="text-xs text-muted-foreground text-center mt-1.5">
+                      Sign in to save this listing
+                    </p>
+                  )}
+                </div>
+
                 <div className="pt-2 border-t border-border">
                   <ReportDialog hostelId={hostel.id} hostelName={hostel.name}
-                    open={reportOpen} onOpenChange={(v) => { if (v && !requireAuth()) return; setReportOpen(v); }} triggerButton={true} />
+                    open={reportOpen} onOpenChange={(v) => { if (v && !requireAuthForAction('report')) return; setReportOpen(v); }} triggerButton={true} />
                 </div>
               </div>
             </div>
@@ -502,7 +526,7 @@ const HostelDetail = () => {
               </Button>
             </a>
           ) : (
-            <Button onClick={() => { if (requireAuth()) setInquiryOpen(true); }} size="lg"
+            <Button onClick={() => setInquiryOpen(true)} size="lg"
               className="shrink-0 gradient-primary border-0 shadow-primary text-primary-foreground font-bold px-6">
               <MessageSquare className="w-4 h-4 mr-2" /> Contact Owner
             </Button>

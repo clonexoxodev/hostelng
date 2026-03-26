@@ -14,6 +14,7 @@ export default function Register() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const returnTo = searchParams.get('returnTo') || null
+  const reason = searchParams.get('reason') || null
   const [step, setStep] = useState<Step>('pick-role')
   const [role, setRole] = useState<Role>('')
 
@@ -86,6 +87,21 @@ export default function Register() {
             <div className="text-center mb-10">
               <h1 className="font-display text-3xl font-bold text-foreground mb-2">Join HostelNG</h1>
               <p className="text-muted-foreground text-sm">Choose how you want to use the platform</p>
+              {reason === 'save' && (
+                <div className="mt-4 px-4 py-3 bg-primary/8 border border-primary/20 rounded-xl text-sm text-primary font-medium">
+                  Create a free account to save listings and access them anytime.
+                </div>
+              )}
+              {reason === 'review' && (
+                <div className="mt-4 px-4 py-3 bg-primary/8 border border-primary/20 rounded-xl text-sm text-primary font-medium">
+                  Sign in or create an account to leave a review.
+                </div>
+              )}
+              {reason === 'report' && (
+                <div className="mt-4 px-4 py-3 bg-primary/8 border border-primary/20 rounded-xl text-sm text-primary font-medium">
+                  Sign in or create an account to report a listing.
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

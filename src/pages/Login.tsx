@@ -11,6 +11,7 @@ export default function Login() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const returnTo = searchParams.get('returnTo') || null
+  const reason = searchParams.get('reason') || null
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -55,6 +56,11 @@ export default function Login() {
           <div className="text-center mb-8">
             <h1 className="font-display text-3xl font-bold text-foreground mb-2">Welcome back</h1>
             <p className="text-muted-foreground text-sm">Sign in to your HostelNG account</p>
+            {reason === 'save' && (
+              <div className="mt-4 px-4 py-3 bg-primary/8 border border-primary/20 rounded-xl text-sm text-primary font-medium">
+                Sign in to save listings and access them anytime.
+              </div>
+            )}
           </div>
 
           <form onSubmit={handleSubmit} className="bg-card rounded-2xl border border-border p-6 space-y-4">

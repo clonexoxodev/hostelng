@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Home, Search, Building, Phone, LogOut, User, LayoutDashboard, Flag, Shield } from "lucide-react";
+import { Menu, X, Home, Search, Building, Phone, LogOut, User, LayoutDashboard, Flag, Shield, Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 
@@ -87,6 +87,20 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
+            {/* Saved Listings — always visible in nav */}
+            {!isSuperAdmin && !isAgent && (
+              <Link
+                to={user ? "/saved" : "/login?reason=save"}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  location.pathname === '/saved'
+                    ? "bg-secondary text-primary"
+                    : "text-foreground/70 hover:text-primary hover:bg-secondary/60"
+                }`}
+              >
+                <Bookmark className="w-3.5 h-3.5" />
+                Saved
+              </Link>
+            )}
           </div>
 
           {/* Desktop CTA */}
@@ -116,6 +130,19 @@ const Navbar = () => {
                     <Link to="/dashboard">
                       <LayoutDashboard className="w-4 h-4 mr-2" />
                       Dashboard
+                    </Link>
+                  </Button>
+                )}
+                {!isSuperAdmin && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-primary hover:bg-secondary"
+                    asChild
+                  >
+                    <Link to="/saved">
+                      <Bookmark className="w-4 h-4 mr-2" />
+                      Saved
                     </Link>
                   </Button>
                 )}
@@ -188,6 +215,21 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
+            {/* Saved Listings in mobile nav — always visible */}
+            {!isSuperAdmin && !isAgent && (
+              <Link
+                to={user ? "/saved" : "/login?reason=save"}
+                onClick={() => setIsOpen(false)}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                  location.pathname === '/saved'
+                    ? "bg-secondary text-primary"
+                    : "text-foreground/70 hover:text-primary hover:bg-secondary/60"
+                }`}
+              >
+                <Bookmark className="w-4 h-4" />
+                Saved Listings
+              </Link>
+            )}
             <div className="pt-2 pb-1 flex flex-col gap-2">
               {user ? (
                 <>
@@ -209,6 +251,16 @@ const Navbar = () => {
                     >
                       <LayoutDashboard className="w-4 h-4" />
                       Dashboard
+                    </Link>
+                  )}
+                  {!isSuperAdmin && (
+                    <Link
+                      to="/saved"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-primary hover:bg-secondary transition-all"
+                    >
+                      <Bookmark className="w-4 h-4" />
+                      Saved Listings
                     </Link>
                   )}
                   {isSuperAdmin && (
