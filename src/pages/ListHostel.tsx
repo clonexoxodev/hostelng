@@ -49,6 +49,7 @@ const ListHostel = () => {
     listing_type: "semester",
     gender: "",
     description: "",
+    contact_name: "",
     contact_phone: "",
     contact_email: "",
     rooms_available: "",
@@ -112,6 +113,7 @@ const ListHostel = () => {
         listing_type: formData.listing_type,
         gender: formData.gender,
         description: formData.description,
+        contact_name: formData.contact_name,
         contact_phone: formData.contact_phone,
         contact_email: formData.contact_email,
         rooms_available: parseInt(formData.rooms_available),
@@ -235,16 +237,24 @@ const ListHostel = () => {
             {/* ── Section 4: Contact ── */}
             <div className="bg-card rounded-2xl border border-border p-6">
               <SectionHeader icon={Phone} title="Contact Details" subtitle="Students will see this after submitting an inquiry" />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-4">
                 <div>
-                  <label htmlFor="contact_phone" className={labelCls}>Phone Number *</label>
-                  <input id="contact_phone" name="contact_phone" type="tel" required value={formData.contact_phone} onChange={handleChange}
-                    className={inputCls} placeholder="e.g., 08012345678" />
+                  <label htmlFor="contact_name" className={labelCls}>Name or Business Name *</label>
+                  <input id="contact_name" name="contact_name" required value={formData.contact_name} onChange={handleChange}
+                    className={inputCls} placeholder="e.g., John Doe or ABC Properties" />
+                  <p className="text-xs text-muted-foreground mt-1">This will be shown to students when they contact you.</p>
                 </div>
-                <div>
-                  <label htmlFor="contact_email" className={labelCls}>Email Address *</label>
-                  <input id="contact_email" name="contact_email" type="email" required value={formData.contact_email} onChange={handleChange}
-                    className={inputCls} placeholder="e.g., yourname@email.com" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="contact_phone" className={labelCls}>Phone Number *</label>
+                    <input id="contact_phone" name="contact_phone" type="tel" required value={formData.contact_phone} onChange={handleChange}
+                      className={inputCls} placeholder="e.g., 08012345678" />
+                  </div>
+                  <div>
+                    <label htmlFor="contact_email" className={labelCls}>Email Address *</label>
+                    <input id="contact_email" name="contact_email" type="email" required value={formData.contact_email} onChange={handleChange}
+                      className={inputCls} placeholder="e.g., yourname@email.com" />
+                  </div>
                 </div>
               </div>
             </div>

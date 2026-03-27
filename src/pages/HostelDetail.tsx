@@ -319,6 +319,15 @@ const HostelDetail = () => {
                       <CheckCircle className="w-4 h-4 text-green-500 shrink-0" />
                       <p className="text-sm font-semibold text-foreground">Owner Contact Details</p>
                     </div>
+                    {hostel.contact_name && (
+                      <div className="flex items-center gap-3 text-sm p-3 rounded-xl bg-secondary">
+                        <Building2 className="w-4 h-4 text-primary shrink-0" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">Name / Business</p>
+                          <p className="font-semibold text-foreground">{hostel.contact_name}</p>
+                        </div>
+                      </div>
+                    )}
                     {hostel.contact_phone && (
                       <a href={`tel:${hostel.contact_phone}`}
                         className="flex items-center gap-3 text-sm p-3 rounded-xl bg-secondary hover:bg-secondary/80 transition-colors">
@@ -442,6 +451,15 @@ const HostelDetail = () => {
                       <CheckCircle className="w-4 h-4 text-green-500 shrink-0" />
                       <p className="text-sm font-semibold text-foreground">Owner Contact Details</p>
                     </div>
+                    {hostel.contact_name && (
+                      <div className="flex items-center gap-3 text-sm text-foreground font-medium">
+                        <Building2 className="w-4 h-4 text-primary shrink-0" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">Name / Business</p>
+                          <p className="font-semibold">{hostel.contact_name}</p>
+                        </div>
+                      </div>
+                    )}
                     {hostel.contact_phone && (
                       <a href={`tel:${hostel.contact_phone}`}
                         className="flex items-center gap-3 text-sm text-foreground hover:text-primary transition-colors font-medium">
@@ -502,6 +520,7 @@ const HostelDetail = () => {
       {inquiryOpen && hostel && (
         <InquiryForm
           hostel={{ id: hostel.id, name: hostel.name, owner_id: hostel.owner_id,
+            contact_name: hostel.contact_name,
             contact_phone: hostel.contact_phone, contact_email: hostel.contact_email }}
           onClose={() => setInquiryOpen(false)}
           onSuccess={() => setContactRevealed(true)}

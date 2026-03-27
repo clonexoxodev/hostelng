@@ -87,20 +87,6 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
-            {/* Saved Listings — always visible in nav */}
-            {!isSuperAdmin && !isAgent && (
-              <Link
-                to={user ? "/saved" : "/login?reason=save"}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  location.pathname === '/saved'
-                    ? "bg-secondary text-primary"
-                    : "text-foreground/70 hover:text-primary hover:bg-secondary/60"
-                }`}
-              >
-                <Bookmark className="w-3.5 h-3.5" />
-                Saved
-              </Link>
-            )}
           </div>
 
           {/* Desktop CTA */}
@@ -215,21 +201,6 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
-            {/* Saved Listings in mobile nav — always visible */}
-            {!isSuperAdmin && !isAgent && (
-              <Link
-                to={user ? "/saved" : "/login?reason=save"}
-                onClick={() => setIsOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                  location.pathname === '/saved'
-                    ? "bg-secondary text-primary"
-                    : "text-foreground/70 hover:text-primary hover:bg-secondary/60"
-                }`}
-              >
-                <Bookmark className="w-4 h-4" />
-                Saved Listings
-              </Link>
-            )}
             <div className="pt-2 pb-1 flex flex-col gap-2">
               {user ? (
                 <>

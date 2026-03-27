@@ -13,6 +13,7 @@ interface InquiryFormProps {
     id: string;
     name: string;
     owner_id: string;
+    contact_name?: string;
     contact_phone?: string;
     contact_email?: string;
   };
@@ -79,11 +80,11 @@ const InquiryForm = ({ hostel, onClose, onSuccess }: InquiryFormProps) => {
         onSuccess();
         toast.success('Inquiry sent! Owner contact details are now visible below.');
       } else {
-        // fallback: navigate to confirmation page
         navigate(`/inquiry-sent/${hostel.id}`, {
           state: {
             hostelName: hostel.name,
             studentName: formData.student_name,
+            agentName: hostel.contact_name,
             agentPhone: hostel.contact_phone,
             agentEmail: hostel.contact_email,
           },

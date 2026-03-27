@@ -25,6 +25,7 @@ const EditHostel = () => {
     amenities: "",
     contact_phone: "",
     contact_email: "",
+    contact_name: "",
     rooms_available: "",
   });
 
@@ -76,6 +77,7 @@ const EditHostel = () => {
         amenities: Array.isArray(data.amenities) ? data.amenities.join(", ") : "",
         contact_phone: data.contact_phone || "",
         contact_email: data.contact_email || "",
+        contact_name: data.contact_name || "",
         rooms_available: data.rooms_available?.toString() || "",
       });
     } catch (error: any) {
@@ -113,6 +115,7 @@ const EditHostel = () => {
         amenities: amenitiesArray,
         contact_phone: formData.contact_phone,
         contact_email: formData.contact_email,
+        contact_name: formData.contact_name,
         rooms_available: parseInt(formData.rooms_available),
         updated_at: new Date().toISOString(),
       };
@@ -335,6 +338,23 @@ const EditHostel = () => {
                     onChange={handleChange}
                     className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                   />
+                </div>
+
+                <div className="mb-4">
+                  <label htmlFor="contact_name" className="block text-sm font-medium text-foreground mb-2">
+                    Name or Business Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="contact_name"
+                    name="contact_name"
+                    required
+                    value={formData.contact_name}
+                    onChange={handleChange}
+                    placeholder="e.g., John Doe or ABC Properties"
+                    className="w-full px-4 py-2.5 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">Shown to students when they contact you.</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

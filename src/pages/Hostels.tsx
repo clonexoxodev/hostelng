@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
-import { useSearchParams, Link, useNavigate } from "react-router-dom";
-import { SlidersHorizontal, X, ChevronDown, Search, Home, Bookmark } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
+import { SlidersHorizontal, X, ChevronDown, Search, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import HostelCard from "@/components/HostelCard";
@@ -60,7 +60,6 @@ const FilterSelect = ({
 
 const Hostels = () => {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const [showFilters, setShowFilters] = useState(false);
   const [showRequestForm, setShowRequestForm] = useState(false);
 
@@ -147,27 +146,14 @@ const Hostels = () => {
       {/* Header */}
       <div className="pt-24 pb-8 gradient-subtle border-b border-border">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-            <div>
-              <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-1">
-                Browse Listings
-              </h1>
-              <p className="text-muted-foreground text-sm mb-2">
-                {filtered.length} listing{filtered.length !== 1 ? "s" : ""} found
-              </p>
-              <div className="inline-flex items-center gap-2 bg-primary/8 border border-primary/20 text-primary text-xs font-medium px-3 py-1.5 rounded-full">
-                Currently showing listings in Ekiti State only — more locations coming soon.
-              </div>
-            </div>
-
-            {/* Saved Listings button — always visible */}
-            <button
-              onClick={() => user ? navigate('/saved') : navigate('/login?reason=save')}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-primary/30 bg-card text-primary text-sm font-semibold hover:bg-primary/5 transition-colors shrink-0 self-start"
-            >
-              <Bookmark className="w-4 h-4" />
-              Saved Listings
-            </button>
+          <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-1">
+            Browse Listings
+          </h1>
+          <p className="text-muted-foreground text-sm mb-2">
+            {filtered.length} listing{filtered.length !== 1 ? "s" : ""} found
+          </p>
+          <div className="inline-flex items-center gap-2 bg-primary/8 border border-primary/20 text-primary text-xs font-medium px-3 py-1.5 rounded-full">
+            Currently showing listings in Ekiti State only — more locations coming soon.
           </div>
         </div>
       </div>
